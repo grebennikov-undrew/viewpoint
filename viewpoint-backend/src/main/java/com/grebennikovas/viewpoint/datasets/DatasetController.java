@@ -25,7 +25,7 @@ public class DatasetController {
         return datasetService.save(dataset);
     }
     @PostMapping("/execute")
-    public Result execute(@RequestBody Long id) {
+    public Result execute(@RequestBody Long id) throws ClassNotFoundException {
         return datasetService.execute(id, null);
     }
 }

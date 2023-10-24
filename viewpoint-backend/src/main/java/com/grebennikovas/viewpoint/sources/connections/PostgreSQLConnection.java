@@ -5,19 +5,33 @@ import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.sources.Source;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import java.sql.*;
 import java.util.*;
 
 public class PostgreSQLConnection implements Executable {
-    private Source source;
+    private SimpleDriverDataSource source;
 
-    public Source getSource() {
+    public SimpleDriverDataSource getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SimpleDriverDataSource source) {
         this.source = source;
+    }
+
+    public PostgreSQLConnection(Source source) throws ClassNotFoundException {
+        String driver = source.getType().getCredit();
+        String netloc = source.getNetloc();
+        String port = source.getPort();
+        String dbname = source.getDbname();
+        String url = String.format("jdbc:%s://%s:%s/%s",driver,netloc,port,dbname);
+        this.source.setDriverClass((Class<? extends Driver>) Class.forName("org.postgresql.Driver"));
+        this.source.setUsername(source.getUsername());
+        this.source.setPassword(source.getPassword());
+        this.source.setUrl(url);
     }
 
     @Override
@@ -35,58 +49,69 @@ public class PostgreSQLConnection implements Executable {
     }
 
     @Override
-    public Result execute(String query, Map<String,String> params) {
-        String url = getUrl();
-        try (Connection connection = DriverManager.getConnection(url)) {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            Map<String,String> coltypes = getColtypes(rs);
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = rs.getMetaData().getColumnCount();
-            Result result = new Result();
-            List<Row> rows = new LinkedList();
-            while (rs.next()) {
-                Row row = new Row();
-                Map<String,Entry> entries = new HashMap();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    String javaColType = coltypes.get(columnName);
-                    if (javaColType.equals("String")) {
-                        Entry<String> entry = new Entry();
-                        entry.setValue(rs.getString(i));
-                        entries.put(columnName,entry);
-                    }
-                    if (javaColType.equals("Double")) {
-                        Entry<Double> entry = new Entry();
-                        entry.setValue(rs.getDouble(i));
-                        entries.put(columnName,entry);
-                    }
-                    if (javaColType.equals("Timestamp")) {
-                        Entry<Timestamp> entry = new Entry();
-                        entry.setValue(rs.getTimestamp(i));
-                        entries.put(columnName, entry);
-                    }
-                    if (javaColType.equals("Boolean")) {
-                        Entry<Boolean> entry = new Entry();
-                        entry.setValue(rs.getBoolean(i));
-                        entries.put(columnName, entry);
-                    }
-                    if (javaColType.equals("Object")) {
-                        Entry<Object> entry = new Entry();
-                        entry.setValue(rs.getObject(i));
-                        entries.put(columnName, entry);
-                    }
-                }
-                row.setEntries(entries);
-                rows.add(row);
-            }
-            result.setRows(rows);
-            result.setColtypes(coltypes);
-            return result;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Обработка ошибки подключения
-            return null;
-        }
+    public List<Map<String, Object>> execute(String query, Map<String,String> params) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(source);
+
+        Result result = new Result();
+        List<Row> rows = new LinkedList();
+        Map<String,String> coltypes = new HashMap();
+
+        List<Map<String, Object>> raw_rows = jdbcTemplate.query(query, rs -> {
+            coltypes = getColtypes(rs);
+            rows = null;
+        });
+        return raw_rows;
+//        String url = getUrl();
+//        try (Connection connection = DriverManager.getConnection(url)) {
+//            PreparedStatement stmt = connection.prepareStatement(query);
+//            ResultSet rs = stmt.executeQuery();
+//            Map<String,String> coltypes = getColtypes(rs);
+//            ResultSetMetaData metaData = rs.getMetaData();
+//            int columnCount = rs.getMetaData().getColumnCount();
+//            Result result = new Result();
+//            List<Row> rows = new LinkedList();
+//            while (rs.next()) {
+//                Row row = new Row();
+//                Map<String,Entry> entries = new HashMap();
+//                for (int i = 1; i <= columnCount; i++) {
+//                    String columnName = metaData.getColumnName(i);
+//                    String javaColType = coltypes.get(columnName);
+//                    if (javaColType.equals("String")) {
+//                        Entry<String> entry = new Entry();
+//                        entry.setValue(rs.getString(i));
+//                        entries.put(columnName,entry);
+//                    }
+//                    if (javaColType.equals("Double")) {
+//                        Entry<Double> entry = new Entry();
+//                        entry.setValue(rs.getDouble(i));
+//                        entries.put(columnName,entry);
+//                    }
+//                    if (javaColType.equals("Timestamp")) {
+//                        Entry<Timestamp> entry = new Entry();
+//                        entry.setValue(rs.getTimestamp(i));
+//                        entries.put(columnName, entry);
+//                    }
+//                    if (javaColType.equals("Boolean")) {
+//                        Entry<Boolean> entry = new Entry();
+//                        entry.setValue(rs.getBoolean(i));
+//                        entries.put(columnName, entry);
+//                    }
+//                    if (javaColType.equals("Object")) {
+//                        Entry<Object> entry = new Entry();
+//                        entry.setValue(rs.getObject(i));
+//                        entries.put(columnName, entry);
+//                    }
+//                }
+//                row.setEntries(entries);
+//                rows.add(row);
+//            }
+//            result.setRows(rows);
+//            result.setColtypes(coltypes);
+//            return result;
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Обработка ошибки подключения
+//            return null;
+//        }
     }
 
     @Override
@@ -96,18 +121,18 @@ public class PostgreSQLConnection implements Executable {
 
     @Override
     public String getUrl() {
-        String driver = source.getType().getCredit();
-        String netloc = source.getNetloc();
-        String port = source.getPort();
-        String dbname = source.getDbname();
-        String params = source.getParams();
-        if (params.length() > 0) {
-            params = "&" + params;
-        }
-        String username = source.getUsername();
-        String password = source.getPassword();
-        String url = String.format("jdbc:%s://%s:%s/%s?user=%s&password=%s%s",driver,netloc,port,dbname,username,password,params);
-        return url;
+//        String driver = source.getType().getCredit();
+//        String netloc = source.getNetloc();
+//        String port = source.getPort();
+//        String dbname = source.getDbname();
+//        String params = source.getParams();
+//        if (params.length() > 0) {
+//            params = "&" + params;
+//        }
+//        String username = source.getUsername();
+//        String password = source.getPassword();
+//        String url = String.format("jdbc:%s://%s:%s/%s?user=%s&password=%s%s",driver,netloc,port,dbname,username,password,params);
+        return null;
     }
 
     public static Map<String,String> getColtypes(ResultSet rs) throws SQLException {
