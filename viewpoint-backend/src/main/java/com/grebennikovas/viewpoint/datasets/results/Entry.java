@@ -1,8 +1,11 @@
 package com.grebennikovas.viewpoint.datasets.results;
 
-public class Entry<T> {
-    T value;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+public class Entry<T> {
+    private T value;
+
+    @JsonValue
     public T getValue() {
         return value;
     }

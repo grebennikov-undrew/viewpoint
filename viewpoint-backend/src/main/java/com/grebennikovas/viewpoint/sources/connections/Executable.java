@@ -12,7 +12,7 @@ public interface Executable {
     void setSource(Source source);
     Source getSource();
     boolean validate();
-    List<Row> execute(String query, Map<String,String> params);
+    Result execute(String query, Map<String,String> params);
     ResultSet getTables();
-    String getUrl(Source source);
+    String getUrl();
 }

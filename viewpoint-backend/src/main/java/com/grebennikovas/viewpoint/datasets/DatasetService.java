@@ -25,12 +25,11 @@ public class DatasetService {
     public Dataset save(Dataset dataset) {
         return datasetRepository.save(dataset);
     }
-    public List<Row> execute(Long id, Map<String,String> params) {
+    public Result execute(Long id, Map<String,String> params) {
         Dataset ds = datasetRepository.getOne(id);
         Source src = ds.getSource();
-        Executable dbInstance = ConnectionFactory.connect(src.getType());
-        dbInstance.setSource(src);
-        List<Row> result = dbInstance.execute(ds.getSqlQuery(),params);
+        Executable dbInstance = ConnectionFactory.connect(src);
+        Result result = dbInstance.execute(ds.getSqlQuery(),params);
         return result;
     }
 }

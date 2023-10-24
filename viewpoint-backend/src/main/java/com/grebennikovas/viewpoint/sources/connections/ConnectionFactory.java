@@ -1,16 +1,24 @@
 package com.grebennikovas.viewpoint.sources.connections;
 
 import com.grebennikovas.viewpoint.sources.DatabaseType;
+import com.grebennikovas.viewpoint.sources.Source;
 
 public class ConnectionFactory {
-    public static Executable connect(DatabaseType type) {
-        switch (type) {
+    public static Executable connect(Source source) {
+        Executable connection;
+        switch (source.getType()) {
             case POSTGRESQL:
-                return new PostgreSQLConnection();
+                connection = new PostgreSQLConnection();
+                connection.setSource(source);
+                break;
             case MYSQL:
-                return new MySQLConnection();
+                connection = new MySQLConnection();
+                connection.setSource(source);
+                break;
             default:
-                throw new IllegalArgumentException("Unsupported database type: " + type);
+                throw new IllegalArgumentException("Unsupported database type: " + source.getType());
+
         }
+        return connection;
     }
 }

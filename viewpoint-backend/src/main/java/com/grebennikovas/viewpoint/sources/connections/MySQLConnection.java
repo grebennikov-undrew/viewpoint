@@ -24,7 +24,7 @@ public class MySQLConnection implements Executable{
     }
 
     @Override
-    public List<Row> execute(String query, Map<String,String> params) {
+    public Result execute(String query, Map<String,String> params) {
         return null;
     }
 
@@ -34,7 +34,7 @@ public class MySQLConnection implements Executable{
     }
 
     @Override
-    public String getUrl(Source source) {
+    public String getUrl() {
         return null;
     }
 }
