@@ -16,6 +16,8 @@ INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'lastname','varchar', current_date, current_date);
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'username','varchar', current_date, current_date);
 
+INSERT INTO parameters (dataset_id, name, type) VALUES (2,'p_name','String');
+
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'id','int', current_date, current_date);
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'created_on','timestamp', current_date, current_date);
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'updated_on','timestamp', current_date, current_date);

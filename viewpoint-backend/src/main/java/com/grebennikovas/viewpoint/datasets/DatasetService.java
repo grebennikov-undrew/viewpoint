@@ -32,12 +32,15 @@ public class DatasetService {
         Dataset ds = datasetRepository.getOne(id);
         Source src = ds.getSource();
         Executable dbInstance = ConnectionFactory.connect(src);
-        String query = prepareQuery(ds.getSqlQuery(), params);
+        String query = prepareQuery(ds, params);
         Result result = dbInstance.execute(query);
         return result;
     }
     // Подстановка параметров в запрос
-    public String prepareQuery(String query, Map<String,String> params) {
+    public String prepareQuery(Dataset ds, Map<String,String> params) {
+        String query = ds.getSqlQuery();
+        List<Parameter> paramsInfo = ds.getParameters();
+
         Pattern pattern = Pattern.compile("(\\{:.*})");
         Matcher matcher = pattern.matcher(query);
 
@@ -48,13 +51,34 @@ public class DatasetService {
             String paramName = parameter.substring(2,parameter.length()-1).trim();
             // Есть ли такой параметр в params?
             if (params.containsKey(paramName)) {
-                String paramValue = " " + params.get(paramName) + " ";
-                matcher.appendReplacement(result, Matcher.quoteReplacement(paramValue));
+                // Поиск прараметра в списке параметров датасета
+                Parameter paramInfo = findParameter(ds,paramName);
+                String paramValue = params.get(paramName);
+                String preparedParamValue = prepareParamValue(paramInfo, paramValue);
+                matcher.appendReplacement(result, Matcher.quoteReplacement(preparedParamValue));
             } else {
                 // не заменять
                 matcher.appendReplacement(result, matcher.group());
             }
         }
         return result.toString();
+    }
+    public Parameter findParameter(Dataset ds, String name){
+        List<Parameter> paramsInfo = ds.getParameters();
+        for (Parameter p : paramsInfo) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+    public String prepareParamValue(Parameter paramInfo, String paramValue){
+        String preparedParamValue;
+        if (paramInfo.getType().equals("String") || paramInfo.getType().equals("Timestamp")) {
+            preparedParamValue = String.format(" '%s' ",paramValue.trim());
+        } else {
+            preparedParamValue = String.format(" %s ",paramValue.trim());
+        }
+        return preparedParamValue;
     }
 }
