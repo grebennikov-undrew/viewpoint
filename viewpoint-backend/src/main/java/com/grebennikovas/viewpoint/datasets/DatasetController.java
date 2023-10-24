@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dataset")
@@ -24,8 +25,8 @@ public class DatasetController {
     public Dataset save(@RequestBody Dataset dataset) {
         return datasetService.save(dataset);
     }
-    @PostMapping("/execute")
-    public Result execute(@RequestBody Long id) {
-        return datasetService.execute(id, null);
+    @PostMapping("/execute/{id}")
+    public Result execute(@PathVariable Long id, @RequestBody Map<String,String> params) {
+        return datasetService.execute(id, params);
     }
 }

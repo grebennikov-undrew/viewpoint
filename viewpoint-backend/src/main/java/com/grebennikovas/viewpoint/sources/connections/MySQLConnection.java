@@ -24,7 +24,7 @@ public class MySQLConnection implements Executable{
     }
 
     @Override
-    public Result execute(String query, Map<String,String> params) {
+    public Result execute(String query) {
         return null;
     }
 

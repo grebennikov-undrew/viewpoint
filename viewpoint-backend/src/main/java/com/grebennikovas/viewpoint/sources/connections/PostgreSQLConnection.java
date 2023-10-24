@@ -35,7 +35,7 @@ public class PostgreSQLConnection implements Executable {
     }
 
     @Override
-    public Result execute(String query, Map<String,String> params) {
+    public Result execute(String query) {
         String url = getUrl();
         try (Connection connection = DriverManager.getConnection(url)) {
             PreparedStatement stmt = connection.prepareStatement(query);
