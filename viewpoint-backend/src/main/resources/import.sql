@@ -6,9 +6,9 @@ INSERT INTO users (username, firstname, lastname, created_on, updated_on) VALUES
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('default', 'POSTGRESQL', 'localhost', '5433', 'viewpoint', '', 'postgres', 'postgres');
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('external', 'MYSQL', '1.1.1.1', '5432', 'public', '', 'admin', '12345');
 
-INSERT INTO datasets (sql_query, user_id, created_on, updated_on, source_id) VALUES ('SELECT * FROM users;', 4, current_date, current_date, 1);
-INSERT INTO datasets (sql_query, user_id, created_on, updated_on, source_id) VALUES ('SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
-INSERT INTO datasets (sql_query, user_id, created_on, updated_on, source_id) VALUES ('SELECT * FROM customers;', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('SELECT * FROM customers;', 4, current_date, current_date, 1);
 
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'id','int', current_date, current_date);
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'created_on','timestamp', current_date, current_date);

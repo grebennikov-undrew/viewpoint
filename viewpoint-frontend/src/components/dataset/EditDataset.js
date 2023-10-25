@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import GeneralTab from './GeneralTab';
@@ -61,9 +63,14 @@ const EditDataset = () => {
     return (
         <Container maxWidth="xl">
             <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
-                <Typography variant="h2" >
+                <Typography variant="h2" m={1}>
                     Edit dataset
                 </Typography>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group" style={{marginLeft: "auto", paddingRight: "200 px"}}>
+                    <Button>Save</Button>
+                    <Button>Save As</Button>
+                    <Button color="error" variant="outlined">Close</Button>
+                </ButtonGroup>
             </div>
             <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
                 <Tab label="General" id={0} aria-controls='tab0'/>
