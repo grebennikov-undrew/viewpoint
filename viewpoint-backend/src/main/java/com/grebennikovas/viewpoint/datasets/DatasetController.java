@@ -13,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dataset")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DatasetController {
     @Autowired
     DatasetService datasetService;
@@ -24,6 +25,10 @@ public class DatasetController {
     @PostMapping("/")
     public Dataset save(@RequestBody Dataset dataset) {
         return datasetService.save(dataset);
+    }
+    @GetMapping("/{id}")
+    public Dataset getOne(@PathVariable Long id) {
+        return datasetService.getOne(id);
     }
     @PostMapping("/execute/{id}")
     public Result execute(@PathVariable Long id, @RequestBody Map<String,String> params) {

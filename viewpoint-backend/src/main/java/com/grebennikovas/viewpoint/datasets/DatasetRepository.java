@@ -9,4 +9,5 @@ public interface DatasetRepository extends JpaRepository<Dataset, Long> {
     List<Dataset> findAll();
     Dataset save(Dataset person);
     Dataset getOne(Long id);
+    Optional<Dataset> findById(Long id);
 }

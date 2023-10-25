@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/connection")
+@RequestMapping("/api/source")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SourceController {
     @Autowired
     SourceService sourceService;

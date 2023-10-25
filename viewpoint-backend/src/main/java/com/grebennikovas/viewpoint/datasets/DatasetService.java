@@ -27,6 +27,9 @@ public class DatasetService {
     public Dataset save(Dataset dataset) {
         return datasetRepository.save(dataset);
     }
+    public Dataset getOne(Long id){
+        return datasetRepository.findById(id).get();
+    }
     // Подставить параметры в запрос и выполнить
     public Result execute(Long id, Map<String,String> params) {
         Dataset ds = datasetRepository.getOne(id);
