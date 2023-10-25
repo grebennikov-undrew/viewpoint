@@ -11,11 +11,35 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import GeneralTab from './GeneralTab';
+import SqlTab from './SqlTab';
+
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
 
 const EditDataset = () => {
     const { id } = useParams(); 
     const [data, setData] = useState();
-    const [sources, setSources] = useState([]);
+    const [tab, setTab] = React.useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,18 +54,9 @@ const EditDataset = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchSources = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/source/`)
-                setSources(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-    
-        fetchSources();
-    }, []);
+    const handleChangeTab = (event, newValue) => {
+        setTab(newValue);
+    };
 
     return (
         <Container maxWidth="xl">
@@ -50,64 +65,20 @@ const EditDataset = () => {
                     Edit dataset
                 </Typography>
             </div>
-            <Grid container spacing={2}>
-                <Grid container spacing={2} xs={5}>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            id="name"
-                            label="Name"
-                            defaultValue="Unnamed"
-                            fullWidth
-                            sx={{m: 1}}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl sx={{m:1}} fullWidth>
-                            <InputLabel id="source-select-label">Source</InputLabel>
-                            <Select
-                                labelId="source-select-label"
-                                id="source"
-                                value={data && data.source.name}
-                                key={data && data.source.id}
-                                label="Source"
-                                required
-                            >
-                                {sources && sources.map((source) => (
-                                    <MenuItem
-                                    key={source.id}
-                                    value={source.name}
-                                    >
-                                    {source.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            id="author"
-                            label="Author"
-                            sx={{ m: 1}}
-                            disabled
-                            fullWidth
-                            defaultValue={" "}
-                            value={data && data.user.username}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            id="updatedOn"
-                            label="Updated"
-                            sx={{ m: 1}}
-                            disabled
-                            fullWidth
-                            defaultValue={" "}
-                            value={data && data.updatedOn}
-                        />
-                    </Grid>
-                </Grid>
-            </Grid>
+            <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
+                <Tab label="General" id={0} aria-controls='tab0'/>
+                <Tab label="SQL" id={1} aria-controls='tab1'/>
+                <Tab label="Result" id={2} aria-controls='tab2'/>
+            </Tabs>
+            <CustomTabPanel value={tab} index={0}>
+                {data && <GeneralTab {...data}/>}
+            </CustomTabPanel>
+            <CustomTabPanel value={tab} index={1}>
+                {data && <SqlTab {...data}/>}
+            </CustomTabPanel>
+            <CustomTabPanel value={tab} index={2}>
+                Item Three
+            </CustomTabPanel>
         </Container>
     )
 }
