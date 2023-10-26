@@ -4,26 +4,39 @@ import com.grebennikovas.viewpoint.BaseEntity;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.users.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 
 @Entity
 @Table(name = "datasets")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "Dataset.default",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "user"),
+                        @NamedAttributeNode(value = "columns"),
+                        @NamedAttributeNode(value = "source"),
+                        @NamedAttributeNode(value = "parameters")
+                }
+        )
+})
 public class Dataset extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String sqlQuery;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Column> columns;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_id", nullable = false)
     private Source source;
-    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Parameter> parameters;
 
     public Long getId() {

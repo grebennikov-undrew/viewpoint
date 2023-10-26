@@ -1,5 +1,6 @@
 package com.grebennikovas.viewpoint.datasets;
 
+import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.users.User;
@@ -19,15 +20,15 @@ public class DatasetController {
     DatasetService datasetService;
 
     @GetMapping("/")
-    public List<Dataset> findAll() {
+    public List<DatasetDTO> findAll() {
         return datasetService.findAll();
     }
     @PostMapping("/")
-    public Dataset save(@RequestBody Dataset dataset) {
-        return datasetService.save(dataset);
+    public DatasetDTO save(@RequestBody DatasetDTO dsDTO) {
+        return datasetService.save(dsDTO);
     }
     @GetMapping("/{id}")
-    public Dataset getOne(@PathVariable Long id) {
+    public DatasetDTO getOne(@PathVariable Long id) {
         return datasetService.getOne(id);
     }
     @PostMapping("/execute/{id}")

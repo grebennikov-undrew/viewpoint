@@ -1,11 +1,19 @@
 package com.grebennikovas.viewpoint.datasets.dto;
 
+import com.grebennikovas.viewpoint.datasets.Parameter;
+
 import java.util.Objects;
 
-public class DatasetParameterDTO {
+public class ParameterDTO {
     private Long id;
     private String name;
     private String type;
+
+    public ParameterDTO(Parameter parameter) {
+        this.id = parameter.getId();
+        this.name = parameter.getName();
+        this.type = parameter.getType();
+    }
 
     public Long getId() {
         return id;
@@ -36,7 +44,7 @@ public class DatasetParameterDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DatasetParameterDTO that = (DatasetParameterDTO) o;
+        ParameterDTO that = (ParameterDTO) o;
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;

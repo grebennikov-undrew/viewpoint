@@ -4,12 +4,12 @@ import com.grebennikovas.viewpoint.datasets.Column;
 
 import java.util.Objects;
 
-public class СolumnDTO {
+public class ColumnDTO {
     private Long id;
     private String name;
     private String type;
 
-    public СolumnDTO(Column column) {
+    public ColumnDTO(Column column) {
         this.id = column.getId();
         this.name = column.getName();
         this.type = column.getType();
@@ -44,7 +44,7 @@ public class СolumnDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        СolumnDTO that = (СolumnDTO) o;
+        ColumnDTO that = (ColumnDTO) o;
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
