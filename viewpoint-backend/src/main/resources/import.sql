@@ -8,7 +8,7 @@ INSERT INTO sources (name, type, netloc, port, dbname, params, username, passwor
 
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, current_date, current_date, 1);
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
-INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('SELECT * FROM customers;', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, current_date, current_date, 1);
 
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'id','int', current_date, current_date);
 INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'created_on','timestamp', current_date, current_date);

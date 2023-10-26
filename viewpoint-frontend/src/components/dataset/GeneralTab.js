@@ -12,7 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 
-const GeneralTab = (data) => {
+const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
     const [sources, setSources] = useState([]);
 
     useEffect(() => {
@@ -36,11 +36,11 @@ const GeneralTab = (data) => {
                         required
                         id="name"
                         label="Name"
-                        // defaultValue="Unnamed"
-                        // value={data && data.name}
-                        defaultValue={"Unnamed" || data.name}
+                        defaultValue="Unnamed"
+                        value={datasetData.name}
                         fullWidth
                         sx={{m: 1}}
+                        onChange={onFieldChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -48,11 +48,12 @@ const GeneralTab = (data) => {
                         <InputLabel id="source-select-label">Source</InputLabel>
                         <Select
                             labelId="source-select-label"
-                            id="source"
-                            value={data && data.source.name}
-                            key={data && data.source.id}
+                            id="source_id"
+                            value={datasetData.source.name}
+                            key={datasetData.source.id}
                             label="Source"
                             required
+                            onChange={onSelectChange}
                         >
                             {sources && sources.map((source) => (
                                 <MenuItem
@@ -67,13 +68,13 @@ const GeneralTab = (data) => {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        id="author"
+                        id="user"
                         label="Author"
                         sx={{ m: 1}}
                         disabled
                         fullWidth
-                        defaultValue={" "}
-                        value={data && data.user.username}
+                        defaultValue="You"
+                        value={datasetData.user.username}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -83,8 +84,7 @@ const GeneralTab = (data) => {
                         sx={{ m: 1}}
                         disabled
                         fullWidth
-                        defaultValue={" "}
-                        value={data && data.updatedOn}
+                        value={datasetData && datasetData.updatedOn}
                     />
                 </Grid>
             </Grid>
