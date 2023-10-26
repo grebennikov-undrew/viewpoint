@@ -1,6 +1,9 @@
 package com.grebennikovas.viewpoint.datasets.dto;
 
 import com.grebennikovas.viewpoint.datasets.Dataset;
+import com.grebennikovas.viewpoint.datasets.column.Column;
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.sources.SourceShortDTO;
 import com.grebennikovas.viewpoint.users.DTO.UserShortDTO;
 
 import java.util.ArrayList;
@@ -11,23 +14,36 @@ import java.util.Objects;
 public class DatasetDTO extends DatasetShortDTO{
     private String sqlQuery;
     private UserShortDTO user;
-    private Long sourceId;
+    private SourceShortDTO source;
     private List<ColumnDTO> columns;
     private List<ParameterDTO> parameters;
     private Date createdOn;
     private Date updatedOn;
 
+    public DatasetDTO() {
+        super();
+    }
+
     public DatasetDTO(Dataset ds) {
         super(ds);
-        List<ColumnDTO> columns = new ArrayList<>();
-        List<ParameterDTO> parameters = new ArrayList<>();
-        ds.getColumns().forEach(c -> columns.add(new ColumnDTO(c)));
-        ds.getParameters().forEach(p -> parameters.add(new ParameterDTO(p)));
         this.sqlQuery = ds.getSqlQuery();
         this.user = new UserShortDTO(ds.getUser().getId(),ds.getUser().getUsername());
-        this.sourceId = ds.getSource().getId();
-        this.columns = columns;
-        this.parameters = parameters;
+        this.source = new SourceShortDTO(ds.getSource());
+        this.createdOn = ds.getCreatedOn();
+        this.updatedOn = ds.getUpdatedOn();
+    }
+
+    public DatasetDTO(Dataset ds, List<Column> columns, List<Parameter> params) {
+        super(ds);
+        List<ColumnDTO> columnsDTO = new ArrayList<>();
+        List<ParameterDTO> parametersDTO = new ArrayList<>();
+        columns.forEach(c -> columnsDTO.add(new ColumnDTO(c)));
+        params.forEach(p -> parametersDTO.add(new ParameterDTO(p)));
+        this.sqlQuery = ds.getSqlQuery();
+        this.user = new UserShortDTO(ds.getUser().getId(),ds.getUser().getUsername());
+        this.source = new SourceShortDTO(ds.getSource());
+        this.columns = columnsDTO;
+        this.parameters = parametersDTO;
         this.createdOn = ds.getCreatedOn();
         this.updatedOn = ds.getUpdatedOn();
     }
@@ -48,12 +64,12 @@ public class DatasetDTO extends DatasetShortDTO{
         this.user = user;
     }
 
-    public Long getSourceId() {
-        return sourceId;
+    public SourceShortDTO getSource() {
+        return source;
     }
 
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
+    public void setSource(SourceShortDTO source) {
+        this.source = source;
     }
 
     public List<ColumnDTO> getColumns() {
@@ -98,7 +114,7 @@ public class DatasetDTO extends DatasetShortDTO{
 
         if (!Objects.equals(sqlQuery, that.sqlQuery)) return false;
         if (!Objects.equals(user, that.user)) return false;
-        if (!Objects.equals(sourceId, that.sourceId)) return false;
+        if (!Objects.equals(source, that.source)) return false;
         if (!Objects.equals(columns, that.columns)) return false;
         if (!Objects.equals(parameters, that.parameters)) return false;
         if (!Objects.equals(createdOn, that.createdOn)) return false;
@@ -110,7 +126,7 @@ public class DatasetDTO extends DatasetShortDTO{
         int result = super.hashCode();
         result = 31 * result + (sqlQuery != null ? sqlQuery.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (sourceId != null ? sourceId.hashCode() : 0);
+        result = 31 * result + (source != null ? source.hashCode() : 0);
         result = 31 * result + (columns != null ? columns.hashCode() : 0);
         result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
         result = 31 * result + (createdOn != null ? createdOn.hashCode() : 0);

@@ -8,6 +8,8 @@ public class DatasetShortDTO {
     private Long id;
     private String name;
 
+    public DatasetShortDTO() { }
+
     public DatasetShortDTO(Dataset ds) {
         this.id = ds.getId();
         this.name = ds.getName();

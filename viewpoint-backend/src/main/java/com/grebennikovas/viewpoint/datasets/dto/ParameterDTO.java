@@ -1,6 +1,6 @@
 package com.grebennikovas.viewpoint.datasets.dto;
 
-import com.grebennikovas.viewpoint.datasets.Parameter;
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 
 import java.util.Objects;
 
@@ -8,6 +8,8 @@ public class ParameterDTO {
     private Long id;
     private String name;
     private String type;
+
+    public ParameterDTO() {    }
 
     public ParameterDTO(Parameter parameter) {
         this.id = parameter.getId();

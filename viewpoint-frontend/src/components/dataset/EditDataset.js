@@ -20,7 +20,6 @@ import SqlTab from './SqlTab';
 
 const EditDataset = () => {
     const { id } = useParams(); 
-    const [data, setData] = useState();
     const [tab, setTab] = React.useState(0);
     const [datasetData, setDatasetData] = useState();
 
@@ -28,7 +27,6 @@ const EditDataset = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/api/dataset/${id}`)
-                setData(response.data)
                 setDatasetData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -40,10 +38,10 @@ const EditDataset = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const {columns, ...submitData} = data;
+        const {...submitData} = datasetData;
         axios.post(`http://localhost:8080/api/dataset/`, submitData)
           .then(response => {
-            setData(response.data);
+            setDatasetData(response.data);
           })
           .catch(error => {
             console.error('Error submitting data:', error);
@@ -90,7 +88,7 @@ const EditDataset = () => {
                 {datasetData && <GeneralTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData}/>}
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={1}>
-                {data && <SqlTab {...data} setData={setData}/>}
+                {datasetData && <SqlTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData}/>}
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={2}>
                 Item Three

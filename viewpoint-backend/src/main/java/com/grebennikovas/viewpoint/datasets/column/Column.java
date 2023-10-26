@@ -1,7 +1,8 @@
-package com.grebennikovas.viewpoint.datasets;
+package com.grebennikovas.viewpoint.datasets.column;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grebennikovas.viewpoint.BaseEntity;
+import com.grebennikovas.viewpoint.datasets.Dataset;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;

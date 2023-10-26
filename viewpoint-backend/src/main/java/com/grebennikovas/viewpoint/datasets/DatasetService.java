@@ -1,6 +1,12 @@
 package com.grebennikovas.viewpoint.datasets;
 
+import com.grebennikovas.viewpoint.datasets.column.Column;
+import com.grebennikovas.viewpoint.datasets.column.ColumnRepository;
+import com.grebennikovas.viewpoint.datasets.dto.ColumnDTO;
 import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
+import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.sources.SourceRepository;
@@ -22,6 +28,10 @@ public class DatasetService {
     @Autowired
     DatasetRepository datasetRepository;
     @Autowired
+    ColumnRepository columnRepository;
+    @Autowired
+    ParameterRepository parameterRepository;
+    @Autowired
     SourceRepository sourceRepository;
     @Autowired
     UserRepository userRepository;
@@ -33,7 +43,9 @@ public class DatasetService {
     }
 
     public DatasetDTO getOne(Long id){
-        DatasetDTO dsDTO = new DatasetDTO(datasetRepository.findById(id).get());
+        List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
+        List<Column> columns = columnRepository.findAllByDataset_id(id);
+        DatasetDTO dsDTO = new DatasetDTO(datasetRepository.findById(id).get(), columns, parameters);
         return dsDTO;
     }
 
@@ -43,7 +55,7 @@ public class DatasetService {
 
     public DatasetDTO save(DatasetDTO dsDTO) {
         Dataset ds = new Dataset();
-        Source s = sourceRepository.findById(dsDTO.getSourceId()).get();
+        Source s = sourceRepository.findById(dsDTO.getSource().getId()).get();
         User u = userRepository.findById(dsDTO.getUser().getId()).get();
         List<Column> columns = new ArrayList<>();
         List<Parameter> parameters = new ArrayList<>();
@@ -54,9 +66,10 @@ public class DatasetService {
         ds.setSqlQuery(dsDTO.getSqlQuery());
         ds.setSource(s);
         ds.setUser(u);
-        ds.setColumns(columns);
-        ds.setParameters(parameters);
-        return new DatasetDTO(datasetRepository.save(ds));
+        DatasetDTO new_dsDTO = new DatasetDTO(datasetRepository.save(ds), columns, parameters);
+        setColumns(columns);
+        setParameters(parameters);
+        return new_dsDTO;
     }
     // Подставить параметры в запрос и выполнить
     public Result execute(Long id, Map<String,String> params) {
@@ -70,7 +83,6 @@ public class DatasetService {
     // Подстановка параметров в запрос
     public String prepareQuery(Dataset ds, Map<String,String> params) {
         String query = ds.getSqlQuery();
-        List<Parameter> paramsInfo = ds.getParameters();
 
         Pattern pattern = Pattern.compile("(\\{:.*})");
         Matcher matcher = pattern.matcher(query);
@@ -95,7 +107,7 @@ public class DatasetService {
         return result.toString();
     }
     public Parameter findParameter(Dataset ds, String name){
-        List<Parameter> paramsInfo = ds.getParameters();
+        List<Parameter> paramsInfo = parameterRepository.findAllByDataset_id(ds.getId());
         for (Parameter p : paramsInfo) {
             if (p.getName().equals(name)) {
                 return p;
@@ -112,6 +124,24 @@ public class DatasetService {
             preparedParamValue = String.format(" %s ",paramValue.trim());
         }
         return preparedParamValue;
+    }
+
+    public List<ColumnDTO> setColumns(List<Column> columns) {
+        List<ColumnDTO> new_columnsDTO = new ArrayList<>();
+        columns.forEach(c -> {
+            Column column = columnRepository.save(c);
+            new_columnsDTO.add(new ColumnDTO(column));
+        });
+        return new_columnsDTO;
+    }
+
+    public List<ParameterDTO> setParameters(List<Parameter> params) {
+        List<ParameterDTO> new_paramsDTO = new ArrayList<>();
+        params.forEach(p -> {
+            Parameter parameter = parameterRepository.save(p);
+            new_paramsDTO.add(new ParameterDTO(parameter));
+        });
+        return new_paramsDTO;
     }
 
 }

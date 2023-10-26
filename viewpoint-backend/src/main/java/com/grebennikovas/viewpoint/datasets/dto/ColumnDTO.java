@@ -1,6 +1,6 @@
 package com.grebennikovas.viewpoint.datasets.dto;
 
-import com.grebennikovas.viewpoint.datasets.Column;
+import com.grebennikovas.viewpoint.datasets.column.Column;
 
 import java.util.Objects;
 
@@ -8,6 +8,8 @@ public class ColumnDTO {
     private Long id;
     private String name;
     private String type;
+
+    public ColumnDTO() {    }
 
     public ColumnDTO(Column column) {
         this.id = column.getId();

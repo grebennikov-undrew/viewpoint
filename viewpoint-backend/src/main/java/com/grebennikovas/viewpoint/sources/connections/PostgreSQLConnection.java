@@ -1,6 +1,5 @@
 package com.grebennikovas.viewpoint.sources.connections;
 
-import com.grebennikovas.viewpoint.datasets.Column;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;

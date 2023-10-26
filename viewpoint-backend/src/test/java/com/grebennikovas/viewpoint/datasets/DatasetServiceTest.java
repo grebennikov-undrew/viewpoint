@@ -1,8 +1,7 @@
 package com.grebennikovas.viewpoint.datasets;
 
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ class DatasetServiceTest {
         parameter.setType("String");
         List<Parameter> parameters= new ArrayList<>();
         parameters.add(parameter);
-        ds.setParameters(parameters);
+        datasetService.setParameters(parameters);
         String actual = datasetService.prepareQuery(ds,params);
         String expected = "SELECT * FROM users WHERE name = 'Andrey' ";
         assertEquals(actual,expected);

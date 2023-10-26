@@ -13,12 +13,12 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 import Parameters from './Parameters';
 
-const SqlTab = (data) => {
+const SqlTab = ({datasetData, onFieldChange, onSelectChange}) => {
     
     return (
         <Grid container spacing={2}>
             <Grid container paddingRight={5} spacing={3} xs={3}>
-               <Parameters {...data}/> 
+               <Parameters {...datasetData}/> 
             </Grid>
             <Grid container xs={9}>
                 <TextField
@@ -28,7 +28,7 @@ const SqlTab = (data) => {
                     rows={20}
                     // defaultValue="SELECT ..."
                     // value={data & data.sqlQuery}
-                    defaultValue={data.sqlQuery || "SELECT ..."}
+                    defaultValue={datasetData.sqlQuery || "SELECT ..."}
                     fullWidth
                 />
             </Grid>
