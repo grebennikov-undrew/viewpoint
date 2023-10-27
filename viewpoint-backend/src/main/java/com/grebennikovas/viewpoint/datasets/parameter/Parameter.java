@@ -22,14 +22,17 @@ public class Parameter {
     private String name;
     private String type;
 
+    private String sqlQuery;
+
     public Parameter() {
     }
 
-    public Parameter(Long id, Dataset dataset, String name, String type) {
+    public Parameter(Long id, Dataset dataset, String name, String type, String sqlQuery) {
         this.id = id;
         this.dataset = dataset;
         this.name = name;
         this.type = type;
+        this.sqlQuery = sqlQuery;
     }
 
     public Long getId() {
@@ -64,6 +67,14 @@ public class Parameter {
         this.name = name;
     }
 
+    public String getSqlQuery() {
+        return sqlQuery;
+    }
+
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +85,7 @@ public class Parameter {
         if (!Objects.equals(id, parameter.id)) return false;
         if (!Objects.equals(dataset, parameter.dataset)) return false;
         if (!Objects.equals(name, parameter.name)) return false;
+        if (!Objects.equals(sqlQuery, parameter.sqlQuery)) return false;
         return Objects.equals(type, parameter.type);
     }
 
@@ -83,6 +95,7 @@ public class Parameter {
         result = 31 * result + (dataset != null ? dataset.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (type != null ? sqlQuery.hashCode() : 0);
         return result;
     }
 }

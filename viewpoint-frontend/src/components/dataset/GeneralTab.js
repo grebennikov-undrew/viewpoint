@@ -29,8 +29,8 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
     }, []);
 
     return (
-        <Grid container spacing={2}>
-            <Grid container spacing={2} xs={5}>
+        <Grid container>
+            <Grid container xs={5}>
                 <Grid item xs={12}>
                     <TextField
                         required
@@ -50,10 +50,10 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                             labelId="source-select-label"
                             id="source_id"
                             value={datasetData.source.name}
-                            key={datasetData.source.id}
+                            // key={datasetData.source.id}
                             label="Source"
                             required
-                            onChange={onSelectChange}
+                            onChange={(e) => onSelectChange(e, "source", {"id": sources.find(s => s.name === e.target.value).id, "name": e.target.value})}
                         >
                             {sources && sources.map((source) => (
                                 <MenuItem

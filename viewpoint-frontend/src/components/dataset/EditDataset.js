@@ -17,6 +17,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import GeneralTab from './GeneralTab';
 import SqlTab from './SqlTab';
+import ResultTab from './ResultTab';
 
 const EditDataset = () => {
     const { id } = useParams(); 
@@ -55,10 +56,10 @@ const EditDataset = () => {
         });
     };
 
-    const handleSelectChange = (e) => {
+    const handleSelectChange = (e, field, value) => {
         setDatasetData({
             ...datasetData,
-            [e.target.id]: e.target.key,
+            [field]: value,
         });
     };
 
@@ -88,10 +89,10 @@ const EditDataset = () => {
                 {datasetData && <GeneralTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData}/>}
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={1}>
-                {datasetData && <SqlTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData}/>}
+                {datasetData && <SqlTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData} setDatasetData={setDatasetData}/>}
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={2}>
-                Item Three
+                {datasetData && <ResultTab datasetData={datasetData}/>}
             </CustomTabPanel>
         </Container>
         </form>

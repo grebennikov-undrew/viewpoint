@@ -8,6 +8,7 @@ public class ParameterDTO {
     private Long id;
     private String name;
     private String type;
+    private String sqlQuery;
 
     public ParameterDTO() {    }
 
@@ -15,6 +16,7 @@ public class ParameterDTO {
         this.id = parameter.getId();
         this.name = parameter.getName();
         this.type = parameter.getType();
+        this.sqlQuery = parameter.getSqlQuery();
     }
 
     public Long getId() {
@@ -41,6 +43,14 @@ public class ParameterDTO {
         this.type = type;
     }
 
+    public String getSqlQuery() {
+        return sqlQuery;
+    }
+
+    public void setSqlQuery(String sqlQuery) {
+        this.sqlQuery = sqlQuery;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,6 +60,7 @@ public class ParameterDTO {
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(sqlQuery, that.sqlQuery)) return false;
         return Objects.equals(type, that.type);
     }
 
@@ -58,6 +69,7 @@ public class ParameterDTO {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (sqlQuery != null ? sqlQuery.hashCode() : 0);
         return result;
     }
 }

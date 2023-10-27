@@ -60,7 +60,7 @@ public class DatasetService {
         List<Column> columns = new ArrayList<>();
         List<Parameter> parameters = new ArrayList<>();
         dsDTO.getColumns().forEach(c -> columns.add(new Column(c.getId(),ds,c.getName(),c.getType())));
-        dsDTO.getParameters().forEach(p -> parameters.add(new Parameter(p.getId(),ds,p.getName(),p.getType())));
+        dsDTO.getParameters().forEach(p -> parameters.add(new Parameter(p.getId(),ds,p.getName(),p.getType(),p.getSqlQuery())));
         ds.setId(dsDTO.getId());
         ds.setName(dsDTO.getName());
         ds.setSqlQuery(dsDTO.getSqlQuery());
@@ -80,6 +80,17 @@ public class DatasetService {
         Result result = dbInstance.execute(query);
         return result;
     }
+    // Выполнение еще не сохраненного запроса
+    public Result execute(String query, Long sourceId, Map<String,String> params) {
+//        Dataset ds = datasetRepository.getOne(id);
+        Dataset ds = new Dataset();
+        Source src = sourceRepository.findById(sourceId).get();
+        Executable dbInstance = ConnectionFactory.connect(src);
+        String preparedQuery = prepareQuery(ds, params);
+        Result result = dbInstance.execute(preparedQuery);
+        return result;
+    }
+
     // Подстановка параметров в запрос
     public String prepareQuery(Dataset ds, Map<String,String> params) {
         String query = ds.getSqlQuery();
