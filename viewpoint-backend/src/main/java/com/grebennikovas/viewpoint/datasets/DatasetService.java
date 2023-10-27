@@ -72,54 +72,44 @@ public class DatasetService {
         return new_dsDTO;
     }
     // Подставить параметры в запрос и выполнить
-    public Result execute(Long id, Map<String,String> params) {
+    public Result execute(Long id, Map<String,String> paramValues) {
         Dataset ds = datasetRepository.getOne(id);
         Source src = ds.getSource();
         Executable dbInstance = ConnectionFactory.connect(src);
-        String query = prepareQuery(ds, params);
-        Result result = dbInstance.execute(query);
-        return result;
+        List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
+        return execute(ds.getSqlQuery(),src.getId(),parameters, paramValues);
     }
     // Выполнение еще не сохраненного запроса
-    public Result execute(String query, Long sourceId, Map<String,String> params) {
-//        Dataset ds = datasetRepository.getOne(id);
-        Dataset ds = new Dataset();
+    public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) {
         Source src = sourceRepository.findById(sourceId).get();
         Executable dbInstance = ConnectionFactory.connect(src);
-        String preparedQuery = prepareQuery(ds, params);
-        Result result = dbInstance.execute(preparedQuery);
-        return result;
+        String preparedQuery = prepareQuery(query, parameters, paramValues);
+        return dbInstance.execute(preparedQuery);
     }
 
     // Подстановка параметров в запрос
-    public String prepareQuery(Dataset ds, Map<String,String> params) {
-        String query = ds.getSqlQuery();
-
+    public String prepareQuery(String sqlQuery, List<Parameter> parameters, Map<String,String> values) {
         Pattern pattern = Pattern.compile("(\\{:.*})");
-        Matcher matcher = pattern.matcher(query);
+        Matcher matcher = pattern.matcher(sqlQuery);
 
-        StringBuffer result = new StringBuffer();
+        String result = sqlQuery;
         // Поочередная замена параметров запроса
         while (matcher.find()) {
             String parameter = matcher.group(1);
             String paramName = parameter.substring(2,parameter.length()-1).trim();
             // Есть ли такой параметр в params?
-            if (params.containsKey(paramName)) {
+            if (values.containsKey(paramName)) {
                 // Поиск прараметра в списке параметров датасета
-                Parameter paramInfo = findParameter(ds,paramName);
-                String paramValue = params.get(paramName);
+                Parameter paramInfo = findParameter(parameters,paramName);
+                String paramValue = values.get(paramName);
                 String preparedParamValue = prepareParamValue(paramInfo, paramValue);
-                matcher.appendReplacement(result, Matcher.quoteReplacement(preparedParamValue));
-            } else {
-                // не заменять
-                matcher.appendReplacement(result, matcher.group());
+                result = matcher.replaceAll(Matcher.quoteReplacement(preparedParamValue));
             }
         }
-        return result.toString();
+        return result;
     }
-    public Parameter findParameter(Dataset ds, String name){
-        List<Parameter> paramsInfo = parameterRepository.findAllByDataset_id(ds.getId());
-        for (Parameter p : paramsInfo) {
+    public Parameter findParameter(List<Parameter> parameters, String name){
+        for (Parameter p : parameters) {
             if (p.getName().equals(name)) {
                 return p;
             }

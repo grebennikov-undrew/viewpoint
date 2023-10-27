@@ -19,8 +19,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-const Filter = ({parameter}) => {
-    const [filterState, setFilterState] = React.useState();
+const Filter = ({parameter, handleFilterChange, filterValue}) => {
+    // const [filterState, setFilterState] = React.useState();
     const [filterOptions, setFilterOptions] = React.useState([]);
 
     useEffect(() => {
@@ -35,10 +35,9 @@ const Filter = ({parameter}) => {
         fetchOptions();
     }, []);
 
-    const handleFilterChange = (e) => {
-        setFilterState(e.target.value);
-
-    }
+    // const handleFilterChange = (e) => {
+    //     setFilterState(e.target.value);
+    // }
 
     return (
         <FormControl fullWidth sx={{m:1}}>
@@ -46,10 +45,12 @@ const Filter = ({parameter}) => {
             <Select
                 labelId={`filter-select-label-${parameter.id}`}
                 id={parameter.name}
-                value={filterState && filterState.value}
+                value={filterValue}
                 label={parameter.name}
                 required
-                onChange={handleFilterChange}
+                onChange={(e) => {
+                    handleFilterChange(e, parameter.name, e.target.value)
+                }}
                 fullWidth
             >
                 {filterOptions.map(option => (
