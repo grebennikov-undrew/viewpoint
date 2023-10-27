@@ -20,6 +20,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboards/>}/>
           <Route path='/dataset' element={<Dataset/>}/>
           <Route path='/dataset/:id' element={<EditDataset/>}/>
+          <Route path='/dataset/new' element={<EditDataset/>}/>
         </Routes>
       </Router>
     </ThemeProvider>

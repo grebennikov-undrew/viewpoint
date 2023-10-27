@@ -119,7 +119,7 @@ const Parameters = ({datasetData, onFieldChange, onSelectChange, setDatasetData}
     
     return (
         <div style={{width: '100%'}}>
-            {parameters.map((parameter) => <Parameter parameter={parameter} handleParamChange={handleParamChange} handleParamDelete={handleParamDelete}/>)}
+            {parameters && parameters.map((parameter) => <Parameter parameter={parameter} handleParamChange={handleParamChange} handleParamDelete={handleParamDelete}/>)}
             <Button startIcon={<AddIcon />} variant="outlined" fullWidth onClick={handleParamAdd}>Add</Button>
         </div>
     )

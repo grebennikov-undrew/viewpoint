@@ -22,19 +22,20 @@ import ResultTab from './ResultTab';
 const EditDataset = () => {
     const { id } = useParams(); 
     const [tab, setTab] = React.useState(0);
-    const [datasetData, setDatasetData] = useState();
+    const [datasetData, setDatasetData] = useState({parameters: [], user: {id: 4, username: "grebennikovas"}});
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/dataset/${id}`)
-                setDatasetData(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+        if (id) {
+            const fetchData = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/dataset/${id}`)
+                    setDatasetData(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
+            fetchData();
         }
-    
-        fetchData();
     }, []);
 
     const handleSubmit = (event) => {
@@ -92,7 +93,7 @@ const EditDataset = () => {
                 {datasetData && <SqlTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData} setDatasetData={setDatasetData}/>}
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={2}>
-                {datasetData && <ResultTab datasetData={datasetData}/>}
+                {datasetData && <ResultTab datasetData={datasetData} handleSelectChange={handleSelectChange}/>}
             </CustomTabPanel>
         </Container>
         </form>

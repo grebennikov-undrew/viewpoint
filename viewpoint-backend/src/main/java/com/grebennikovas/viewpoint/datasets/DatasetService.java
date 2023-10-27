@@ -89,10 +89,9 @@ public class DatasetService {
 
     // Подстановка параметров в запрос
     public String prepareQuery(String sqlQuery, List<Parameter> parameters, Map<String,String> values) {
-        Pattern pattern = Pattern.compile("(\\{:.*})");
-        Matcher matcher = pattern.matcher(sqlQuery);
-
         String result = sqlQuery;
+        Pattern pattern = Pattern.compile("(\\{:\\w+?})");
+        Matcher matcher = pattern.matcher(result);
         // Поочередная замена параметров запроса
         while (matcher.find()) {
             String parameter = matcher.group(1);
@@ -103,7 +102,8 @@ public class DatasetService {
                 Parameter paramInfo = findParameter(parameters,paramName);
                 String paramValue = values.get(paramName);
                 String preparedParamValue = prepareParamValue(paramInfo, paramValue);
-                result = matcher.replaceAll(Matcher.quoteReplacement(preparedParamValue));
+                result = matcher.replaceFirst(Matcher.quoteReplacement(preparedParamValue));
+                matcher = pattern.matcher(result);
             }
         }
         return result;

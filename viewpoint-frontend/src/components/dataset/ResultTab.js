@@ -16,7 +16,7 @@ import Filter from '../dashboard/Filter'
 import { DataGrid } from '@mui/x-data-grid';
 import SendIcon from '@mui/icons-material/Send';
 
-const ResultTab = ({datasetData}) => {
+const ResultTab = ({datasetData, handleSelectChange}) => {
     const [data, setData] = useState();
     const [filters, setFilters] = useState({});
 
@@ -31,6 +31,7 @@ const ResultTab = ({datasetData}) => {
         const fetchData = async () => axios.post(`http://localhost:8080/api/dataset/execute`, queryData)
             .then(response => {
             setData(response.data);
+            handleSelectChange(null, "columns", Object.keys(response.data.coltypes).map(k => {return {"name": k, "type": response.data.coltypes[k] }}));
             })
             .catch(error => {
             console.error('Error submitting data:', error);
@@ -61,7 +62,7 @@ const ResultTab = ({datasetData}) => {
             <Grid container >
                 <Grid container paddingRight={5} xs={3}>
                     <Grid item xs={12}>
-                        {datasetData.parameters.map(parameter => <Filter parameter={parameter} handleFilterChange={handleFilterChange} filterValue={filters[parameter.name]}/>)}
+                        {datasetData.parameters && datasetData.parameters.map(parameter => <Filter parameter={parameter} handleFilterChange={handleFilterChange} filterValue={filters[parameter.name]} sourceId={datasetData.source.id}/>)}
                         <Button startIcon={<SendIcon />} variant="contained" fullWidth onClick={handleExecuteQuery}>Execute query</Button>
                     </Grid>
                 </Grid>

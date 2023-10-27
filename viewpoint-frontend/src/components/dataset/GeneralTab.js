@@ -49,7 +49,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                         <Select
                             labelId="source-select-label"
                             id="source_id"
-                            value={datasetData.source.name}
+                            value={datasetData.source && datasetData.source.name}
                             // key={datasetData.source.id}
                             label="Source"
                             required
@@ -74,7 +74,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                         disabled
                         fullWidth
                         defaultValue="You"
-                        value={datasetData.user.username}
+                        value={datasetData.user && datasetData.user.username}
                     />
                 </Grid>
                 <Grid item xs={6}>

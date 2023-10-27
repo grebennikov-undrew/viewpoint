@@ -2,11 +2,15 @@ package com.grebennikovas.viewpoint.dashboard;
 
 import com.grebennikovas.viewpoint.datasets.Dataset;
 import com.grebennikovas.viewpoint.datasets.DatasetRepository;
+import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
+import com.grebennikovas.viewpoint.datasets.parameter.dto.ParameterTempDTO;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
+import com.grebennikovas.viewpoint.sources.SourceRepository;
+import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
 import com.grebennikovas.viewpoint.sources.connections.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +27,19 @@ public class DashboardService {
     ParameterRepository parameterRepository;
     @Autowired
     DatasetRepository datasetRepository;
+    @Autowired
+    SourceRepository sourceRepository;
 
     public List<String> getFilterValues(Long id) {
         Parameter p = parameterRepository.findById(id).get();
         Dataset ds = p.getDataset();
-        Source src = ds.getSource();
+        return getFilterValues(ds.getSource().getId(), p.getSqlQuery());
+    }
+
+    public List<String> getFilterValues(Long sourceId, String sqlQuery) {
+        Source src = sourceRepository.findById(sourceId).get();
         Executable dbInstance = ConnectionFactory.connect(src);
-        Result result = dbInstance.execute(p.getSqlQuery());
+        Result result = dbInstance.execute(sqlQuery);
         List<String> filterOptions = new ArrayList<>();
         result.getRows().forEach(r -> {
             Optional<Entry> entry = r.getEntries().values().stream().findFirst();

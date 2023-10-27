@@ -1,7 +1,10 @@
 package com.grebennikovas.viewpoint.dashboard;
 
 import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
+import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
+import com.grebennikovas.viewpoint.datasets.parameter.dto.ParameterTempDTO;
 import com.grebennikovas.viewpoint.datasets.results.Result;
+import com.grebennikovas.viewpoint.sources.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,15 @@ public class DashboardController {
     DashboardService dashboardService;
 
     @GetMapping("/parameter/{id}")
-    public List<String> getOne(@PathVariable Long id) {
+    public List<String> getParameterValues(@PathVariable Long id) {
         return dashboardService.getFilterValues(id);
     }
+
+    @PostMapping("/parameter")
+    public List<String> getParameterValues(@RequestBody ParameterTempDTO parameterTempDTO) {
+        Long sourceId = parameterTempDTO.getSourceId();
+        String sqlQuery = parameterTempDTO.getSqlQuery();
+        return dashboardService.getFilterValues(sourceId, sqlQuery);
+    }
+
 }

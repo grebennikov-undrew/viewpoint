@@ -44,12 +44,13 @@ const Dataset = () => {
                 {/* <Button variant="text">Add</Button> */}
                 <IconButton
                 size="large"
-                aria-label="account of current user"
+                aria-label="Add dataset"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 style={customButtonStyle}
+                href='/dataset/new'
                 >
-                <AddCircleIcon />
+                <AddCircleIcon/>
                 </IconButton>
             </div>
             <DataGrid

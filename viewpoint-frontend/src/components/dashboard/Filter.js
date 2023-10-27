@@ -19,14 +19,19 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-const Filter = ({parameter, handleFilterChange, filterValue}) => {
+const Filter = ({parameter, handleFilterChange, filterValue, sourceId}) => {
     // const [filterState, setFilterState] = React.useState();
     const [filterOptions, setFilterOptions] = React.useState([]);
 
     useEffect(() => {
         const fetchOptions = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/dashboard/parameter/${parameter.id}`)
+                const body = {
+                    sourceId: sourceId,
+                    sqlQuery: parameter.sqlQuery,
+                    type: parameter.type,
+                }
+                const response = await axios.post(`http://localhost:8080/api/dashboard/parameter`, body)
                 setFilterOptions(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
