@@ -1,5 +1,7 @@
 package com.grebennikovas.viewpoint.datasets.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grebennikovas.viewpoint.datasets.Dataset;
 import com.grebennikovas.viewpoint.datasets.column.Column;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
@@ -11,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DatasetDTO extends DatasetShortDTO{
     private String sqlQuery;
     private UserShortDTO user;

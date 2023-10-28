@@ -35,50 +35,37 @@ public class DatasetService {
     ParameterRepository parameterRepository;
     @Autowired
     SourceRepository sourceRepository;
-    @Autowired
-    UserRepository userRepository;
 
     public List<DatasetDTO> findAll() {
         List<DatasetDTO> dsDTO = new ArrayList<>();
-        datasetRepository.findAll().forEach(d -> dsDTO.add(new DatasetDTO(d)));
+        List<Dataset> datasets = datasetRepository.findAll();
+        datasets.forEach(d -> dsDTO.add(mapDataset(d)));
         return dsDTO;
     }
 
     public DatasetDTO getOne(Long id){
         List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
         List<Column> columns = columnRepository.findAllByDataset_id(id);
-        DatasetDTO dsDTO = new DatasetDTO(datasetRepository.findById(id).get(), columns, parameters);
+        Dataset ds = datasetRepository.findById(id).get();
+        DatasetDTO dsDTO = mapDataset(ds,columns,parameters);
         return dsDTO;
     }
 
-    public Dataset getOne(DatasetDTO dsDTO){
-        return datasetRepository.findById(dsDTO.getId()).get();
+    public DatasetDTO save(DatasetDTO dsDTO) {
+        // Сохранение объекта Dataset
+        Dataset ds = mapDatasetDTO(dsDTO);
+        Dataset savedDataset = save(ds);
+        // Сохранение всех колонок датасета
+        List<Column> columns = mapColumnsDTO(dsDTO.getColumns(), savedDataset);
+        List<Column> savedColumns = upsertColumns(columns, savedDataset);
+        // Сохранение всех параметров датасета
+        List<Parameter> params = mapParameterDTO(dsDTO.getParameters(), savedDataset);
+        List<Parameter> savedParams = upsertParameters(params, ds);
+        // Преобразование в DTO
+        DatasetDTO savedDatasetDTO = mapDataset(savedDataset, savedColumns, savedParams);
+        return savedDatasetDTO;
     }
 
-    public DatasetDTO save(DatasetDTO dsDTO) {
-        Dataset ds = new Dataset();
-        Source s = sourceRepository.findById(dsDTO.getSource().getId()).get();
-        User u = userRepository.findById(dsDTO.getUser().getId()).get();
-        List<Column> columns = new ArrayList<>();
-        dsDTO.getColumns().forEach(c -> columns.add(new Column(c.getId(),ds,c.getName(),c.getType())));
-        ds.setId(dsDTO.getId());
-        ds.setName(dsDTO.getName());
-        ds.setSqlQuery(dsDTO.getSqlQuery());
-        ds.setSource(s);
-        ds.setUser(u);
-        Dataset new_ds = datasetRepository.save(ds);
-        List<Parameter> parameters = setParameters(dsDTO.getParameters(), ds);
-        DatasetDTO new_dsDTO = new DatasetDTO(new_ds, columns, parameters);
-        setColumns(columns);
-        return new_dsDTO;
-    }
-    // Подставить параметры в запрос и выполнить
-    public Result execute(Long id, Map<String,String> paramValues) {
-        Dataset ds = datasetRepository.getOne(id);
-        Source src = ds.getSource();
-        List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
-        return execute(ds.getSqlQuery(),src.getId(),parameters, paramValues);
-    }
     // Выполнение еще не сохраненного запроса
     public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) {
         Source src = sourceRepository.findById(sourceId).get();
@@ -130,36 +117,102 @@ public class DatasetService {
         return preparedParamValue;
     }
 
-    public List<ColumnDTO> setColumns(List<Column> columns) {
-        List<ColumnDTO> new_columnsDTO = new ArrayList<>();
-        columns.forEach(c -> {
-            Column column = columnRepository.save(c);
-            new_columnsDTO.add(new ColumnDTO(column));
-        });
-        return new_columnsDTO;
+    // Маппинг Dataset DTO->DAO
+    public Dataset mapDatasetDTO(DatasetDTO dsDTO) {
+        Dataset ds = new Dataset();
+        ds.setId(dsDTO.getId());
+        ds.setName(dsDTO.getName());
+        ds.setSqlQuery(dsDTO.getSqlQuery());
+        ds.setSource(new Source(dsDTO.getSource().getId()));
+        ds.setUser(new User(dsDTO.getSource().getId()));
+        return ds;
     }
-    // set or replace parameters by name
-    public List<Parameter> setParameters(List<ParameterDTO> params, Dataset ds) {
-        List<Parameter> oldParameters = parameterRepository.findAllByDataset_id(ds.getId());
-        List<Parameter> newParameters = new ArrayList<>();
-        List<Parameter> deletedParameters = new ArrayList<>();
 
-        for (ParameterDTO newParamDTO: params) {
-            Parameter newParam = new Parameter(newParamDTO.getId(),ds,newParamDTO.getName(),newParamDTO.getType(),newParamDTO.getSqlQuery());
-            // Try to find existing by name
+    // Маппинг Dataset DAO->DTO
+    public DatasetDTO mapDataset(Dataset ds, List<Column> columns, List<Parameter> params) {
+        return new DatasetDTO(ds, columns, params);
+    }
+    public DatasetDTO mapDataset(Dataset ds) {
+        return new DatasetDTO(ds);
+    }
+
+    // Сохранение датасета в таблицу
+    public Dataset save(Dataset ds) {
+        return datasetRepository.save(ds);
+    }
+
+    // Маппинг столбцов датасета DTO->DAO
+    public List<Column> mapColumnsDTO(List<ColumnDTO> columnsDTO, Dataset dataset) {
+        List<Column> columns = new ArrayList<>();
+        columnsDTO.forEach(c -> columns.add(new Column(c.getId(),dataset,c.getName(),c.getType())));
+        return columns;
+    }
+
+    // Маппинг столбцов датасета DAO->DTO
+    public List<ColumnDTO> mapColumns(List<Column> columns) {
+        List<ColumnDTO> columnsDTO = new ArrayList<>();
+        columns.forEach(c -> columnsDTO.add(new ColumnDTO(c)));
+        return columnsDTO;
+    }
+
+    // Сохранение списка колонок в БД и удаление убранных
+    public List<Column> upsertColumns(List<Column> newColumns, Dataset ds) {
+
+        // Поиск старых параметров
+        List<Column> oldColumns = columnRepository.findAllByDataset_id(ds.getId());
+        List<Column> addColumns = new ArrayList<>();
+
+        for (Column newColumn: newColumns) {
+            // Поиск имени в существующих параметрах
+            for (Column oldColumn : oldColumns) {
+                if (oldColumn.getName().equals(newColumn.getName())) {
+                    // Если параметр с таким именем существует
+                    newColumn.setId(oldColumn.getId());
+                    oldColumns.remove(oldColumn);
+                    break;
+                }
+            }
+            addColumns.add(newColumn);
+        }
+        // Удалить параметры, которых нет в новом списке
+        columnRepository.deleteAll(oldColumns);
+        return columnRepository.saveAll(addColumns);
+    }
+
+    // Маппинг параметров датасета DTO->DAO
+    public List<Parameter> mapParameterDTO(List<ParameterDTO> paramsDTO, Dataset dataset) {
+        List<Parameter> params = new ArrayList<>();
+        paramsDTO.forEach(p -> params.add(new Parameter(p.getId(),dataset,p.getName(),p.getType(),p.getSqlQuery())));
+        return params;
+    }
+
+    // Маппинг параметров датасета DAO->DTO
+    public List<ParameterDTO> mapParameters(List<Parameter> params) {
+        List<ParameterDTO> columnsDTO = new ArrayList<>();
+        params.forEach(p -> columnsDTO.add(new ParameterDTO(p)));
+        return columnsDTO;
+    }
+
+    // Сохранение нового списка параметров в БД и удаление не используемых
+    public List<Parameter> upsertParameters(List<Parameter> newParams, Dataset ds) {
+        // Поиск старых параметров
+        List<Parameter> oldParameters = parameterRepository.findAllByDataset_id(ds.getId());
+        List<Parameter> addParameters = new ArrayList<>();
+
+        for (Parameter newParam: newParams) {
+            // Поиск имени в существующих параметрах
             for (Parameter oldParam : oldParameters) {
                 if (oldParam.getName().equals(newParam.getName())) {
-                    // set id if this name exists
+                    // Если параметр с таким именем существует
                     newParam.setId(oldParam.getId());
                     oldParameters.remove(oldParam);
                     break;
                 }
             }
-            newParameters.add(newParam);
+            addParameters.add(newParam);
         }
-        // delete parameters not in new list
+        // Удалить параметры, которых нет в новом списке
         parameterRepository.deleteAll(oldParameters);
-        return parameterRepository.saveAll(newParameters);
+        return parameterRepository.saveAll(addParameters);
     }
-
 }

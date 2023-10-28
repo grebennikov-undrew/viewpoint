@@ -13,6 +13,13 @@ public class User extends BaseEntity {
     private String firstname;
     private String lastname;
 
+    public User() {
+    }
+
+    public User(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

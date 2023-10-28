@@ -27,6 +27,7 @@ public class DatasetController {
         return datasetService.findAll();
     }
 
+    // Сохранить/изменить датасет
     @PostMapping("/")
     public DatasetDTO save(@RequestBody DatasetDTO dsDTO) {
         return datasetService.save(dsDTO);
@@ -36,12 +37,6 @@ public class DatasetController {
     @GetMapping("/{id}")
     public DatasetDTO getOne(@PathVariable Long id) {
         return datasetService.getOne(id);
-    }
-
-    // Сохранить/изменить датасет
-    @PostMapping("/execute/{id}")
-    public Result execute(@PathVariable Long id, @RequestBody Map<String,String> params) {
-        return datasetService.execute(id, params);
     }
 
     // Вернуть таблицу по запросу

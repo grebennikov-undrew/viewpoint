@@ -6,6 +6,7 @@ import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.users.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +38,14 @@ public class Dataset extends BaseEntity {
     private Source source;
 //    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    private List<com.grebennikovas.viewpoint.datasets.parameter.Parameter> parameters;
+
+
+    public Dataset() {
+    }
+
+    public Dataset(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

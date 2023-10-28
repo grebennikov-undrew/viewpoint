@@ -21,6 +21,13 @@ public class Source extends BaseEntity {
     private String username;
     private String password;
 
+    public Source() {
+    }
+
+    public Source(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
