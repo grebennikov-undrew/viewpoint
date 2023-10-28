@@ -1,5 +1,8 @@
 package com.grebennikovas.viewpoint.datasets;
 
+import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
+import com.grebennikovas.viewpoint.datasets.dto.DatasetExecDTO;
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.users.User;
@@ -13,20 +16,36 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dataset")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DatasetController {
     @Autowired
     DatasetService datasetService;
 
+    // Получить все датасеты
     @GetMapping("/")
-    public List<Dataset> findAll() {
+    public List<DatasetDTO> findAll() {
         return datasetService.findAll();
     }
+
+    // Сохранить/изменить датасет
     @PostMapping("/")
-    public Dataset save(@RequestBody Dataset dataset) {
-        return datasetService.save(dataset);
+    public DatasetDTO save(@RequestBody DatasetDTO dsDTO) {
+        return datasetService.save(dsDTO);
     }
-    @PostMapping("/execute/{id}")
-    public Result execute(@PathVariable Long id, @RequestBody Map<String,String> params) {
-        return datasetService.execute(id, params);
+
+    // Получить данные по датасету по id
+    @GetMapping("/{id}")
+    public DatasetDTO getOne(@PathVariable Long id) {
+        return datasetService.getOne(id);
+    }
+
+    // Вернуть таблицу по запросу
+    @PostMapping("/execute")
+    public Result execute(@RequestBody DatasetExecDTO execInfo) {
+        String sqlQuery = execInfo.getSqlQuery();
+        Long sourceId = execInfo.getSourceId();
+        List<Parameter> parameters = execInfo.getParameters();
+        Map<String,String> paramValues = execInfo.getParamValues();
+        return datasetService.execute(sqlQuery,sourceId,parameters,paramValues);
     }
 }

@@ -1,8 +1,7 @@
 package com.grebennikovas.viewpoint.datasets;
 
+import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +15,15 @@ class DatasetServiceTest {
         DatasetService datasetService = new DatasetService();
         Dataset ds = new Dataset();
         String query = "SELECT * FROM users WHERE name ={:p_name}";
-        Map<String,String> params = new HashMap<>();
-        params.put("p_name","'Andrey'");
+        Map<String,String> paramValues = new HashMap<>();
+        paramValues.put("p_name","Andrey");
         ds.setSqlQuery(query);
         Parameter parameter = new Parameter();
         parameter.setName("p_name");
         parameter.setType("String");
         List<Parameter> parameters= new ArrayList<>();
         parameters.add(parameter);
-        ds.setParameters(parameters);
-        String actual = datasetService.prepareQuery(ds,params);
+        String actual = datasetService.prepareQuery(query,parameters,paramValues);
         String expected = "SELECT * FROM users WHERE name = 'Andrey' ";
         assertEquals(actual,expected);
     }
