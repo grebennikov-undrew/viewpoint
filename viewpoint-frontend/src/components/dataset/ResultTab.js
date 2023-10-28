@@ -15,6 +15,7 @@ import Parameters from './Parameters';
 import Filter from '../dashboard/Filter'
 import { DataGrid } from '@mui/x-data-grid';
 import SendIcon from '@mui/icons-material/Send';
+import dayjs from 'dayjs';
 
 const ResultTab = ({datasetData, handleSelectChange}) => {
     const [data, setData] = useState();
@@ -22,11 +23,19 @@ const ResultTab = ({datasetData, handleSelectChange}) => {
 
     const handleExecuteQuery = (event) => {
         event.preventDefault();
+        // Put NULL for all the empty filters
+        const safeFilterValues = {};
+        Object.keys(filters).map(
+            key => {
+                if (filters[key]) safeFilterValues[key] = filters[key];
+                if (dayjs.isDayjs(filters[key]))  safeFilterValues[key] = dayjs(safeFilterValues[key]).format('YYYY-MM-DD');
+            }
+        )
         const queryData = {
             "sqlQuery": datasetData.sqlQuery,
             "sourceId": datasetData.source.id,
             "parameters": datasetData.parameters,
-            "paramValues": filters
+            "paramValues": safeFilterValues
         };
         const fetchData = async () => axios.post(`http://localhost:8080/api/dataset/execute`, queryData)
             .then(response => {
@@ -40,7 +49,7 @@ const ResultTab = ({datasetData, handleSelectChange}) => {
     }
 
     const handleFilterChange = (e, name, value) => {
-        filters[name] = value;
+        filters[name] = value ? value : false;
     }
     
     const getColumn = (column) => {

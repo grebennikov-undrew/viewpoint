@@ -21,22 +21,30 @@ public class DatasetController {
     @Autowired
     DatasetService datasetService;
 
+    // Получить все датасеты
     @GetMapping("/")
     public List<DatasetDTO> findAll() {
         return datasetService.findAll();
     }
+
     @PostMapping("/")
     public DatasetDTO save(@RequestBody DatasetDTO dsDTO) {
         return datasetService.save(dsDTO);
     }
+
+    // Получить данные по датасету по id
     @GetMapping("/{id}")
     public DatasetDTO getOne(@PathVariable Long id) {
         return datasetService.getOne(id);
     }
+
+    // Сохранить/изменить датасет
     @PostMapping("/execute/{id}")
     public Result execute(@PathVariable Long id, @RequestBody Map<String,String> params) {
         return datasetService.execute(id, params);
     }
+
+    // Вернуть таблицу по запросу
     @PostMapping("/execute")
     public Result execute(@RequestBody DatasetExecDTO execInfo) {
         String sqlQuery = execInfo.getSqlQuery();

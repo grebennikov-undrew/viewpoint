@@ -15,13 +15,10 @@ public class Parameter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "dataset_id", nullable = false)
-    @JsonIgnore
     private Dataset dataset;
     private String name;
     private String type;
-
     private String sqlQuery;
 
     public Parameter() {

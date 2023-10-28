@@ -111,7 +111,7 @@ const Parameters = ({datasetData, onFieldChange, onSelectChange, setDatasetData}
     };
 
     const handleParamAdd = (e) => {
-        const newParam = {}
+        const newParam = {name: "new_parameter", type: "String"}
         const oldParameters = [...parameters]
         const newParameters = [...oldParameters, newParam]
         onSelectChange(e,"parameters",newParameters)

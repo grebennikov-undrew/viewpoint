@@ -20,8 +20,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class DatasetService {
@@ -58,24 +60,22 @@ public class DatasetService {
         Source s = sourceRepository.findById(dsDTO.getSource().getId()).get();
         User u = userRepository.findById(dsDTO.getUser().getId()).get();
         List<Column> columns = new ArrayList<>();
-        List<Parameter> parameters = new ArrayList<>();
         dsDTO.getColumns().forEach(c -> columns.add(new Column(c.getId(),ds,c.getName(),c.getType())));
-        dsDTO.getParameters().forEach(p -> parameters.add(new Parameter(p.getId(),ds,p.getName(),p.getType(),p.getSqlQuery())));
         ds.setId(dsDTO.getId());
         ds.setName(dsDTO.getName());
         ds.setSqlQuery(dsDTO.getSqlQuery());
         ds.setSource(s);
         ds.setUser(u);
-        DatasetDTO new_dsDTO = new DatasetDTO(datasetRepository.save(ds), columns, parameters);
+        Dataset new_ds = datasetRepository.save(ds);
+        List<Parameter> parameters = setParameters(dsDTO.getParameters(), ds);
+        DatasetDTO new_dsDTO = new DatasetDTO(new_ds, columns, parameters);
         setColumns(columns);
-        setParameters(parameters);
         return new_dsDTO;
     }
     // Подставить параметры в запрос и выполнить
     public Result execute(Long id, Map<String,String> paramValues) {
         Dataset ds = datasetRepository.getOne(id);
         Source src = ds.getSource();
-        Executable dbInstance = ConnectionFactory.connect(src);
         List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
         return execute(ds.getSqlQuery(),src.getId(),parameters, paramValues);
     }
@@ -90,7 +90,7 @@ public class DatasetService {
     // Подстановка параметров в запрос
     public String prepareQuery(String sqlQuery, List<Parameter> parameters, Map<String,String> values) {
         String result = sqlQuery;
-        Pattern pattern = Pattern.compile("(\\{:\\w+?})");
+        Pattern pattern = Pattern.compile("(\\{:[\\w\\s]+?})", Pattern.UNICODE_CHARACTER_CLASS);
         Matcher matcher = pattern.matcher(result);
         // Поочередная замена параметров запроса
         while (matcher.find()) {
@@ -138,14 +138,28 @@ public class DatasetService {
         });
         return new_columnsDTO;
     }
+    // set or replace parameters by name
+    public List<Parameter> setParameters(List<ParameterDTO> params, Dataset ds) {
+        List<Parameter> oldParameters = parameterRepository.findAllByDataset_id(ds.getId());
+        List<Parameter> newParameters = new ArrayList<>();
+        List<Parameter> deletedParameters = new ArrayList<>();
 
-    public List<ParameterDTO> setParameters(List<Parameter> params) {
-        List<ParameterDTO> new_paramsDTO = new ArrayList<>();
-        params.forEach(p -> {
-            Parameter parameter = parameterRepository.save(p);
-            new_paramsDTO.add(new ParameterDTO(parameter));
-        });
-        return new_paramsDTO;
+        for (ParameterDTO newParamDTO: params) {
+            Parameter newParam = new Parameter(newParamDTO.getId(),ds,newParamDTO.getName(),newParamDTO.getType(),newParamDTO.getSqlQuery());
+            // Try to find existing by name
+            for (Parameter oldParam : oldParameters) {
+                if (oldParam.getName().equals(newParam.getName())) {
+                    // set id if this name exists
+                    newParam.setId(oldParam.getId());
+                    oldParameters.remove(oldParam);
+                    break;
+                }
+            }
+            newParameters.add(newParam);
+        }
+        // delete parameters not in new list
+        parameterRepository.deleteAll(oldParameters);
+        return parameterRepository.saveAll(newParameters);
     }
 
 }
