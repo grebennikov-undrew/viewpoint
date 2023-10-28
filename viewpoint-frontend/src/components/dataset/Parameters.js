@@ -33,7 +33,7 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
             <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id={parameter.id}
+            id={parameter.name}
             style={customAccordionStyle}
             >
                 <Typography>
@@ -41,7 +41,7 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
                 </Typography>
                 <IconButton
                     aria-label="Delete" 
-                    onClick={e => handleParamDelete(e, parameter.id)}
+                    onClick={e => handleParamDelete(e, parameter.name)}
                     style={{padding: 0, marginLeft: "auto"}}
                 >
                     <DeleteIcon/>
@@ -55,7 +55,7 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
                 value={parameter.name}
                 fullWidth
                 sx={{m: 1}}
-                onChange={e => handleParamChange(e, parameter.id, "name", e.target.value)}
+                onChange={e => handleParamChange(e, parameter.name, "name", e.target.value)}
             />
             <FormControl sx={{m:1}} fullWidth>
                 <InputLabel id="source-select-label">Type</InputLabel>
@@ -66,7 +66,7 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
                     key={parameter.type}
                     label="Type"
                     required
-                    onChange={e => handleParamChange(e, parameter.id, "type", e.target.value)}
+                    onChange={e => handleParamChange(e, parameter.name, "type", e.target.value)}
                 >
                     {TYPES.map((type) => (
                         <MenuItem
@@ -86,7 +86,7 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
                     sx={{m:1}}
                     defaultValue="SELECT ..."
                     value={parameter.sqlQuery}
-                    onChange={e => handleParamChange(e, parameter.id, "sqlQuery", e.target.value)}
+                    onChange={e => handleParamChange(e, parameter.name, "sqlQuery", e.target.value)}
                     fullWidth
                 />
             }
@@ -98,15 +98,15 @@ const Parameter = ({parameter, handleParamChange, handleParamDelete}) => {
 const Parameters = ({datasetData, onFieldChange, onSelectChange, setDatasetData}) => {
     const parameters = datasetData.parameters;
 
-    const handleParamChange = (e, id, key, value) => {
+    const handleParamChange = (e, name, key, value) => {
         const oldParameters = [...parameters]
-        const newParameters = oldParameters.map(p => p.id === id ? { ...p, [key]: value} : p)
+        const newParameters = oldParameters.map(p => p.name === name ? { ...p, [key]: value} : p)
         onSelectChange(e,"parameters",newParameters)
     };
 
-    const handleParamDelete = (e, id) => {
+    const handleParamDelete = (e, name) => {
         const oldParameters = [...parameters]
-        const newParameters = oldParameters.filter(p => p.id !== id)
+        const newParameters = oldParameters.filter(p => p.name !== name)
         onSelectChange(e,"parameters",newParameters)
     };
 

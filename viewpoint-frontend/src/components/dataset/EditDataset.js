@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -22,7 +22,15 @@ import ResultTab from './ResultTab';
 const EditDataset = () => {
     const { id } = useParams(); 
     const [tab, setTab] = React.useState(0);
-    const [datasetData, setDatasetData] = useState({parameters: [], user: {id: 4, username: "grebennikovas"}});
+    const [datasetData, setDatasetData] = useState({});
+    const navigate = useNavigate();
+
+    const defaultValues = {
+        parameters: [],
+        user: {id: 4, username: "grebennikovas"},
+        name: "New dataset",
+        source: {}
+    }
 
     useEffect(() => {
         if (id) {
@@ -35,6 +43,9 @@ const EditDataset = () => {
                 }
             }
             fetchData();
+        }
+        else {
+            setDatasetData(defaultValues);
         }
     }, []);
 
@@ -68,6 +79,26 @@ const EditDataset = () => {
         setTab(newValue);
     };
 
+    const handleCloseClick = () => {
+        navigate(`/dataset/`);
+    };
+
+    const handleSaveAsClick = (e) => {
+        if (validateData) {
+            setDatasetData({
+                ...datasetData,
+                [id]: null,
+            });
+            handleSubmit(e);
+        }
+    };
+
+    const validateData = () => {
+        if (datasetData.name && datasetData.source && datasetData.sqlQuery)
+        return true;
+    }
+
+    if (!datasetData) return;
     return (
         <form onSubmit={handleSubmit}>
         <Container maxWidth="xl">
@@ -77,8 +108,8 @@ const EditDataset = () => {
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" style={{marginLeft: "auto", paddingRight: "200 px"}}>
                     <Button type='submit'>Save</Button>
-                    <Button>Save As</Button>
-                    <Button color="error" variant="outlined">Close</Button>
+                    <Button onClick={handleSaveAsClick}>Save As</Button>
+                    <Button color="error" variant="outlined" onClick={handleCloseClick}>Close</Button>
                 </ButtonGroup>
             </div>
             <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">

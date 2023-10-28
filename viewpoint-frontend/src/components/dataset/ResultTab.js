@@ -63,7 +63,7 @@ const ResultTab = ({datasetData, handleSelectChange}) => {
                 <Grid container paddingRight={5} xs={3}>
                     <Grid item xs={12}>
                         {datasetData.parameters && datasetData.parameters.map(parameter => <Filter parameter={parameter} handleFilterChange={handleFilterChange} filterValue={filters[parameter.name]} sourceId={datasetData.source.id}/>)}
-                        <Button startIcon={<SendIcon />} variant="contained" fullWidth onClick={handleExecuteQuery}>Execute query</Button>
+                        <Button startIcon={<SendIcon />} variant="contained" fullWidth onClick={handleExecuteQuery} sx={{m:1}}>Execute query</Button>
                     </Grid>
                 </Grid>
                 <Grid container xs={9}>

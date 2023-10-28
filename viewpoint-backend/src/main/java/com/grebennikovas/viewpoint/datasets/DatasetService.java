@@ -104,6 +104,9 @@ public class DatasetService {
                 String preparedParamValue = prepareParamValue(paramInfo, paramValue);
                 result = matcher.replaceFirst(Matcher.quoteReplacement(preparedParamValue));
                 matcher = pattern.matcher(result);
+            } else {
+                result = matcher.replaceFirst(Matcher.quoteReplacement(" NULL "));
+                matcher = pattern.matcher(result);
             }
         }
         return result;

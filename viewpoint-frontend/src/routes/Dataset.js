@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
@@ -14,6 +15,7 @@ const customButtonStyle = {
 
 const Dataset = () => {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,6 +29,14 @@ const Dataset = () => {
     
         fetchData();
     }, []);
+
+    const handleRowClick = (
+        params, // GridRowParams
+        event, // MuiEvent<React.MouseEvent<HTMLElement>>
+        details, // GridCallbackDetails
+    ) => {
+        navigate(`/dataset/${params.row.id}`)
+    };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -63,7 +73,7 @@ const Dataset = () => {
                 }}
                 pageSizeOptions={[10, 20, 50]}
                 // checkboxSelection
-                
+                onRowClick={handleRowClick}
                 disableColumnMenu={true}
             />
         </Container>

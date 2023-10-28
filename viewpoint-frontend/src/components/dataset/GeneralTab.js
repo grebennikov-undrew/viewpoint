@@ -13,7 +13,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 
 const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
-    const [sources, setSources] = useState([]);
+    const [sources, setSources] = useState();
 
     useEffect(() => {
         const fetchSources = async () => {
@@ -24,10 +24,10 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                 console.error('Error fetching data:', error);
             }
         }
-    
         fetchSources();
     }, []);
-
+    
+    if (!datasetData.source) return;
     return (
         <Grid container>
             <Grid container xs={5}>
@@ -50,7 +50,6 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                             labelId="source-select-label"
                             id="source_id"
                             value={datasetData.source && datasetData.source.name}
-                            // key={datasetData.source.id}
                             label="Source"
                             required
                             onChange={(e) => onSelectChange(e, "source", {"id": sources.find(s => s.name === e.target.value).id, "name": e.target.value})}
@@ -84,7 +83,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
                         sx={{ m: 1}}
                         disabled
                         fullWidth
-                        value={datasetData && datasetData.updatedOn}
+                        value={datasetData.updatedOn}
                     />
                 </Grid>
             </Grid>
