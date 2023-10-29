@@ -8,9 +8,12 @@ import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.users.User;
 import com.grebennikovas.viewpoint.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -41,11 +44,19 @@ public class DatasetController {
 
     // Вернуть таблицу по запросу
     @PostMapping("/execute")
-    public Result execute(@RequestBody DatasetExecDTO execInfo) {
+    public ResponseEntity<?> execute(@RequestBody DatasetExecDTO execInfo) {
         String sqlQuery = execInfo.getSqlQuery();
         Long sourceId = execInfo.getSourceId();
         List<Parameter> parameters = execInfo.getParameters();
         Map<String,String> paramValues = execInfo.getParamValues();
-        return datasetService.execute(sqlQuery,sourceId,parameters,paramValues);
+        try {
+            Result execResult = datasetService.execute(sqlQuery,sourceId,parameters,paramValues);
+            return ResponseEntity.status(HttpStatus.OK).
+                    body(execResult);
+        }
+        catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    body(e.getMessage());
+        }
     }
 }

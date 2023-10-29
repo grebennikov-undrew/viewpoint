@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DatasetDTO extends DatasetShortDTO{
+public class DatasetDTO{
+    private Long id;
+    private String name;
     private String sqlQuery;
     private UserShortDTO user;
     private SourceShortDTO source;
@@ -24,11 +26,12 @@ public class DatasetDTO extends DatasetShortDTO{
     private Date updatedOn;
 
     public DatasetDTO() {
-        super();
+
     }
 
     public DatasetDTO(Dataset ds) {
-        super(ds);
+        this.id = ds.getId();
+        this.name = ds.getName();
         this.sqlQuery = ds.getSqlQuery();
         this.user = new UserShortDTO(ds.getUser().getId(),ds.getUser().getUsername());
         this.source = new SourceShortDTO(ds.getSource());
@@ -37,11 +40,12 @@ public class DatasetDTO extends DatasetShortDTO{
     }
 
     public DatasetDTO(Dataset ds, List<Column> columns, List<Parameter> params) {
-        super(ds);
         List<ColumnDTO> columnsDTO = new ArrayList<>();
         List<ParameterDTO> parametersDTO = new ArrayList<>();
         columns.forEach(c -> columnsDTO.add(new ColumnDTO(c)));
         params.forEach(p -> parametersDTO.add(new ParameterDTO(p)));
+        this.id = ds.getId();
+        this.name = ds.getName();
         this.sqlQuery = ds.getSqlQuery();
         this.user = new UserShortDTO(ds.getUser().getId(),ds.getUser().getUsername());
         this.source = new SourceShortDTO(ds.getSource());
@@ -49,6 +53,22 @@ public class DatasetDTO extends DatasetShortDTO{
         this.parameters = parametersDTO;
         this.createdOn = ds.getCreatedOn();
         this.updatedOn = ds.getUpdatedOn();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSqlQuery() {
@@ -111,10 +131,11 @@ public class DatasetDTO extends DatasetShortDTO{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         DatasetDTO that = (DatasetDTO) o;
 
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
         if (!Objects.equals(sqlQuery, that.sqlQuery)) return false;
         if (!Objects.equals(user, that.user)) return false;
         if (!Objects.equals(source, that.source)) return false;
@@ -126,7 +147,8 @@ public class DatasetDTO extends DatasetShortDTO{
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (sqlQuery != null ? sqlQuery.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (source != null ? source.hashCode() : 0);
@@ -136,5 +158,4 @@ public class DatasetDTO extends DatasetShortDTO{
         result = 31 * result + (updatedOn != null ? updatedOn.hashCode() : 0);
         return result;
     }
-
 }

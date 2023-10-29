@@ -17,6 +17,7 @@ import com.grebennikovas.viewpoint.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class DatasetService {
     }
 
     // Выполнение еще не сохраненного запроса
-    public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) {
+    public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) throws SQLException {
         Source src = sourceRepository.findById(sourceId).get();
         Executable dbInstance = ConnectionFactory.connect(src);
         String preparedQuery = prepareQuery(query, parameters, paramValues);

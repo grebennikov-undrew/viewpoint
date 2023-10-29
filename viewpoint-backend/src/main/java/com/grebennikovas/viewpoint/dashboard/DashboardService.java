@@ -5,7 +5,6 @@ import com.grebennikovas.viewpoint.datasets.DatasetRepository;
 import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
-import com.grebennikovas.viewpoint.datasets.parameter.dto.ParameterTempDTO;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
@@ -16,6 +15,7 @@ import com.grebennikovas.viewpoint.sources.connections.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +30,13 @@ public class DashboardService {
     @Autowired
     SourceRepository sourceRepository;
 
-    public List<String> getFilterValues(Long id) {
+    public List<String> getFilterValues(Long id) throws SQLException {
         Parameter p = parameterRepository.findById(id).get();
         Dataset ds = p.getDataset();
         return getFilterValues(ds.getSource().getId(), p.getSqlQuery());
     }
 
-    public List<String> getFilterValues(Long sourceId, String sqlQuery) {
+    public List<String> getFilterValues(Long sourceId, String sqlQuery) throws SQLException {
         Source src = sourceRepository.findById(sourceId).get();
         Executable dbInstance = ConnectionFactory.connect(src);
         Result result = dbInstance.execute(sqlQuery);

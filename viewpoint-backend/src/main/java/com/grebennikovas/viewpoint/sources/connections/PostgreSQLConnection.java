@@ -34,7 +34,7 @@ public class PostgreSQLConnection implements Executable {
     }
 
     @Override
-    public Result execute(String query) {
+    public Result execute(String query) throws SQLException {
         String url = getUrl();
         try (Connection connection = DriverManager.getConnection(url)) {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -84,7 +84,7 @@ public class PostgreSQLConnection implements Executable {
             return result;
         } catch (SQLException e) {
             e.printStackTrace(); // Обработка ошибки подключения
-            return null;
+            throw e;
         }
     }
 
