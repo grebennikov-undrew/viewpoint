@@ -19,9 +19,5 @@ public class SourceService {
     public Source check_and_save(Source source){
         return sourceRepository.save(source);
     }
-    public Result execute(Long sourceId, String query) {
-        Source src = sourceRepository.findById(sourceId).get();
-        Executable dbInstance = ConnectionFactory.connect(src);
-        return dbInstance.execute(query);
-    }
+
 }

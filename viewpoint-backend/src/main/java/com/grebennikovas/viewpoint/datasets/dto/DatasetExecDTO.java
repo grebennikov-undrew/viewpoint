@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-//String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues
 public class DatasetExecDTO {
     private String sqlQuery;
     private Long sourceId;
