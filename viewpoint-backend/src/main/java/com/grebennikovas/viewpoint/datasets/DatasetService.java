@@ -13,7 +13,6 @@ import com.grebennikovas.viewpoint.sources.SourceRepository;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
 import com.grebennikovas.viewpoint.sources.connections.Executable;
 import com.grebennikovas.viewpoint.users.User;
-import com.grebennikovas.viewpoint.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
