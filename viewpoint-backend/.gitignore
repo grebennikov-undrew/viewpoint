@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### KEYS ###
+src/main/resources/viewpoint.key
+src/main/resources/viewpoint.pub
+
 ### STS ###
 .apt_generated
 .classpath
