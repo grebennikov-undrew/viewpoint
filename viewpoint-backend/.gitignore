@@ -5,8 +5,8 @@ target/
 !**/src/test/**/target/
 
 ### KEYS ###
-src/main/resources/viewpoint.key
-src/main/resources/viewpoint.pub
+src/main/resources/keys/*
+#src/main/resources/public_key.pem
 
 ### STS ###
 .apt_generated

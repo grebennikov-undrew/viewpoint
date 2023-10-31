@@ -1,4 +1,4 @@
-package com.grebennikovas.viewpoint.security;
+package com.grebennikovas.viewpoint.users;
 
 public enum Role {
     ADMIN ("admin"),

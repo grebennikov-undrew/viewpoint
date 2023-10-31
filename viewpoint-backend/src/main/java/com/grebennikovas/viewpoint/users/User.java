@@ -2,8 +2,6 @@ package com.grebennikovas.viewpoint.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grebennikovas.viewpoint.BaseEntity;
-import com.grebennikovas.viewpoint.security.Role;
-import com.grebennikovas.viewpoint.sources.DatabaseType;
 import jakarta.persistence.*;
 
 import java.util.Objects;
