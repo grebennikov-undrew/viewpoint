@@ -1,4 +1,6 @@
 import * as React from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +14,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 
 const pages = [
     {label: 'Dashboards', link: '/dashboard'},
@@ -45,6 +48,20 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleClickUserMenu = (e) => {
+    e.preventDefault();
+    if (e.target.innerText === "Logout") {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/logout`)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -143,10 +160,12 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page.label}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
                 style={customButtonStyle}
-                href={page.link}
+                component={Link}
+                to={page.link}
+                // href={page.link}
               >
                 {page.label}
               </Button>
@@ -177,7 +196,7 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleClickUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

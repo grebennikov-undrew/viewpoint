@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
@@ -14,13 +14,15 @@ const customButtonStyle = {
 };
 
 const Dataset = () => {
+    // const [context, setContext] = useContext(AuthContext);
     const [data, setData] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/dataset/')
+                console.log(axios.interceptors);
+                const response = await axios.get('http://localhost:8080/api/dataset/', {withCredentials: true});
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
