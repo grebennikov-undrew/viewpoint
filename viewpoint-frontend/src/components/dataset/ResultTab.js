@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -16,6 +15,7 @@ import Filter from '../dashboard/Filter'
 import { DataGrid } from '@mui/x-data-grid';
 import SendIcon from '@mui/icons-material/Send';
 import dayjs from 'dayjs';
+import { httpRequest } from '../../service/httpRequest';
 
 const ResultTab = ({datasetData, handleSelectChange}) => {
     const [data, setData] = useState();
@@ -37,7 +37,7 @@ const ResultTab = ({datasetData, handleSelectChange}) => {
             "parameters": datasetData.parameters,
             "paramValues": safeFilterValues
         };
-        const fetchData = async () => axios.post(`http://localhost:8080/api/dataset/execute`, queryData)
+        const fetchData = async () => httpRequest.post(`/dataset/execute`, queryData)
             .then(response => {
             setData(response.data);
             handleSelectChange(null, "columns", Object.keys(response.data.coltypes).map(k => {return {"name": k, "type": response.data.coltypes[k] }}));

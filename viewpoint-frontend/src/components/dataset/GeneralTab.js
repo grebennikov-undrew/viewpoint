@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -11,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
+import { httpRequest } from '../../service/httpRequest';
 
 const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
     const [sources, setSources] = useState();
@@ -18,7 +18,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange}) => {
     useEffect(() => {
         const fetchSources = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/source/`)
+                const response = await httpRequest.get(`/source/`)
                 setSources(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

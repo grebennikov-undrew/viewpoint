@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +13,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
+import { httpRequest } from '../service/httpRequest';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const pages = [
     {label: 'Dashboards', link: '/dashboard'},
@@ -45,6 +49,21 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleClickUserMenu = (e) => {
+    e.preventDefault();
+    if (e.target.innerText === "Logout") {
+        const fetchData = async () => {
+            try {
+                const response = await httpRequest.post(`/auth/logout`)
+                window.location.replace("/login")
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -143,10 +162,12 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page.label}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
                 style={customButtonStyle}
-                href={page.link}
+                component={Link}
+                to={page.link}
+                // href={page.link}
               >
                 {page.label}
               </Button>
@@ -156,8 +177,8 @@ function Navbar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} color='inherit'>
+                <MoreVertIcon/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -177,7 +198,7 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleClickUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
