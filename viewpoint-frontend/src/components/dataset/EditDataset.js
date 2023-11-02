@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -18,6 +17,7 @@ import Tab from '@mui/material/Tab';
 import GeneralTab from './GeneralTab';
 import SqlTab from './SqlTab';
 import ResultTab from './ResultTab';
+import { httpRequest } from '../../service/httpRequest';
 
 const EditDataset = () => {
     const { id } = useParams(); 
@@ -36,7 +36,7 @@ const EditDataset = () => {
         if (id) {
             const fetchData = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/dataset/${id}`)
+                    const response = await httpRequest.get(`/dataset/${id}`)
                     setDatasetData(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -52,7 +52,7 @@ const EditDataset = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const {...submitData} = datasetData;
-        axios.post(`http://localhost:8080/api/dataset/`, submitData)
+        httpRequest.post(`/dataset/`, submitData)
           .then(response => {
             setDatasetData(response.data);
           })

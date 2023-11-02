@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -18,6 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { httpRequest } from '../../service/httpRequest';
 
 const customAccordionStyle = {
     height: '50 px',
