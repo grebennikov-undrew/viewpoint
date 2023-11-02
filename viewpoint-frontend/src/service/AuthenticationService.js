@@ -1,6 +1,4 @@
 import axios from 'axios'
-import httpRequest from './httpRequest';
-import AuthContext from './AuthContext';
 
 const API_URL = 'http://localhost:8080/api'
 

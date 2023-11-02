@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { TextField, Button, Grid, Typography, Container } from '@mui/material';
 import axios from 'axios';
+import AuthenticationService from "../service/AuthenticationService"
 
 const API_URL = 'http://localhost:8080'
 
@@ -22,7 +23,8 @@ const LoginForm = () => {
     e.preventDefault();
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/auth/basic_auth`)
+            const response = await //axios.get(`http://localhost:8080/api/auth/basic_auth`)
+            AuthenticationService.executeBasicAuthenticationService(formData.username, formData.password)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
