@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Checkbox, Container, FormControlLabel } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -19,6 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DatePicker from '../basic/DatePicker'
+import { httpRequest } from '../../service/httpRequest';
 
 const Filter = ({parameter, handleFilterChange, filterValue, sourceId}) => {
     // const [filterState, setFilterState] = React.useState();
@@ -33,7 +33,7 @@ const Filter = ({parameter, handleFilterChange, filterValue, sourceId}) => {
                         sqlQuery: parameter.sqlQuery,
                         type: parameter.type,
                     }
-                    const response = await axios.post(`http://localhost:8080/api/dashboard/parameter`, body)
+                    const response = await httpRequest.post(`/dashboard/parameter`, body)
                     setFilterOptions(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);

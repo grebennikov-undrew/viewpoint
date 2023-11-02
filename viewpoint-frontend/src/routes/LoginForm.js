@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { TextField, Button, Grid, Typography, Container } from '@mui/material';
-import axios from 'axios';
 import AuthenticationService from "../service/AuthenticationService"
+import { margin } from '@mui/system';
 
 const API_URL = 'http://localhost:8080'
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -23,8 +25,8 @@ const LoginForm = () => {
     e.preventDefault();
     const fetchData = async () => {
         try {
-            const response = await //axios.get(`http://localhost:8080/api/auth/basic_auth`)
-            AuthenticationService.executeBasicAuthenticationService(formData.username, formData.password)
+            const response = await AuthenticationService.executeBasicAuthenticationService(formData.username, formData.password);
+            if (response.status === 200) navigate('/dataset');
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -35,17 +37,17 @@ const LoginForm = () => {
   return (
     <Container maxWidth="sm">
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{marginTop: 10}}>
           <Grid item xs={12}>
-            <Typography variant="h4" align="center">
-              Авторизация
+            <Typography variant="h2" align="center">
+              Sign in
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
               variant="outlined"
-              label="Имя пользователя"
+              label="Username"
               name="username"
               value={formData.username}
               onChange={handleInputChange}
@@ -56,7 +58,7 @@ const LoginForm = () => {
               fullWidth
               variant="outlined"
               type="password"
-              label="Пароль"
+              label="Password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
@@ -69,7 +71,7 @@ const LoginForm = () => {
               color="primary"
               type="submit"
             >
-              Войти
+              Sign in
             </Button>
           </Grid>
         </Grid>

@@ -1,7 +1,4 @@
-// import axios from 'axios'
 import { httpRequest } from "./httpRequest";
-
-const API_URL = 'http://localhost:8080/api'
 
 export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'username'
 export let globalToken;
@@ -9,14 +6,14 @@ export let globalToken;
 class AuthenticationService {
 
     executeBasicAuthenticationService(username, password) {
-        return httpRequest.get(`${API_URL}/auth/basic_auth`,
+        return httpRequest.get(`/auth/basic_auth`,
             { headers: { authorization: this.createBasicAuthToken(username, password) }})
             // { headers: { authorization: this.createBasicAuthToken(username, password) }})
     }
 
     executeJwtAuthenticationService(username, password) {
         console.log(username);
-        return httpRequest.post(`${API_URL}/authenticate`, {
+        return httpRequest.post(`/authenticate`, {
             username,
             password
         })

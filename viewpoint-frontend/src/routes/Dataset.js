@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -22,7 +21,7 @@ const Dataset = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await httpRequest.get('http://localhost:8080/api/dataset/', {withCredentials: true});
+                const response = await httpRequest.get('/dataset/', {withCredentials: true});
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
