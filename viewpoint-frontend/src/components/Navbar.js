@@ -1,5 +1,5 @@
 import * as React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,6 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
+import { httpRequest } from '../service/httpRequest';
 
 const pages = [
     {label: 'Dashboards', link: '/dashboard'},
@@ -54,7 +55,8 @@ function Navbar() {
     if (e.target.innerText === "Logout") {
         const fetchData = async () => {
             try {
-                const response = await axios.post(`http://localhost:8080/api/auth/logout`,{},{withCredentials: true})
+                const response = await httpRequest.post(`http://localhost:8080/api/auth/logout`)
+                window.location.replace("/login")
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

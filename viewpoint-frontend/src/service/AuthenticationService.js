@@ -1,4 +1,5 @@
-import axios from 'axios'
+// import axios from 'axios'
+import { httpRequest } from "./httpRequest";
 
 const API_URL = 'http://localhost:8080/api'
 
@@ -8,14 +9,14 @@ export let globalToken;
 class AuthenticationService {
 
     executeBasicAuthenticationService(username, password) {
-        return axios.get(`${API_URL}/auth/basic_auth`,
-            { headers: { authorization: this.createBasicAuthToken(username, password) }, withCredentials: true})
+        return httpRequest.get(`${API_URL}/auth/basic_auth`,
+            { headers: { authorization: this.createBasicAuthToken(username, password) }})
             // { headers: { authorization: this.createBasicAuthToken(username, password) }})
     }
 
     executeJwtAuthenticationService(username, password) {
         console.log(username);
-        return axios.post(`${API_URL}/authenticate`, {
+        return httpRequest.post(`${API_URL}/authenticate`, {
             username,
             password
         })

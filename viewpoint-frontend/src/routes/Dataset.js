@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+// import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { httpRequest } from '../service/httpRequest';
 
 const customButtonStyle = {
     margin: 'auto 0', // Задаем отступы
@@ -21,8 +22,7 @@ const Dataset = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(axios.interceptors);
-                const response = await axios.get('http://localhost:8080/api/dataset/', {withCredentials: true});
+                const response = await httpRequest.get('http://localhost:8080/api/dataset/', {withCredentials: true});
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
