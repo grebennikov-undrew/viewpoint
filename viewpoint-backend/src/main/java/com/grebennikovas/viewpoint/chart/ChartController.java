@@ -19,7 +19,7 @@ public class ChartController {
     ChartRepository chartRepository;
 
     @Autowired
-    ChartFactory chartFactory;
+    private ChartFactory chartFactory;
 
     // Получить все диаграммы
     @GetMapping("/")
