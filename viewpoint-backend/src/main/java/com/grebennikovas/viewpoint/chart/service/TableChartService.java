@@ -6,11 +6,10 @@ import com.grebennikovas.viewpoint.chart.ChartSettings;
 import com.grebennikovas.viewpoint.chart.ChartType;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
-import com.grebennikovas.viewpoint.sources.connections.Executable;
+import com.grebennikovas.viewpoint.sources.connections.DbConnection;
 import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ public class TableChartService implements ChartService {
 
     @Override
     public Result getData(Chart chart) {
-        Executable dbInstance = ConnectionFactory.connect(chart.getDataset().getSource());
+//        DbConnection dbInstance = ConnectionFactory.connect(chart.getDataset().getSource());
 //        String preparedQuery = prepareQuery(query, parameters, paramValues);
 //        return dbInstance.execute(preparedQuery);
         return null;
@@ -52,8 +51,7 @@ public class TableChartService implements ChartService {
         // Настройки диаграммы
         ChartSettings settings = chart.getChartSettings();
 
-        // Очистка запроса от ;
-        String sqlQuery = chart.getDataset().getSqlQuery().replace(";","");
+        String sqlQuery = chart.getDataset().getSqlQuery();
 
         // Преобразования к строке
         String xColumns = SqlUtils.convertToString(settings.getxColumns());

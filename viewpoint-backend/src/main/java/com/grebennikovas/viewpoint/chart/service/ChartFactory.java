@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 @Component
 public class ChartFactory {
 
-    @Autowired
     private List<ChartService> chartServices;
 
     public static Map<String, ChartService> chartServicesCache = new HashMap<>();

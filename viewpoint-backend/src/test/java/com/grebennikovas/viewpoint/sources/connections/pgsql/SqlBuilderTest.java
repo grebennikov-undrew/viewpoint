@@ -1,13 +1,14 @@
 package com.grebennikovas.viewpoint.sources.connections.pgsql;
 
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PgSqlBuilderTest {
+class SqlBuilderTest {
     @Test
     public void testBuildQuery() {
         // Arrange
@@ -18,7 +19,7 @@ class PgSqlBuilderTest {
         List<String> orderByColumns = Arrays.asList("col2", "col1");
         int limitCount = 5;
 
-        PgSqlBuilder builder = new PgSqlBuilder()
+        SqlBuilder builder = new SqlBuilder()
                 .select(columns)
                 .from(tableName)
                 .where(conditions)
@@ -59,7 +60,7 @@ class PgSqlBuilderTest {
         Map<String, Object> paramValues = new HashMap<>();
         paramValues.put("param1", 10);
 
-        PgSqlBuilder builder = new PgSqlBuilder()
+        SqlBuilder builder = new SqlBuilder()
                 .select(columns)
                 .from(tableName)
                 .where(conditions)

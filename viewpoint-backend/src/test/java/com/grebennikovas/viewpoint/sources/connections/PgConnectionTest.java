@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PostgreSQLConnectionTest {
+class PgConnectionTest {
 
     @Test
     void getUrl() {
@@ -25,7 +25,8 @@ class PostgreSQLConnectionTest {
         source.setUsername(username);
         source.setPassword(password);
         source.setPort(port);
-        Executable pgConn = ConnectionFactory.connect(source);
+        DbConnection pgConn = new PgConnection();
+        pgConn.setSource(source);
         String expected = String.format("jdbc:%s://%s:%s/%s?user=%s&password=%s%s",driver,netloc,port,dbname,username,password,params);
         String actual = pgConn.getUrl();
         assertEquals(expected,actual);

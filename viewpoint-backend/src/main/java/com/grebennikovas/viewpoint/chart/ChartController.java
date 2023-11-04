@@ -18,7 +18,6 @@ public class ChartController {
     @Autowired
     ChartRepository chartRepository;
 
-    @Autowired
     private ChartFactory chartFactory;
 
     // Получить все диаграммы

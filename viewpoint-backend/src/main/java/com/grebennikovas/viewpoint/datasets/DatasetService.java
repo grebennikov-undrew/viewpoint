@@ -10,8 +10,9 @@ import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.sources.SourceRepository;
+import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
-import com.grebennikovas.viewpoint.sources.connections.Executable;
+import com.grebennikovas.viewpoint.sources.connections.DbConnection;
 import com.grebennikovas.viewpoint.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class DatasetService {
@@ -35,6 +34,8 @@ public class DatasetService {
     ParameterRepository parameterRepository;
     @Autowired
     SourceRepository sourceRepository;
+    @Autowired
+    SourceService sourceService;
 
     public List<DatasetDTO> findAll() {
         List<DatasetDTO> dsDTO = new ArrayList<>();
@@ -43,7 +44,7 @@ public class DatasetService {
         return dsDTO;
     }
 
-    public DatasetDTO getOne(Long id){
+    public DatasetDTO findById(Long id){
         List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
         List<Column> columns = columnRepository.findAllByDataset_id(id);
         Dataset ds = datasetRepository.findById(id).get();
@@ -55,12 +56,15 @@ public class DatasetService {
         // Сохранение объекта Dataset
         Dataset ds = mapDatasetDTO(dsDTO);
         Dataset savedDataset = save(ds);
+
         // Сохранение всех колонок датасета
         List<Column> columns = mapColumnsDTO(dsDTO.getColumns(), savedDataset);
         List<Column> savedColumns = upsertColumns(columns, savedDataset);
+
         // Сохранение всех параметров датасета
         List<Parameter> params = mapParameterDTO(dsDTO.getParameters(), savedDataset);
         List<Parameter> savedParams = upsertParameters(params, ds);
+
         // Преобразование в DTO
         DatasetDTO savedDatasetDTO = mapDataset(savedDataset, savedColumns, savedParams);
         return savedDatasetDTO;
@@ -68,53 +72,7 @@ public class DatasetService {
 
     // Выполнение еще не сохраненного запроса
     public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) throws SQLException {
-        Source src = sourceRepository.findById(sourceId).get();
-        Executable dbInstance = ConnectionFactory.connect(src);
-        String preparedQuery = prepareQuery(query, parameters, paramValues);
-        return dbInstance.execute(preparedQuery);
-    }
-
-    // Подстановка параметров в запрос
-    public String prepareQuery(String sqlQuery, List<Parameter> parameters, Map<String,String> values) {
-        String result = sqlQuery;
-        Pattern pattern = Pattern.compile("(\\{:[\\w\\s]+?})", Pattern.UNICODE_CHARACTER_CLASS);
-        Matcher matcher = pattern.matcher(result);
-        // Поочередная замена параметров запроса
-        while (matcher.find()) {
-            String parameter = matcher.group(1);
-            String paramName = parameter.substring(2,parameter.length()-1).trim();
-            // Есть ли такой параметр в params?
-            if (values.containsKey(paramName)) {
-                // Поиск прараметра в списке параметров датасета
-                Parameter paramInfo = findParameter(parameters,paramName);
-                String paramValue = values.get(paramName);
-                String preparedParamValue = prepareParamValue(paramInfo, paramValue);
-                result = matcher.replaceFirst(Matcher.quoteReplacement(preparedParamValue));
-                matcher = pattern.matcher(result);
-            } else {
-                result = matcher.replaceFirst(Matcher.quoteReplacement(" NULL "));
-                matcher = pattern.matcher(result);
-            }
-        }
-        return result;
-    }
-    public Parameter findParameter(List<Parameter> parameters, String name){
-        for (Parameter p : parameters) {
-            if (p.getName().equals(name)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    public String prepareParamValue(Parameter paramInfo, String paramValue){
-        String preparedParamValue;
-        if (paramInfo.getType().equals("String") || paramInfo.getType().equals("Timestamp")) {
-            preparedParamValue = String.format(" '%s' ",paramValue.trim());
-        } else {
-            preparedParamValue = String.format(" %s ",paramValue.trim());
-        }
-        return preparedParamValue;
+        return sourceService.execute(sourceId, query, parameters, paramValues);
     }
 
     // Маппинг Dataset DTO->DAO

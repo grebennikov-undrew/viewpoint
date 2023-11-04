@@ -1,15 +1,12 @@
-package com.grebennikovas.viewpoint.sources.connections.pgsql;
+package com.grebennikovas.viewpoint.utils;
 
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
-import com.grebennikovas.viewpoint.utils.SqlUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class PgSqlBuilder {
+public class SqlBuilder {
 
     private String select;
     private String from;
@@ -20,47 +17,57 @@ public class PgSqlBuilder {
     private String limit;
     private Map<String,String> paramValues;
 
-    public PgSqlBuilder() {
+    public SqlBuilder() {
         paramValues = new HashMap<>();
     }
 
-    public PgSqlBuilder select(List<String> columns) {
+    public SqlBuilder select(List<String> columns) {
         this.select = "SELECT " + SqlUtils.convertToString(columns);
         return this;
     }
 
-    public PgSqlBuilder from(String table_name) {
+    public SqlBuilder selectAll() {
+        this.select = "SELECT *";
+        return this;
+    }
+
+    public SqlBuilder from(String table_name) {
         this.from = "FROM " + table_name;
         return this;
     }
 
-    public PgSqlBuilder where(String conditions) {
+    public SqlBuilder fromSubQuery(String subquery) {
+        this.from = "FROM (" + subquery.replace(";","") + ") t";
+        return this;
+    }
+
+    public SqlBuilder where(String conditions) {
         this.where = "WHERE " + conditions;
         return this;
     }
 
-    public PgSqlBuilder groupBy(List<String> columns) {
+    public SqlBuilder groupBy(List<String> columns) {
         this.groupBy = "GROUP BY " + SqlUtils.convertToString(columns);
         return this;
     }
 
-    public PgSqlBuilder having(String conditions) {
+    public SqlBuilder having(String conditions) {
         this.having = "HAVING " + conditions;
         return this;
     }
 
-    public PgSqlBuilder orderBy(List<String> columns, boolean desc) {
+    public SqlBuilder orderBy(List<String> columns, boolean desc) {
         this.orderBy = "ORDER BY " + SqlUtils.convertToString(columns);
         if (desc) this.orderBy = this.orderBy + " DESC";
         return this;
     }
 
-    public PgSqlBuilder limit(int count) {
+    public SqlBuilder limit(int count) {
         this.limit = "LIMIT " + count;
         return this;
     }
 
-    public PgSqlBuilder parameters(List<Parameter> parameters, Map<String,?> values) {
+    public SqlBuilder parameters(List<Parameter> parameters, Map<String,?> values) {
         for (Parameter parameterInfo: parameters) {
             String name = parameterInfo.getName();
             if (values.containsKey(name)){

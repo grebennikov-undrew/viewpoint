@@ -39,7 +39,7 @@ public class DatasetController {
     // Получить данные по датасету по id
     @GetMapping("/{id}")
     public DatasetDTO getOne(@PathVariable Long id) {
-        return datasetService.getOne(id);
+        return datasetService.findById(id);
     }
 
     // Вернуть таблицу по запросу
