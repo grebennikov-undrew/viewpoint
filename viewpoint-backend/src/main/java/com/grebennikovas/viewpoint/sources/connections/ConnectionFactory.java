@@ -37,21 +37,4 @@ public class ConnectionFactory {
         throw new NoSuchElementException("Unsupported database type " + source.getType().getCredit());
     }
 
-//    public static DbConnection connect(Source source) {
-//        DbConnection connection;
-//        switch (source.getType()) {
-//            case POSTGRESQL:
-//                connection = new PgConnection();
-//                connection.setSource(source);
-//                break;
-//            case MYSQL:
-//                connection = new MySQLConnection();
-//                connection.setSource(source);
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Unsupported database type: " + source.getType());
-//
-//        }
-//        return connection;
-//    }
 }

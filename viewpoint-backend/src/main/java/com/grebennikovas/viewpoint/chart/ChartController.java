@@ -7,6 +7,7 @@ import com.grebennikovas.viewpoint.datasets.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ChartController {
 
     // Получить все диаграммы
     @GetMapping("/")
-    public List<Chart> findAll() {
+    public List<ChartDTO> findAll() {
         ChartService chartService = chartFactory.getChartService(ChartType.TABLE);
         return chartService.findAll();
     }
@@ -35,7 +36,7 @@ public class ChartController {
     }
 
     @GetMapping("/{id}/data")
-    public Result getData(@PathVariable Long id) {
+    public Result getData(@PathVariable Long id) throws SQLException {
         Chart chart = chartRepository.findById(id).get();
         ChartService chartService = chartFactory.getChartService(chart.getChartType());
         return chartService.getData(chart);

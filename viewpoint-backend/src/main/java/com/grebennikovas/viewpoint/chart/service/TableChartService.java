@@ -1,21 +1,26 @@
 package com.grebennikovas.viewpoint.chart.service;
 
-import com.grebennikovas.viewpoint.chart.Chart;
-import com.grebennikovas.viewpoint.chart.ChartRepository;
-import com.grebennikovas.viewpoint.chart.ChartSettings;
-import com.grebennikovas.viewpoint.chart.ChartType;
+import com.grebennikovas.viewpoint.chart.*;
+import com.grebennikovas.viewpoint.datasets.Dataset;
+import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
 import com.grebennikovas.viewpoint.datasets.results.Result;
+import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
 import com.grebennikovas.viewpoint.sources.connections.DbConnection;
+import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class TableChartService implements ChartService {
     @Autowired
     ChartRepository chartRepository;
+    @Autowired
+    SourceService sourceService;
 
     @Override
     public String getType() {
@@ -24,8 +29,11 @@ public class TableChartService implements ChartService {
 
 
     @Override
-    public List<Chart> findAll() {
-        return chartRepository.findAll();
+    public List<ChartDTO> findAll() {
+        List<ChartDTO> chartsDTO = new ArrayList<>();
+        List<Chart> charts = chartRepository.findAll();
+        charts.forEach(c -> chartsDTO.add(new ChartDTO(c)));
+        return chartsDTO;
     };
 
     @Override
@@ -38,32 +46,30 @@ public class TableChartService implements ChartService {
         return chartRepository.findById(id);
     }
 
+    // Выполнение запроса для построения диаграммы
     @Override
-    public Result getData(Chart chart) {
-//        DbConnection dbInstance = ConnectionFactory.connect(chart.getDataset().getSource());
-//        String preparedQuery = prepareQuery(query, parameters, paramValues);
-//        return dbInstance.execute(preparedQuery);
-        return null;
+    public Result getData(Long id) throws SQLException {
+        Chart chart = chartRepository.findById(id).get();
+        return getData(chart);
     }
-
-    // Выполнение всех необходимых операций с данным запросом
-    public String prepareChartQuery(Chart chart) {
+    @Override
+    public Result getData(Chart chart) throws SQLException {
         // Настройки диаграммы
         ChartSettings settings = chart.getChartSettings();
+        String datasetQuery = chart.getDataset().getSqlQuery();
 
-        String sqlQuery = chart.getDataset().getSqlQuery();
+        String chartQuery = new SqlBuilder()
+                .select(settings.getxColumns())
+                .fromSubQuery(datasetQuery)
+                .where(settings.getWhere())
+                .orderBy(settings.getOrderBy(),false)
+                .limit(settings.getLimit())
+                .build();
 
-        // Преобразования к строке
-        String xColumns = SqlUtils.convertToString(settings.getxColumns());
-        String where = settings.getWhere();
-        String groupBy = SqlUtils.convertToString(settings.getGroupBy());
-        String having = settings.getHaving();
-        String orderBy = SqlUtils.convertToString(settings.getOrderBy());
-        Integer limit = settings.getLimit();
-
+        Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
 
         return null;
-
-
     }
+
+
 }

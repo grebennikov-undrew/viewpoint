@@ -33,8 +33,6 @@ public class DatasetService {
     @Autowired
     ParameterRepository parameterRepository;
     @Autowired
-    SourceRepository sourceRepository;
-    @Autowired
     SourceService sourceService;
 
     public List<DatasetDTO> findAll() {
