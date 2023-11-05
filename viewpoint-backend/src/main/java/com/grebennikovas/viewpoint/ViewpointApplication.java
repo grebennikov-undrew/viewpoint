@@ -13,5 +13,4 @@ public class ViewpointApplication {
 		SpringApplication.run(ViewpointApplication.class, args);
 	}
 
-
 }

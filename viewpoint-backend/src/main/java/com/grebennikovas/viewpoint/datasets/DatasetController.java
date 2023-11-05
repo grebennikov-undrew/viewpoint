@@ -1,18 +1,12 @@
 package com.grebennikovas.viewpoint.datasets;
 
-import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
-import com.grebennikovas.viewpoint.datasets.dto.DatasetExecDTO;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Result;
-import com.grebennikovas.viewpoint.datasets.results.Row;
-import com.grebennikovas.viewpoint.users.User;
-import com.grebennikovas.viewpoint.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -26,25 +20,26 @@ public class DatasetController {
 
     // Получить все датасеты
     @GetMapping("/")
-    public List<DatasetDTO> findAll() {
+    public List<DatasetDto> findAll() {
         return datasetService.findAll();
     }
 
     // Сохранить/изменить датасет
     @PostMapping("/")
-    public DatasetDTO save(@RequestBody DatasetDTO dsDTO) {
+    public DatasetDto save(@RequestBody DatasetDto dsDTO) {
         return datasetService.save(dsDTO);
     }
 
     // Получить данные по датасету по id
     @GetMapping("/{id}")
-    public DatasetDTO getOne(@PathVariable Long id) {
+    public DatasetDto getOne(@PathVariable Long id) {
         return datasetService.findById(id);
     }
 
     // Вернуть таблицу по запросу
+    // TODO: перетащить в source controller
     @PostMapping("/execute")
-    public ResponseEntity<?> execute(@RequestBody DatasetExecDTO execInfo) {
+    public ResponseEntity<?> execute(@RequestBody DatasetExecDto execInfo) {
         String sqlQuery = execInfo.getSqlQuery();
         Long sourceId = execInfo.getSourceId();
         List<Parameter> parameters = execInfo.getParameters();

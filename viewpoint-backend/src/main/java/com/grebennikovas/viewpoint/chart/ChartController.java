@@ -2,7 +2,6 @@ package com.grebennikovas.viewpoint.chart;
 
 import com.grebennikovas.viewpoint.chart.service.ChartFactory;
 import com.grebennikovas.viewpoint.chart.service.ChartService;
-import com.grebennikovas.viewpoint.chart.service.TableChartService;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ public class ChartController {
 
     // Получить все диаграммы
     @GetMapping("/")
-    public List<ChartDTO> findAll() {
+    public List<ChartDto> findAll() {
         ChartService chartService = chartFactory.getChartService(ChartType.TABLE);
         return chartService.findAll();
     }

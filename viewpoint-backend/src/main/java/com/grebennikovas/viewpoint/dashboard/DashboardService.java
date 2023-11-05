@@ -27,11 +27,11 @@ public class DashboardService {
     @Autowired
     SourceService sourceService;
 
-    public List<String> getFilterValues(Long id) throws SQLException {
-        Parameter p = parameterRepository.findById(id).get();
-        Dataset ds = p.getDataset();
-        return getFilterValues(ds.getSource().getId(), p.getSqlQuery());
-    }
+//    public List<String> getFilterValues(Long id) throws SQLException {
+//        Parameter p = parameterRepository.findById(id).get();
+////        Dataset ds = p.getDataset();
+//        return getFilterValues(ds.getSource().getId(), p.getSqlQuery());
+//    }
 
     public List<String> getFilterValues(Long sourceId, String sqlQuery) throws SQLException {
         Result column = sourceService.execute(sourceId,sqlQuery);

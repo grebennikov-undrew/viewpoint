@@ -1,26 +1,27 @@
 package com.grebennikovas.viewpoint.chart.service;
 
 import com.grebennikovas.viewpoint.chart.*;
-import com.grebennikovas.viewpoint.datasets.Dataset;
-import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.SourceService;
-import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
-import com.grebennikovas.viewpoint.sources.connections.DbConnection;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
-import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TableChartService implements ChartService {
+
     @Autowired
     ChartRepository chartRepository;
     @Autowired
     SourceService sourceService;
+    @Autowired
+    ChartMapper chartMapper;
+
 
     @Override
     public String getType() {
@@ -29,10 +30,10 @@ public class TableChartService implements ChartService {
 
 
     @Override
-    public List<ChartDTO> findAll() {
-        List<ChartDTO> chartsDTO = new ArrayList<>();
+    public List<ChartDto> findAll() {
+        List<ChartDto> chartsDTO = new ArrayList<>();
         List<Chart> charts = chartRepository.findAll();
-        charts.forEach(c -> chartsDTO.add(new ChartDTO(c)));
+        charts.forEach(c -> chartsDTO.add(chartMapper.mapToChartDto(c)));
         return chartsDTO;
     };
 

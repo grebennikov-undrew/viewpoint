@@ -1,18 +1,16 @@
 package com.grebennikovas.viewpoint.datasets;
 
 import com.grebennikovas.viewpoint.datasets.column.Column;
+import com.grebennikovas.viewpoint.datasets.column.ColumnMapper;
 import com.grebennikovas.viewpoint.datasets.column.ColumnRepository;
-import com.grebennikovas.viewpoint.datasets.dto.ColumnDTO;
-import com.grebennikovas.viewpoint.datasets.dto.DatasetDTO;
-import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
+import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.datasets.parameter.ParameterMapper;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
-import com.grebennikovas.viewpoint.sources.SourceRepository;
 import com.grebennikovas.viewpoint.sources.SourceService;
-import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
-import com.grebennikovas.viewpoint.sources.connections.DbConnection;
 import com.grebennikovas.viewpoint.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class DatasetService {
@@ -34,38 +30,41 @@ public class DatasetService {
     ParameterRepository parameterRepository;
     @Autowired
     SourceService sourceService;
+    @Autowired
+    DatasetMapper datasetMapper;
+    @Autowired
+    ColumnMapper columnMapper;
+    @Autowired
+    ParameterMapper parameterMapper;
 
-    public List<DatasetDTO> findAll() {
-        List<DatasetDTO> dsDTO = new ArrayList<>();
+    public List<DatasetDto> findAll() {
+        List<DatasetDto> dsDTO = new ArrayList<>();
         List<Dataset> datasets = datasetRepository.findAll();
-        datasets.forEach(d -> dsDTO.add(mapDataset(d)));
+        datasets.forEach(d -> dsDTO.add(datasetMapper.toShortDto(d)));
         return dsDTO;
     }
 
-    public DatasetDTO findById(Long id){
-        List<Parameter> parameters = parameterRepository.findAllByDataset_id(id);
-        List<Column> columns = columnRepository.findAllByDataset_id(id);
+    public DatasetDto findById(Long id){
         Dataset ds = datasetRepository.findById(id).get();
-        DatasetDTO dsDTO = mapDataset(ds,columns,parameters);
-        return dsDTO;
+        return datasetMapper.toDto(ds);
     }
 
-    public DatasetDTO save(DatasetDTO dsDTO) {
+    public DatasetDto save(DatasetDto dsDTO) {
         // Сохранение объекта Dataset
-        Dataset ds = mapDatasetDTO(dsDTO);
+        Dataset ds = datasetMapper.toEntity(dsDTO);
         Dataset savedDataset = save(ds);
 
         // Сохранение всех колонок датасета
-        List<Column> columns = mapColumnsDTO(dsDTO.getColumns(), savedDataset);
-        List<Column> savedColumns = upsertColumns(columns, savedDataset);
-
-        // Сохранение всех параметров датасета
-        List<Parameter> params = mapParameterDTO(dsDTO.getParameters(), savedDataset);
-        List<Parameter> savedParams = upsertParameters(params, ds);
-
-        // Преобразование в DTO
-        DatasetDTO savedDatasetDTO = mapDataset(savedDataset, savedColumns, savedParams);
-        return savedDatasetDTO;
+//        List<Column> columns = mapColumnsDTO(dsDTO.getColumns(), savedDataset);
+//        List<Column> savedColumns = upsertColumns(columns, savedDataset);
+//
+//        // Сохранение всех параметров датасета
+//        List<Parameter> params = mapParameterDTO(dsDTO.getParameters(), savedDataset);
+//        List<Parameter> savedParams = upsertParameters(params, ds);
+//
+//        // Преобразование в DTO
+//        DatasetDto savedDatasetDto = mapDataset(savedDataset, savedColumns, savedParams);
+        return datasetMapper.toDto(savedDataset);
     }
 
     // Выполнение еще не сохраненного запроса
@@ -73,42 +72,9 @@ public class DatasetService {
         return sourceService.execute(sourceId, query, parameters, paramValues);
     }
 
-    // Маппинг Dataset DTO->DAO
-    public Dataset mapDatasetDTO(DatasetDTO dsDTO) {
-        Dataset ds = new Dataset();
-        ds.setId(dsDTO.getId());
-        ds.setName(dsDTO.getName());
-        ds.setSqlQuery(dsDTO.getSqlQuery());
-        ds.setSource(new Source(dsDTO.getSource().getId()));
-        ds.setUser(new User(dsDTO.getSource().getId()));
-        return ds;
-    }
-
-    // Маппинг Dataset DAO->DTO
-    public DatasetDTO mapDataset(Dataset ds, List<Column> columns, List<Parameter> params) {
-        return new DatasetDTO(ds, columns, params);
-    }
-    public DatasetDTO mapDataset(Dataset ds) {
-        return new DatasetDTO(ds);
-    }
-
     // Сохранение датасета в таблицу
     public Dataset save(Dataset ds) {
         return datasetRepository.save(ds);
-    }
-
-    // Маппинг столбцов датасета DTO->DAO
-    public List<Column> mapColumnsDTO(List<ColumnDTO> columnsDTO, Dataset dataset) {
-        List<Column> columns = new ArrayList<>();
-        columnsDTO.forEach(c -> columns.add(new Column(c.getId(),dataset,c.getName(),c.getType())));
-        return columns;
-    }
-
-    // Маппинг столбцов датасета DAO->DTO
-    public List<ColumnDTO> mapColumns(List<Column> columns) {
-        List<ColumnDTO> columnsDTO = new ArrayList<>();
-        columns.forEach(c -> columnsDTO.add(new ColumnDTO(c)));
-        return columnsDTO;
     }
 
     // Сохранение списка колонок в БД и удаление убранных
@@ -133,20 +99,6 @@ public class DatasetService {
         // Удалить параметры, которых нет в новом списке
         columnRepository.deleteAll(oldColumns);
         return columnRepository.saveAll(addColumns);
-    }
-
-    // Маппинг параметров датасета DTO->DAO
-    public List<Parameter> mapParameterDTO(List<ParameterDTO> paramsDTO, Dataset dataset) {
-        List<Parameter> params = new ArrayList<>();
-        paramsDTO.forEach(p -> params.add(new Parameter(p.getId(),dataset,p.getName(),p.getType(),p.getSqlQuery())));
-        return params;
-    }
-
-    // Маппинг параметров датасета DAO->DTO
-    public List<ParameterDTO> mapParameters(List<Parameter> params) {
-        List<ParameterDTO> columnsDTO = new ArrayList<>();
-        params.forEach(p -> columnsDTO.add(new ParameterDTO(p)));
-        return columnsDTO;
     }
 
     // Сохранение нового списка параметров в БД и удаление не используемых
