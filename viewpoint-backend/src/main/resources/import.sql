@@ -27,3 +27,5 @@ INSERT INTO columns (dataset_id, name, type) VALUES (2, 'updated_on','timestamp'
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'firstname','varchar');
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','varchar');
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','varchar');
+
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Табличная диаграмма', 'TABLE', 1, 1, '{"xColumns": ["id", "username", "lastname", "firstname"],"where": "id>1", "orderBy": ["lastname"]}'::json);

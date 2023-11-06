@@ -10,6 +10,8 @@ import customTheme from './CustomTheme';
 import Dataset from './routes/Dataset';
 import EditDataset from './components/dataset/EditDataset';
 import LoginForm from './routes/LoginForm';
+import Chart from './routes/Charts';
+import EditChart from './components/chart/EditChart';
 
 function App() {
   return (
@@ -22,6 +24,9 @@ function App() {
             <Route path='/dataset' element={<Dataset/>}/>
             <Route path='/dataset/:id' element={<EditDataset/>}/>
             <Route path='/dataset/new' element={<EditDataset/>}/>
+            <Route path='/chart' element={<Chart/>}/>
+            <Route path='/chart/:id' element={<EditChart/>}/>
+            <Route path='/chart/new' element={<EditChart/>}/>
             <Route exact path='/login' element={<LoginForm/>}/>
         </Routes>
       </Router>

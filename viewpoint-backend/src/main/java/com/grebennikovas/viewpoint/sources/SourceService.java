@@ -1,6 +1,5 @@
 package com.grebennikovas.viewpoint.sources;
 
-import com.grebennikovas.viewpoint.chart.service.ChartFactory;
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;

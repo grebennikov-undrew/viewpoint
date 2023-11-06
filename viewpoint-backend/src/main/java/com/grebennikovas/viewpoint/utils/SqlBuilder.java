@@ -42,28 +42,34 @@ public class SqlBuilder {
     }
 
     public SqlBuilder where(String conditions) {
-        this.where = "WHERE " + conditions;
+        if (conditions!= null)
+            this.where = "WHERE " + conditions;
         return this;
     }
 
     public SqlBuilder groupBy(List<String> columns) {
-        this.groupBy = "GROUP BY " + SqlUtils.convertToString(columns);
+        if (columns!= null && columns.size() > 0)
+            this.groupBy = "GROUP BY " + SqlUtils.convertToString(columns);
         return this;
     }
 
     public SqlBuilder having(String conditions) {
-        this.having = "HAVING " + conditions;
+        if (conditions!= null)
+            this.having = "HAVING " + conditions;
         return this;
     }
 
     public SqlBuilder orderBy(List<String> columns, boolean desc) {
-        this.orderBy = "ORDER BY " + SqlUtils.convertToString(columns);
-        if (desc) this.orderBy = this.orderBy + " DESC";
+        if (columns!= null && columns.size() > 0)
+            this.orderBy = "ORDER BY " + SqlUtils.convertToString(columns);
+        if (desc)
+            this.orderBy = this.orderBy + " DESC";
         return this;
     }
 
-    public SqlBuilder limit(int count) {
-        this.limit = "LIMIT " + count;
+    public SqlBuilder limit(Integer count) {
+        if (count!= null && count>0)
+            this.limit = "LIMIT " + count;
         return this;
     }
 

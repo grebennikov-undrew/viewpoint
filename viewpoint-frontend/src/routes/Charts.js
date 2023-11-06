@@ -13,8 +13,7 @@ const customButtonStyle = {
     padding: '0 12px',
 };
 
-const Chatrs = () => {
-    // const [context, setContext] = useContext(AuthContext);
+const Chart = () => {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
 
@@ -36,31 +35,32 @@ const Chatrs = () => {
         event, // MuiEvent<React.MouseEvent<HTMLElement>>
         details, // GridCallbackDetails
     ) => {
-        navigate(`/dataset/${params.row.id}`)
+        navigate(`/chart/${params.row.id}`)
     };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'name', headerName: 'Name', width: 150 },
+        { field: 'type', headerName: 'Type', width: 100, valueGetter: (params) => `${params.row.chartType}`},
         { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.user.username}`},
-        { field: 'type', headerName: 'Type', width: 150, valueGetter: (params) => `${params.row.type.chartType}` },
-        { field: 'dataset', headerName: 'Dataset', width: 150, valueGetter: (params) => `${params.row.dataset.name}` },
+        { field: 'dataset', headerName: 'Dataset', width: 150, valueGetter: (params) => `${params.row.dataset.name}`},
+        { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.dataset.source.name}` },
     ];
 
     return (
         <Container maxWidth="xl">
             <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
                 <Typography variant="h2" >
-                    Datasets
+                    Charts
                 </Typography>
                 {/* <Button variant="text">Add</Button> */}
                 <IconButton
                 size="large"
-                aria-label="Add dataset"
+                aria-label="Add chart"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 style={customButtonStyle}
-                href='/dataset/new'
+                href='/chart/new'
                 >
                 <AddCircleIcon/>
                 </IconButton>
@@ -82,4 +82,4 @@ const Chatrs = () => {
     );
 }
 
-export default Charts;
+export default Chart;
