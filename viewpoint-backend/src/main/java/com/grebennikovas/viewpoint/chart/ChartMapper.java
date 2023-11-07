@@ -25,7 +25,7 @@ public interface ChartMapper {
     @Mapping(target = "dataset", source = "datasetDto")
     @Mapping(target = "user", source = "userDto")
     @Mapping(target = "dataset.source", source = "datasetDto.sourceDto")
-    @Mapping(target = "dataset.parameters", source = "datasetDto.parametersDto")
+    @Mapping(target = "dataset.columns", source = "datasetDto.columnsDto")
     Chart mapToChart(ChartDto chartDto);
 
     @Mapping(target = "userDto", source = "user")
@@ -34,7 +34,7 @@ public interface ChartMapper {
 
     @Named("datasetToDto")
     @Mapping(target = "userDto", source = "user")
-    @Mapping(target = "parametersDto", source = "parameters")
+    @Mapping(target = "columnsDto", source = "columns")
     @Mapping(target = "sourceDto", source = "source", qualifiedByName = "sourceToShortDto")
     DatasetDto DataetToDto(Dataset dataset);
 

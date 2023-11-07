@@ -59,11 +59,12 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder orderBy(List<String> columns, boolean desc) {
-        if (columns!= null && columns.size() > 0)
+    public SqlBuilder orderBy(List<String> columns, Boolean desc) {
+        if (columns != null && columns.size() > 0) {
             this.orderBy = "ORDER BY " + SqlUtils.convertToString(columns);
-        if (desc)
-            this.orderBy = this.orderBy + " DESC";
+            if (desc != null && desc)
+                this.orderBy = this.orderBy + " DESC";
+        }
         return this;
     }
 

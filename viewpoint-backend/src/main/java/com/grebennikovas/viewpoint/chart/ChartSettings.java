@@ -25,6 +25,8 @@ public class ChartSettings implements Serializable {
     String having;
     @JsonProperty("orderBy")
     List<String> orderBy;
+    @JsonProperty("desc")
+    Boolean desc;
     @JsonProperty("limit")
     Integer limit;
 

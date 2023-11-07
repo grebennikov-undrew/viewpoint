@@ -104,14 +104,19 @@ public class SqlUtils {
 
     // Возвращает типы данных каждого столбца запроса
     public static Map<String,String> getSqlColtypes(ResultSet rs) throws SQLException {
-        Map<String,String> coltypes = new HashMap();
+        Map<String,String> coltypes = new HashMap<>();
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 
         for (int i = 1; i <= columnCount; i++) {
             String columnName = metaData.getColumnName(i);
             String queryColumnType = metaData.getColumnTypeName(i);
-            coltypes.put(columnName,queryColumnType);
+            if (coltypes.containsKey(columnName)) {
+                throw new IllegalArgumentException("More than one column with name " + columnName);
+            } else {
+                coltypes.put(columnName,queryColumnType);
+            }
+
         }
         return coltypes;
     }

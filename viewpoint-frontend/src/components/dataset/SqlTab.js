@@ -29,6 +29,7 @@ const SqlTab = ({datasetData, onFieldChange, onSelectChange, setDatasetData}) =>
                     defaultValue="SELECT ..."
                     value={datasetData.sqlQuery}
                     onChange={onFieldChange}
+                    style={{backgroundColor: "white"}}
                     fullWidth
                 />
             </Grid>

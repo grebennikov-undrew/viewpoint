@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container } from '@mui/material';
+import { Checkbox, Container, FormControlLabel } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -23,10 +23,12 @@ import { httpRequest } from '../../service/httpRequest';
 import SelectTags from './Components/SelectTags';
 
 const SettingsArea = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
-    const [datasets, setDatasets] = useState();
-    const { chartSettings, dataset } = chartData;
-    const { xColumns } = chartSettings;
+    const [ datasets, setDatasets] = useState();
+    const { chartSettings, dataset, chartType } = chartData;
+    const { xColumns, where, orderBy, desc } = chartSettings;
     const { columns } = dataset;
+
+    const columnsValues = columns.map(c => c.name);
 
     useEffect(() => {
         const fetchSources = async () => {
@@ -39,22 +41,31 @@ const SettingsArea = ({chartData, chartResult, onFieldChange, onSelectChange}) =
         }
         fetchSources();
     }, []);
+
+    const getDatasetInfo = async (e, id) => {
+        try {
+            const response = await httpRequest.get(`/dataset/${id}`)
+            onSelectChange(e, "dataset", response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
     
     if (!chartData.dataset) return;
     return (
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={1}>
-                    <IconButton aria-label="delete" color="primary">
+                    <IconButton aria-label="delete" color={chartType.toLowerCase() === "table" ? "primary" : "disabled"}>
                         <GridOnIcon />
                     </IconButton>
-                    <IconButton aria-label="delete" color="disabled">
+                    <IconButton aria-label="delete" color={chartType.toLowerCase() === "pie" ? "primary" : "disabled"}>
                         <PieChartIcon />
                     </IconButton>
-                    <IconButton color="disabled" aria-label="add an alarm">
+                    <IconButton aria-label="add an alarm" color={chartType.toLowerCase() === "bar" ? "primary" : "disabled"}>
                         <BarChartIcon />
                     </IconButton>
-                    <IconButton color="disabled" aria-label="add to shopping cart">
+                    <IconButton aria-label="add to shopping cart" color={chartType.toLowerCase() === "line" ? "primary" : "disabled"}>
                         <SsidChartIcon />
                     </IconButton>
                 </Stack>
@@ -80,7 +91,10 @@ const SettingsArea = ({chartData, chartResult, onFieldChange, onSelectChange}) =
                         value={chartData.dataset && chartData.dataset.name}
                         label="Dataset"
                         required
-                        onChange={(e) => onSelectChange(e, "dataset", {"id": datasets.find(d => d.name === e.target.value).id, "name": e.target.value})}
+                        onChange={(e) => {
+                            const datasetId = datasets.find(d => d.name === e.target.value).id;
+                            getDatasetInfo(e, datasetId);
+                        }}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 <Chip label={selected} />
@@ -101,14 +115,62 @@ const SettingsArea = ({chartData, chartResult, onFieldChange, onSelectChange}) =
             <Grid item xs={12}>
                 <FormControl fullWidth>
                         <SelectTags 
-                        options={columns} 
+                        options={columnsValues} 
                         values={xColumns} 
+                        label="Columns"
                         onSelectChange={(event, value) => onSelectChange(event, "chartSettings", {
                         ...chartSettings,
                         "xColumns": value,
                     })}/>
                 </FormControl>
             </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    id="where"
+                    label="Conditions"
+                    value={where}
+                    fullWidth
+                    onChange={(event) => onSelectChange(event, "chartSettings", {
+                        ...chartSettings,
+                        "where": event.target.value,
+                    })}
+                    variant='standard'
+                    multiline
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl fullWidth>
+                        <SelectTags 
+                        options={columnsValues} 
+                        values={orderBy} 
+                        label="Order by"
+                        onSelectChange={(event, value) => onSelectChange(event, "chartSettings", {
+                        ...chartSettings,
+                        "orderBy": value,
+                    })}/>
+                </FormControl>
+            </Grid>
+            {orderBy && orderBy.length > 0 && <Grid item xs={12}>
+                <FormControl variant="standard" fullWidth >
+                    <InputLabel id="desc-select-label">Sort</InputLabel>
+                    <Select
+                        labelId="desc-select-label"
+                        id="desc-id"
+                        label="Sort"
+                        required
+                        value={desc ? "descending" : "ascending"}
+                        onChange={
+                            (e) => onSelectChange(e, "chartSettings", {
+                                    ...chartSettings,
+                                    "desc": e.target.value === "descending" ? true : false,
+                                })
+                        }
+                    >
+                        <MenuItem value="ascending">ascending</MenuItem>
+                        <MenuItem value="descending">descending</MenuItem>
+                    </Select>
+                </FormControl>
+            </Grid>}
         </Grid>
     )
 }

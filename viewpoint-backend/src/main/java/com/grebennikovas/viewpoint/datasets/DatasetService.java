@@ -68,8 +68,8 @@ public class DatasetService {
     }
 
     // Выполнение еще не сохраненного запроса
-    public Result execute(String query, Long sourceId, List<Parameter> parameters, Map<String,String> paramValues) throws SQLException {
-        return sourceService.execute(sourceId, query, parameters, paramValues);
+    public Result execute(String query, Long sourceId) throws SQLException {
+        return sourceService.execute(sourceId, query);
     }
 
     // Сохранение датасета в таблицу
@@ -102,25 +102,25 @@ public class DatasetService {
     }
 
     // Сохранение нового списка параметров в БД и удаление не используемых
-    public List<Parameter> upsertParameters(List<Parameter> newParams, Dataset ds) {
-        // Поиск старых параметров
-        List<Parameter> oldParameters = parameterRepository.findAllByDataset_id(ds.getId());
-        List<Parameter> addParameters = new ArrayList<>();
-
-        for (Parameter newParam: newParams) {
-            // Поиск имени в существующих параметрах
-            for (Parameter oldParam : oldParameters) {
-                if (oldParam.getName().equals(newParam.getName())) {
-                    // Если параметр с таким именем существует
-                    newParam.setId(oldParam.getId());
-                    oldParameters.remove(oldParam);
-                    break;
-                }
-            }
-            addParameters.add(newParam);
-        }
-        // Удалить параметры, которых нет в новом списке
-        parameterRepository.deleteAll(oldParameters);
-        return parameterRepository.saveAll(addParameters);
-    }
+//    public List<Parameter> upsertParameters(List<Parameter> newParams, Dataset ds) {
+//        // Поиск старых параметров
+//        List<Parameter> oldParameters = parameterRepository.findAllByDataset_id(ds.getId());
+//        List<Parameter> addParameters = new ArrayList<>();
+//
+//        for (Parameter newParam: newParams) {
+//            // Поиск имени в существующих параметрах
+//            for (Parameter oldParam : oldParameters) {
+//                if (oldParam.getName().equals(newParam.getName())) {
+//                    // Если параметр с таким именем существует
+//                    newParam.setId(oldParam.getId());
+//                    oldParameters.remove(oldParam);
+//                    break;
+//                }
+//            }
+//            addParameters.add(newParam);
+//        }
+//        // Удалить параметры, которых нет в новом списке
+//        parameterRepository.deleteAll(oldParameters);
+//        return parameterRepository.saveAll(addParameters);
+//    }
 }

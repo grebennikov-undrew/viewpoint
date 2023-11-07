@@ -28,7 +28,9 @@ const EditChart = () => {
         parameters: [],
         user: {id: 4, username: "grebennikovas"},
         name: "New chart",
-        chartSettings: { xColumns: [] }
+        chartType: "TABLE",
+        chartSettings: { xColumns: [], orderBy: [] },
+        dataset: {columns: []}
     }
 
     useEffect(() => {
@@ -61,23 +63,6 @@ const EditChart = () => {
             fetchData();
         }
     }, []);
-
-    // useEffect(() => {
-    //     if (id) {
-    //         const fetchData = async () => {
-    //             try {
-    //                 const response = await httpRequest.get(`/chart/${id}/data`)
-    //                 setChartData(response.data);
-    //             } catch (error) {
-    //                 console.error('Error fetching data:', error);
-    //             }
-    //         }
-    //         fetchData();
-    //     }
-    //     else {
-    //         setChartData(defaultValues);
-    //     }
-    // }, []);
 
     const handleRefresh = (event) => {
         if (needUpdate) {
@@ -155,7 +140,7 @@ const EditChart = () => {
                     <Button color="error" variant="outlined" onClick={handleCloseClick}>Close</Button>
                 </ButtonGroup>
             </div>
-            <Grid container>
+            <Grid container >
                 <Grid container xs={3}>
                     <SettingsArea chartData={chartData} chartResult={chartResult} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
                 </Grid>

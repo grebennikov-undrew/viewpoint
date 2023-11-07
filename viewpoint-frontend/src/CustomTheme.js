@@ -31,6 +31,8 @@ theme.typography.h2.paddingBottom = 10;
 theme.typography.h3.fontSize = 24;
 theme.typography.h3.fontSize = 20;
 
+// theme.palette.background.default = "#F5F5F5";
+
 // Создаем результирующую тему с новыми брейкпоинтами и, если нужно, с адаптивными размерами шрифтов
 const customTheme = responsiveFontSizes(theme);
 

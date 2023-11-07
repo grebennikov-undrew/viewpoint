@@ -16,20 +16,20 @@ import EditChart from './components/chart/EditChart';
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <Router>
-      <Navbar/>
-        <Routes>
-            <Route exact path='/' element={<HomePage/>}/>
-            <Route path='/dashboard' element={<Dashboards/>}/>
-            <Route path='/dataset' element={<Dataset/>}/>
-            <Route path='/dataset/:id' element={<EditDataset/>}/>
-            <Route path='/dataset/new' element={<EditDataset/>}/>
-            <Route path='/chart' element={<Chart/>}/>
-            <Route path='/chart/:id' element={<EditChart/>}/>
-            <Route path='/chart/new' element={<EditChart/>}/>
-            <Route exact path='/login' element={<LoginForm/>}/>
-        </Routes>
-      </Router>
+        <Router>
+        <Navbar/>
+          <Routes>
+              <Route exact path='/' element={<HomePage/>}/>
+              <Route path='/dashboard' element={<Dashboards/>}/>
+              <Route path='/dataset' element={<Dataset/>}/>
+              <Route path='/dataset/:id' element={<EditDataset/>}/>
+              <Route path='/dataset/new' element={<EditDataset/>}/>
+              <Route path='/chart' element={<Chart/>}/>
+              <Route path='/chart/:id' element={<EditChart/>}/>
+              <Route path='/chart/new' element={<EditChart/>}/>
+              <Route exact path='/login' element={<LoginForm/>}/>
+          </Routes>
+        </Router>
     </ThemeProvider>
   );
 }

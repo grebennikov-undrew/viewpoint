@@ -15,7 +15,7 @@ public class SimpleQueryProcessor implements QueryProcessor{
                 .select(settings.getXColumns())
                 .fromSubQuery(datasetQuery)
                 .where(settings.getWhere())
-                .orderBy(settings.getOrderBy(),false)
+                .orderBy(settings.getOrderBy(),settings.getDesc())
                 .limit(settings.getLimit())
                 .build();
         return chartQuery;

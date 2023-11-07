@@ -31,11 +31,11 @@ public class DatasetDto {
     @JsonProperty("source")
     private SourceDto sourceDto;
 
-//    @JsonProperty("columns")
-//    private List<ColumnDto> columnsDto;
+    @JsonProperty("columns")
+    private List<ColumnDto> columnsDto;
 
-    @JsonProperty("parameters")
-    private List<ParameterDto> parametersDto;
+//    @JsonProperty("parameters")
+//    private List<ParameterDto> parametersDto;
 
     private Date createdOn;
 

@@ -17,8 +17,4 @@ public class DatasetExecDto {
 
     private Long sourceId;
 
-    private List<Parameter> parameters;
-
-    private Map<String,String> paramValues;
-
 }

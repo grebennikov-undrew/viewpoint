@@ -16,11 +16,11 @@ public interface DatasetMapper {
 
     @Mapping(target = "user", source = "userDto")
     @Mapping(target = "source", source = "sourceDto")
-    @Mapping(target = "parameters", source = "parametersDto")
+    @Mapping(target = "columns", source = "columnsDto")
     Dataset toEntity(DatasetDto datasetDto);
 
     @Mapping(target = "userDto", source = "user")
-    @Mapping(target = "parametersDto", source = "parameters")
+    @Mapping(target = "columnsDto", source = "columns")
     @Mapping(target = "sourceDto", source = "source", qualifiedByName = "sourceToShortDto")
     DatasetDto toDto(Dataset dataset);
 
@@ -47,7 +47,7 @@ public interface DatasetMapper {
 
     @AfterMapping
     default void addBackReference(@MappingTarget Dataset dataset) {
-        dataset.getParameters().forEach(p -> p.setDataset(dataset));
+        dataset.getColumns().forEach(p -> p.setDataset(dataset));
     }
 
 }

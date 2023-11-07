@@ -42,10 +42,8 @@ public class DatasetController {
     public ResponseEntity<?> execute(@RequestBody DatasetExecDto execInfo) {
         String sqlQuery = execInfo.getSqlQuery();
         Long sourceId = execInfo.getSourceId();
-        List<Parameter> parameters = execInfo.getParameters();
-        Map<String,String> paramValues = execInfo.getParamValues();
         try {
-            Result execResult = datasetService.execute(sqlQuery,sourceId,parameters,paramValues);
+            Result execResult = datasetService.execute(sqlQuery,sourceId);
             return ResponseEntity.status(HttpStatus.OK).
                     body(execResult);
         }

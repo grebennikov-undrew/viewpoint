@@ -12,20 +12,20 @@ INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_i
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, current_date, current_date, 1);
 
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'id','int');
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'created_on','timestamp');
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'updated_on','timestamp');
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'firstname','varchar');
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'lastname','varchar');
-INSERT INTO columns (dataset_id, name, type) VALUES (1, 'username','varchar');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'id','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'created_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'updated_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'firstname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'lastname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'username','String');
 
 INSERT INTO parameters (dataset_id, name, type, sql_query) VALUES (2,'p_name','String','SELECT distinct firstname FROM users;');
 
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'id','int');
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'created_on','timestamp');
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'updated_on','timestamp');
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'firstname','varchar');
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','varchar');
-INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','varchar');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'id','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'created_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'updated_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'firstname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','String');
 
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Табличная диаграмма', 'TABLE', 1, 1, '{"xColumns": ["id", "username", "lastname", "firstname"],"where": "id>1", "orderBy": ["lastname"]}'::json);
