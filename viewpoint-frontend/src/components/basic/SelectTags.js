@@ -4,7 +4,9 @@ import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
-export default function SelectTags({options, values, label, onSelectChange}) {
+export default function SelectTags(props) {
+
+    const {options, values, label, onSelectChange} = props;
 
     // if (!options) return;
     return (

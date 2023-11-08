@@ -39,7 +39,7 @@ public class SourceService {
     public Result execute(Long sourceId, String query, List<Parameter> parameters, Map<String,String> paramValues) throws SQLException {
         SqlBuilder sqlBuilder = new SqlBuilder();
         String preparedQuery = sqlBuilder
-                .selectAll()
+                .select()
                 .fromSubQuery(query)
                 .parameters(parameters,paramValues)
                 .build();

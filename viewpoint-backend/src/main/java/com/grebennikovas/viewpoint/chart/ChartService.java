@@ -53,7 +53,6 @@ public class ChartService {
 
     // // Получение данных для диаграммы по Entity - общий метод
     public Result getData(Chart chart) throws SQLException {
-        // Получение стратегии
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
         String chartQuery = queryProcessor.buildQuery(chart);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);

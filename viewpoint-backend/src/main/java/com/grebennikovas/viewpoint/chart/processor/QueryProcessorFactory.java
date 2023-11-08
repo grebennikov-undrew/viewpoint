@@ -1,7 +1,6 @@
 package com.grebennikovas.viewpoint.chart.processor;
 
 import com.grebennikovas.viewpoint.chart.Chart;
-import com.grebennikovas.viewpoint.chart.ChartSettings;
 import com.grebennikovas.viewpoint.chart.ChartType;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ public class QueryProcessorFactory {
         if (chart.getChartType() == ChartType.TABLE)
             return new SimpleQueryProcessor();
         if (chart.getChartType() == ChartType.PIE)
-            return new SimpleQueryProcessor();
+            return new PieQueryProcessor();
         if (chart.getChartType() == ChartType.LINE)
             return new PivotQueryProcessor();
         if (chart.getChartType() == ChartType.BAR)

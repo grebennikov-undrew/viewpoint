@@ -9,6 +9,7 @@ import java.util.Map;
 public class SqlBuilder {
 
     private String select;
+    private String agg;
     private String from;
     private String where;
     private String groupBy;
@@ -21,13 +22,18 @@ public class SqlBuilder {
         paramValues = new HashMap<>();
     }
 
+    public SqlBuilder select() {
+        this.select = "SELECT *";
+        return this;
+    }
+
     public SqlBuilder select(List<String> columns) {
         this.select = "SELECT " + SqlUtils.convertToString(columns);
         return this;
     }
 
-    public SqlBuilder selectAll() {
-        this.select = "SELECT *";
+    public SqlBuilder select(List<String> columns, AggFunction aggFunction, List<String> aggColumns) {
+        this.select = "SELECT " + SqlUtils.convertToString(columns) + ", " + SqlUtils.buildAggregationQuery(aggFunction, aggColumns);
         return this;
     }
 
@@ -42,7 +48,7 @@ public class SqlBuilder {
     }
 
     public SqlBuilder where(String conditions) {
-        if (conditions!= null)
+        if (conditions!= null && conditions.trim().length()>0)
             this.where = "WHERE " + conditions;
         return this;
     }
@@ -94,6 +100,10 @@ public class SqlBuilder {
         if (select == null || from == null) throw new IllegalStateException("Invalid sql statement");
 
         query.append(select).append("\n");
+        if (agg != null) {
+            query.append(agg).append("\n");
+        }
+
         query.append(from).append("\n");
 
         if (where != null) {

@@ -13,15 +13,18 @@ import FormControl from '@mui/material/FormControl';
 import { httpRequest } from '../../service/httpRequest';
 import { width } from '@mui/system';
 import TableArea from './Table/TableArea';
+import PieArea from './pie/PieArea';
 
-const ChartArea = ({chartData, chartResult}) => {
-    if (!chartResult) return;
-    return (
-        <Grid item sx={{m: 1}}>
-            <h3 style={{margin: "0 0 10px 10px"}}>{chartData.name}</h3>
-            <TableArea chartData={chartData} chartResult={chartResult}/>
-        </Grid>
-    )
+const ChartArea = (props) => {
+
+    const { chartData, chartResult } = props;
+
+    if (!chartData) return;
+    if (chartData.chartType.toLowerCase() === "table") {
+        return (<TableArea {...props}/>);
+    } else if (chartData.chartType.toLowerCase() === "pie") {
+        return (<PieArea {...props}/>)
+    }
 }
 
 export default ChartArea;

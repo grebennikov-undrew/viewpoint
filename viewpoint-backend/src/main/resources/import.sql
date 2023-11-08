@@ -18,6 +18,7 @@ INSERT INTO columns (dataset_id, name, type) VALUES (1, 'updated_on','Timestamp'
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'firstname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'lastname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'username','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'role','String');
 
 INSERT INTO parameters (dataset_id, name, type, sql_query) VALUES (2,'p_name','String','SELECT distinct firstname FROM users;');
 
@@ -29,3 +30,4 @@ INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','String');
 
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Табличная диаграмма', 'TABLE', 1, 1, '{"xColumns": ["id", "username", "lastname", "firstname"],"where": "id>1", "orderBy": ["lastname"]}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Круговая диаграмма', 'PIE', 1, 1, '{"xColumns": ["role"],"where": "id>1", "groupBy": ["role"], "aggFunction": "COUNT"}'::json);

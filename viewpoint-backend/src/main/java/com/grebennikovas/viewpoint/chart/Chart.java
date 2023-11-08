@@ -2,21 +2,13 @@ package com.grebennikovas.viewpoint.chart;
 
 import com.grebennikovas.viewpoint.BaseEntity;
 import com.grebennikovas.viewpoint.datasets.Dataset;
-import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.users.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JavaTypeRegistration;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.ConvertedBasicCollectionType;
 import org.hibernate.type.SqlTypes;
-import org.hibernate.type.descriptor.jdbc.JsonAsStringJdbcType;
-
-import java.util.Map;
-import java.util.Objects;
 
 @Entity
 @Table(name = "charts")

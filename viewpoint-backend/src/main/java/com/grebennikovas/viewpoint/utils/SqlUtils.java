@@ -19,6 +19,15 @@ public class SqlUtils {
         return String.join(", ", list);
     }
 
+    // Добавляет каждому элементу списка агрегатную функцию
+    public static String buildAggregationQuery(AggFunction aggregateFunction, List<String> columns) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (String column : columns) {
+            joiner.add(aggregateFunction.getFunc() + "(" + column + ") as \"" + aggregateFunction.getFunc() + "(" + column + ")\"");
+        }
+        return joiner.toString();
+    }
+
     // Приводит значение параметра к строке в SQL запросе
     public static String prepareParamValue(String parameterType, String paramValue) {
         String preparedParamValue;

@@ -88,4 +88,24 @@ class SqlUtilsTest {
         // Assert
         assertEquals("SELECT * FROM users WHERE firstname = 'Bob Dylan' AND id = 123 OR empty_param = {:p_null}", result);
     }
+
+    @Test
+    void buildAggregationQueryManyValues() {
+        List<String> columns = Arrays.asList("col_1", "col_2");
+        AggFunction aggregateFunction = AggFunction.AVG;
+
+        String result = SqlUtils.buildAggregationQuery(aggregateFunction, columns);
+
+        assertEquals("AVG(col_1) as \"AVG(col_1)\", AVG(col_2) as \"AVG(col_2)\"", result);
+    }
+
+    @Test
+    void buildAggregationQueryOneValue() {
+        List<String> columns = Arrays.asList("col_1");
+        AggFunction aggregateFunction = AggFunction.AVG;
+
+        String result = SqlUtils.buildAggregationQuery(aggregateFunction, columns);
+
+        assertEquals("AVG(col_1) as \"AVG(col_1)\"", result);
+    }
 }

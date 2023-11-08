@@ -2,6 +2,7 @@ package com.grebennikovas.viewpoint.chart;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.grebennikovas.viewpoint.utils.AggFunction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,5 +30,7 @@ public class ChartSettings implements Serializable {
     Boolean desc;
     @JsonProperty("limit")
     Integer limit;
+    @JsonProperty("aggFunction")
+    AggFunction aggFunction;
 
 }

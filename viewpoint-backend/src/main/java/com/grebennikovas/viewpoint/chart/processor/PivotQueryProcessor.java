@@ -2,6 +2,7 @@ package com.grebennikovas.viewpoint.chart.processor;
 
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.datasets.results.Result;
+import com.grebennikovas.viewpoint.utils.AggFunction;
 
 import java.util.ArrayList;
 import java.util.List;
