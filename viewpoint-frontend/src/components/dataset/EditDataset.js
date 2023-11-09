@@ -23,6 +23,7 @@ const EditDataset = () => {
     const { id } = useParams(); 
     const [tab, setTab] = React.useState(0);
     const [datasetData, setDatasetData] = useState({});
+    const [tableData, setTableData] = useState();
     const navigate = useNavigate();
 
     const defaultValues = {
@@ -112,19 +113,21 @@ const EditDataset = () => {
                     <Button color="error" variant="outlined" onClick={handleCloseClick}>Close</Button>
                 </ButtonGroup>
             </div>
-            <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
-                <Tab label="General" id={0} aria-controls='tab0'/>
-                <Tab label="SQL" id={1} aria-controls='tab1'/>
-                <Tab label="Result" id={2} aria-controls='tab2'/>
-            </Tabs>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
+                    <Tab label="General" id={0} aria-controls='tab0'/>
+                    {/* <Tab label="SQL" id={1} aria-controls='tab1'/> */}
+                    <Tab label="Result" id={2} aria-controls='tab2'/>
+                </Tabs>
+            </Box>
             <CustomTabPanel value={tab} index={0}>
-                {datasetData && <GeneralTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData}/>}
+                {datasetData && <GeneralTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData} setTableData={setTableData} setTab={setTab}/>}
             </CustomTabPanel>
-            <CustomTabPanel value={tab} index={1}>
+            {/* <CustomTabPanel value={tab} index={1}>
                 {datasetData && <SqlTab onFieldChange={handleFieldChange} onSelectChange={handleSelectChange} datasetData={datasetData} setDatasetData={setDatasetData}/>}
-            </CustomTabPanel>
-            <CustomTabPanel value={tab} index={2}>
-                {datasetData && <ResultTab datasetData={datasetData} handleSelectChange={handleSelectChange}/>}
+            </CustomTabPanel> */}
+            <CustomTabPanel value={tab} index={1}>
+                {datasetData && <ResultTab tableData={tableData} handleSelectChange={handleSelectChange}/>}
             </CustomTabPanel>
         </Container>
         </form>
@@ -143,7 +146,7 @@ function CustomTabPanel(props) {
         {...other}
       >
         {value === index && (
-          <Box sx={{ p: 3 }}>
+          <Box marginTop={3}>
             <Typography>{children}</Typography>
           </Box>
         )}

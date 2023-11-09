@@ -12,18 +12,65 @@ INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_i
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
 INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, current_date, current_date, 1);
 
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'id','int', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'created_on','timestamp', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'updated_on','timestamp', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'firstname','varchar', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'lastname','varchar', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (1, 'username','varchar', current_date, current_date);
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'id','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'created_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'updated_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'firstname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'lastname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'username','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (1, 'role','String');
 
 INSERT INTO parameters (dataset_id, name, type, sql_query) VALUES (2,'p_name','String','SELECT distinct firstname FROM users;');
 
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'id','int', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'created_on','timestamp', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'updated_on','timestamp', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'firstname','varchar', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'lastname','varchar', current_date, current_date);
-INSERT INTO columns (dataset_id, name, type, created_on, updated_on) VALUES (2, 'username','varchar', current_date, current_date);
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'id','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'created_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'updated_on','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'firstname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','String');
+
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Табличная диаграмма', 'TABLE', 1, 1, '{"dimensions": [{"value": "id", "label": "id"}, {"value": "username", "label": "username"}, {"value": "lastname", "label": "lastname"}, {"value": "firstname", "label": "firstname"}],"where": "id>1", "orderBy": [{"value": "lastname", "label": "lastname"}]}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Круговая диаграмма', 'PIE', 1, 1, '{"metrics": [{"value": "role", "label": "COUNT(role)", "aggFunction": "COUNT" }],"where": "id>1", "dimensions": [{"value": "role", "label": "role"}]}'::json);
+
+--  Тестовые данные ---------------------------
+DROP TABLE IF EXISTS sales;
+CREATE TABLE sales (product_name VARCHAR(50),sale_date DATE,quantity INT,unit_price DECIMAL(10, 2),shop VARCHAR(50));
+
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-01', 10, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-01', 8, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-01', 5, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-02', 3, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-02', 2, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-02', 5, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-03', 6, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-03', 3, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-03', 2, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-04', 8, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-04', 7, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-04', 2, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-05', 9, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-05', 2, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-05', 12, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-06', 2, 15.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-06', 2, 20.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-06', 12, 10.00, 'Shop 1');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-01', 2, 15.00, 'Shop 2');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-01', 6, 20.00, 'Shop 2');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-01', 16, 10.00, 'Shop 2');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product A', '2023-09-02', 15, 15.00, 'Shop 2');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-02', 20, 20.00, 'Shop 2');
+INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-02', 1, 10.00, 'Shop 2');
+
+INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Sales','SELECT *, quantity::DECIMAL * unit_price as total_amount FROM sales;', 4, current_date, current_date, 1);
+
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'quantity','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'unit_price','Double');
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'sale_date','Timestamp');
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'product_name','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'shop','String');
+INSERT INTO columns (dataset_id, name, type) VALUES (4, 'total_amount','Double');
+
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Продажи за неделю', 'LINE', 1, 4, '{"dimensions": [{"value": "product_name", "label": "product_name"}], "metrics": [{"value" : "quantity", "label": "SUM(quantity)", "aggFunction": "SUM"}], "xAxis": "sale_date"}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов по магазинам', 'BAR', 1, 4, '{"dimensions": [{"value": "shop", "label": "shop"}], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);
+
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов', 'BAR', 1, 4, '{"dimensions": [], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);

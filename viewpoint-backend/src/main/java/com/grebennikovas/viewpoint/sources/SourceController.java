@@ -1,7 +1,5 @@
 package com.grebennikovas.viewpoint.sources;
 
-import com.grebennikovas.viewpoint.datasets.dto.ParameterDTO;
-import com.grebennikovas.viewpoint.datasets.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

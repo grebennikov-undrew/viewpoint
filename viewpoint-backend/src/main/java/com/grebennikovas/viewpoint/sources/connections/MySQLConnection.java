@@ -1,31 +1,28 @@
 package com.grebennikovas.viewpoint.sources.connections;
 
-import com.grebennikovas.viewpoint.datasets.results.Result;
-import com.grebennikovas.viewpoint.datasets.results.Row;
+import com.grebennikovas.viewpoint.sources.DatabaseType;
 import com.grebennikovas.viewpoint.sources.Source;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Map;
 
-public class MySQLConnection implements Executable{
-    private Source source;
+@Component
+public class MySQLConnection implements DbConnection {
 
+    @Override
     public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
-    }
-    @Override
-    public boolean validate() {
-        return false;
-    }
-
-    @Override
-    public Result execute(String query) {
         return null;
+    }
+
+    @Override
+    public void setSource(Source source) {
+
+    }
+
+    @Override
+    public String getType() {
+        return DatabaseType.MYSQL.getCredit();
     }
 
     @Override
@@ -37,4 +34,16 @@ public class MySQLConnection implements Executable{
     public String getUrl() {
         return null;
     }
+
+    @Override
+    public Map<String, String> getJavaColTypes(Map<String, String> queryColTypes) {
+        return null;
+    }
+
+    @Override
+    public String getJavaColType(String queryColumnType) {
+        return null;
+    }
+
+
 }
