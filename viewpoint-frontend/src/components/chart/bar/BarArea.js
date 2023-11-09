@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import { Box, height, width } from '@mui/system';
 import dayjs from 'dayjs';
 
@@ -19,7 +19,7 @@ const legendPlacement = {
     },
   };
 
-const LineArea = ({chartData, chartResult}) => {
+const BarArea = ({chartData, chartResult}) => {
     if (!chartResult || !chartData) return;
 
     const { rows, columns, data } = chartResult;
@@ -30,9 +30,10 @@ const LineArea = ({chartData, chartResult}) => {
     const sortedKeys = columns.sort();
     const xColumn = dataset.columns.find(c => c.name == xAxis);
     const xAxisSettings = {
-        data: sortedKeys.map(stringDate => new Date(stringDate)),
-    }
+        data: sortedKeys,
+    };
     if (xColumn["type"] === "Timestamp") {
+        xAxisSettings["data"] = sortedKeys.map(stringDate => new Date(stringDate));
         xAxisSettings["scaleType"] = 'time';
         xAxisSettings["tickMinStep"] = 3600 * 1000 * 24; // 24 h
         xAxisSettings["valueFormatter"] = (value) => (dayjs(value).format("YYYY-MM-DD"));
@@ -49,7 +50,7 @@ const LineArea = ({chartData, chartResult}) => {
     }))
     
     return (
-        <LineChart
+        <BarChart
             xAxis={[{ ...xAxisSettings }]}
             series={[
                 ...seriesSettings
@@ -60,4 +61,4 @@ const LineArea = ({chartData, chartResult}) => {
     )
 }
 
-export default LineArea;
+export default BarArea;

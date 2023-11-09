@@ -15,6 +15,7 @@ import { width } from '@mui/system';
 import TableArea from './Table/TableArea';
 import PieArea from './pie/PieArea';
 import LineArea from './line/LineArea';
+import BarArea from './bar/BarArea';
 
 const ChartArea = (props) => {
     const { chartData, chartResult } = props;
@@ -40,6 +41,8 @@ const Chart = (props) => {
         return (<PieArea {...props}/>)
     } else if (chartData.chartType.toLowerCase() === "line") {
         return (<LineArea {...props}/>)
+    } else if (chartData.chartType.toLowerCase() === "bar") {
+        return (<BarArea {...props}/>)
     }
 }
 
