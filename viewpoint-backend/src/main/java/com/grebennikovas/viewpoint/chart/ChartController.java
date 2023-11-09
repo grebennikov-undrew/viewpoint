@@ -1,13 +1,12 @@
 package com.grebennikovas.viewpoint.chart;
 
-import com.grebennikovas.viewpoint.chart.ChartService;
-import com.grebennikovas.viewpoint.datasets.DatasetDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartDto;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,13 +38,13 @@ public class ChartController {
     // Получить данные из диагрммы по ее настройкам в БД (для дашборда)
     // TODO: возможно, этот метод не нужен
     @GetMapping("/{id}/data")
-    public Result getData(@PathVariable Long id) throws SQLException {
+    public ChartDataDto getData(@PathVariable Long id) throws SQLException {
         return chartService.getData(id);
     }
 
     // Получить данные из диагрммы по ее настройкам без сохранения (для редактора диаграмм)
     @PostMapping("/data")
-    public Result getDataRaw(@RequestBody ChartDto chartDto) throws SQLException {
+    public ChartDataDto getDataRaw(@RequestBody ChartDto chartDto) throws SQLException {
         return chartService.getData(chartDto);
     }
 

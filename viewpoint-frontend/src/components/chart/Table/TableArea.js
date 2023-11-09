@@ -12,32 +12,35 @@ import Paper from '@mui/material/Paper';
 const TableArea = ({chartData, chartResult}) => {
     if (!chartResult) return;
 
-    const { rows, coltypes } = chartResult;
+    const { rows, columns, data } = chartResult;
     const { chartSettings } = chartData;
     const { dimensions } = chartSettings;
 
-    
+
+
     return (
         <TableContainer component={Paper} style={{backgroundColor:"white"}}>
             <Table sx={{ minWidth: 650}} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        {dimensions.map((column) => (
-                            <TableCell>{column.label}</TableCell>
+                        {columns && columns.map((column) => (
+                            <TableCell>{column}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, idx) => (
-                        <TableRow
-                        key={idx}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            {dimensions.map((column) => (
-                                <TableCell>{row[column.label]}</TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
+                    {/* {Object.keys(data).forEach((rowKey, rowIdx) => { */}
+                    {Object.keys(data).map(key => {
+                        return (
+                            <TableRow
+                                key={key}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    {columns.map((column) => (
+                                        <TableCell>{data[key][column]}</TableCell>
+                                    ))}
+                            </TableRow>
+                    )})}
                 </TableBody>
             </Table>
         </TableContainer>

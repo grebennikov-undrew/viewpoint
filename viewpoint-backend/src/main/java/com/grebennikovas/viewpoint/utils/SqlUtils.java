@@ -108,8 +108,7 @@ public class SqlUtils {
 //                        entries.put(columnName, entry);
 //                    }
 //                    if (javaColType.equals("Object")) {
-                        Entry<Object> entry = new Entry();
-                        entry.setValue(rs.getObject(i));
+                        Entry<Object> entry = new Entry(rs.getObject(i));
                         entries.put(columnName, entry);
 //                    }
                 }

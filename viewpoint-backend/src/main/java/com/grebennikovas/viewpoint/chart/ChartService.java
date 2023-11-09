@@ -1,10 +1,11 @@
 package com.grebennikovas.viewpoint.chart;
 
+import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartDto;
 import com.grebennikovas.viewpoint.chart.processor.QueryProcessor;
 import com.grebennikovas.viewpoint.chart.processor.QueryProcessorFactory;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.SourceService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,25 +41,23 @@ public class ChartService {
     }
 
     // Получение данных для диаграммы по ID
-    public Result getData(Long chartId) throws SQLException {
+    public ChartDataDto getData(Long chartId) throws SQLException {
         Chart chart = chartRepository.findById(chartId).get();
         return getData(chart);
     }
 
     // Получение данных для диаграммы по DTO - для редактора диаграммы
-    public Result getData(ChartDto chartDto) throws SQLException {
+    public ChartDataDto getData(ChartDto chartDto) throws SQLException {
         Chart chart = chartMapper.mapToChart(chartDto);
         return getData(chart);
     }
 
     // // Получение данных для диаграммы по Entity - общий метод
-    public Result getData(Chart chart) throws SQLException {
+    public ChartDataDto getData(Chart chart) throws SQLException {
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
         String chartQuery = queryProcessor.buildQuery(chart);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
-        if (queryProcessor.needPivot())
-            return queryProcessor.pivotResult(chartData, chart.getChartSettings());
-        return chartData;
+        return queryProcessor.postProcess(chartData, chart.getChartSettings());
     }
 
 

@@ -27,7 +27,7 @@ public class ChartSettings implements Serializable {
     List<Column> metrics;
 
     @JsonProperty("xAxis")
-    Column xAxis;
+    String xAxis;
 
     @JsonProperty("where")
     String where;

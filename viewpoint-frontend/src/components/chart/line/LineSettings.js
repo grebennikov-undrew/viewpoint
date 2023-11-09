@@ -22,7 +22,7 @@ import SelectValue from '../../basic/SelectValue'
 const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
     const [ datasets, setDatasets] = useState();
     const { chartSettings, dataset, chartType } = chartData;
-    const { where, orderBy, desc, dimensions, metrics } = chartSettings;
+    const { where, orderBy, desc, dimensions, metrics, xAxis } = chartSettings;
     const { columns } = dataset;
 
     const columnsValues = columns.map(c => c.name);
@@ -93,6 +93,22 @@ const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =
                     </Select>
                 </FormControl>
             </Grid>
+            <Grid item xs={12}>
+                <FormControl fullWidth>
+                    <SelectValue 
+                        id="xAxis"
+                        options={columnsValues} 
+                        value={xAxis}
+                        label="X axis"
+                        onChange={(e) => {
+                            return onSelectChange(e, "chartSettings", {
+                                ...chartSettings,
+                                "xAxis": e.target.value,
+                            })
+                    }}
+                    />
+                </FormControl>
+            </Grid>
             <Grid item xs={12} >
                 <Box style={{backgroundColor: "#F3F3F3"}} pt={1} pb={1} pl={1} pr={1}>
                     <InputLabel style={{fontWeight: "bold", marginBottom: "5px"}} fullWidth>Metric</InputLabel>
@@ -109,6 +125,7 @@ const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =
                                     onChange={(e) => {
                                             const newMetric = metrics[0];
                                             newMetric["aggFunction"] = e.target.value;
+                                            newMetric["label"] = `${newMetric["aggFunction"]}(${newMetric["value"]})`;
                                             return onSelectChange(e, "chartSettings", {
                                                 ...chartSettings,
                                                 "metrics": [newMetric],
@@ -135,6 +152,7 @@ const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =
                                     (e) => {
                                         const newMetric = metrics[0];
                                         newMetric["value"] = e.target.value;
+                                        newMetric["label"] = `${newMetric["aggFunction"]}(${newMetric["value"]})`;
                                         onSelectChange(e, "chartSettings", {
                                             ...chartSettings,
                                             "metrics": [newMetric],
@@ -173,20 +191,6 @@ const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =
                     variant='standard'
                     multiline
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <FormControl fullWidth>
-                    <SelectTags 
-                        options={columnsValues} 
-                        values={orderBy && orderBy.map(d => d.label)} 
-                        label="Order by"
-                        onSelectChange={(event, value) => {
-                            const newArray = value.map(listValue => {return {label: listValue, value: listValue}});
-                            return onSelectChange(event, "chartSettings", {
-                            ...chartSettings,
-                            "orderBy": newArray,
-                    })}}/>
-                </FormControl>
             </Grid>
         </Grid>
     )

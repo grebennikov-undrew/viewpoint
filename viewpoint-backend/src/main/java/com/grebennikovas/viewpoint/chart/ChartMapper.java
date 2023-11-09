@@ -1,21 +1,15 @@
 package com.grebennikovas.viewpoint.chart;
 
+import com.grebennikovas.viewpoint.chart.dto.ChartDto;
 import com.grebennikovas.viewpoint.datasets.Dataset;
 import com.grebennikovas.viewpoint.datasets.DatasetDto;
-import com.grebennikovas.viewpoint.datasets.column.Column;
-import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.column.ColumnMapper;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.sources.SourceDto;
-import com.grebennikovas.viewpoint.users.User;
-import com.grebennikovas.viewpoint.users.UserDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper
 public interface ChartMapper {

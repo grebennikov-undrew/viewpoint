@@ -14,6 +14,7 @@ import { httpRequest } from '../../service/httpRequest';
 import { width } from '@mui/system';
 import TableArea from './Table/TableArea';
 import PieArea from './pie/PieArea';
+import LineArea from './line/LineArea';
 
 const ChartArea = (props) => {
     const { chartData, chartResult } = props;
@@ -37,6 +38,8 @@ const Chart = (props) => {
         return (<TableArea {...props}/>);
     } else if (chartData.chartType.toLowerCase() === "pie") {
         return (<PieArea {...props}/>)
+    } else if (chartData.chartType.toLowerCase() === "line") {
+        return (<LineArea {...props}/>)
     }
 }
 

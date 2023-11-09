@@ -34,7 +34,7 @@ const EditChart = () => {
         user: {id: 4, username: "grebennikovas"},
         name: "New chart",
         chartType: "TABLE",
-        chartSettings: { dimensions: [], metrics: [] , orderBy: [] },
+        chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
         dataset: {columns: []}
     }
 
