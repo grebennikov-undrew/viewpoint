@@ -16,7 +16,20 @@ import TableArea from './Table/TableArea';
 import PieArea from './pie/PieArea';
 
 const ChartArea = (props) => {
+    const { chartData, chartResult } = props;
+    if (!chartData) return;
 
+    return(
+        // <Box>
+        <Box height={"100%"} bgcolor={"white"} p={2} m={2}>
+            <Typography variant="h4">{chartData.name}</Typography>
+                <Chart {...props}/>
+        </Box>
+        //{ </Box> }
+    )
+}
+
+const Chart = (props) => {
     const { chartData, chartResult } = props;
 
     if (!chartData) return;

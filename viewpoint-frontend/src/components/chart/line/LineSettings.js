@@ -14,17 +14,12 @@ import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 
-import GridOnIcon from '@mui/icons-material/GridOn';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import SsidChartIcon from '@mui/icons-material/SsidChart';
-import PieChartIcon from '@mui/icons-material/PieChart';
-
 import { httpRequest } from '../../../service/httpRequest';
 import SelectTags from '../../basic/SelectTags';
 import { aggFunctions } from '../../basic/Enum';
 import SelectValue from '../../basic/SelectValue'
 
-const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
+const LineSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
     const [ datasets, setDatasets] = useState();
     const { chartSettings, dataset, chartType } = chartData;
     const { where, orderBy, desc, dimensions, metrics } = chartSettings;
@@ -114,7 +109,6 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
                                     onChange={(e) => {
                                             const newMetric = metrics[0];
                                             newMetric["aggFunction"] = e.target.value;
-                                            newMetric["label"] = `${newMetric["aggFunction"]}(${newMetric["value"]})`;
                                             return onSelectChange(e, "chartSettings", {
                                                 ...chartSettings,
                                                 "metrics": [newMetric],
@@ -141,7 +135,6 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
                                     (e) => {
                                         const newMetric = metrics[0];
                                         newMetric["value"] = e.target.value;
-                                        newMetric["label"] = `${newMetric["aggFunction"]}(${newMetric["value"]})`;
                                         onSelectChange(e, "chartSettings", {
                                             ...chartSettings,
                                             "metrics": [newMetric],
@@ -195,29 +188,8 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
                     })}}/>
                 </FormControl>
             </Grid>
-            {orderBy && orderBy.length > 0 && <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth >
-                    <InputLabel id="desc-select-label">Sort</InputLabel>
-                    <Select
-                        labelId="desc-select-label"
-                        id="desc-id"
-                        label="Sort"
-                        required
-                        value={desc ? "descending" : "ascending"}
-                        onChange={
-                            (e) => onSelectChange(e, "chartSettings", {
-                                    ...chartSettings,
-                                    "desc": e.target.value === "descending" ? true : false,
-                                })
-                        }
-                    >
-                        <MenuItem value="ascending">ascending</MenuItem>
-                        <MenuItem value="descending">descending</MenuItem>
-                    </Select>
-                </FormControl>
-            </Grid>}
         </Grid>
     )
 }
 
-export default PieSettings;
+export default LineSettings;

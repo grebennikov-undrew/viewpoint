@@ -14,7 +14,7 @@ const TableArea = ({chartData, chartResult}) => {
 
     const { rows, coltypes } = chartResult;
     const { chartSettings } = chartData;
-    const { xColumns } = chartSettings;
+    const { dimensions } = chartSettings;
 
     
     return (
@@ -22,8 +22,8 @@ const TableArea = ({chartData, chartResult}) => {
             <Table sx={{ minWidth: 650}} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        {xColumns.map((column) => (
-                            <TableCell>{column}</TableCell>
+                        {dimensions.map((column) => (
+                            <TableCell>{column.label}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
@@ -33,8 +33,8 @@ const TableArea = ({chartData, chartResult}) => {
                         key={idx}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            {xColumns.map((column) => (
-                                <TableCell>{row[column]}</TableCell>
+                            {dimensions.map((column) => (
+                                <TableCell>{row[column.label]}</TableCell>
                             ))}
                         </TableRow>
                     ))}

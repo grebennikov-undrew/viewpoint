@@ -25,7 +25,7 @@ import SelectTags from '../../basic/SelectTags';
 const TableSettingsArea = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
     const [ datasets, setDatasets] = useState();
     const { chartSettings, dataset, chartType } = chartData;
-    const { xColumns, where, orderBy, desc } = chartSettings;
+    const { dimensions, where, orderBy, desc } = chartSettings;
     const { columns } = dataset;
 
     const columnsValues = columns.map(c => c.name);
@@ -100,12 +100,14 @@ const TableSettingsArea = ({chartData, chartResult, onFieldChange, onSelectChang
                 <FormControl fullWidth>
                         <SelectTags 
                         options={columnsValues} 
-                        values={xColumns} 
-                        label="Columns"
-                        onSelectChange={(event, value) => onSelectChange(event, "chartSettings", {
-                        ...chartSettings,
-                        "xColumns": value,
-                    })}/>
+                        values={dimensions && dimensions.map(d => d.label)} 
+                        label="Dimensions"
+                        onSelectChange={(event, value) => {
+                            const newArray = value.map(listValue => {return {label: listValue, value: listValue}});
+                            return onSelectChange(event, "chartSettings", {
+                            ...chartSettings,
+                            "dimensions": newArray,
+                    })}}/>
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
@@ -126,12 +128,14 @@ const TableSettingsArea = ({chartData, chartResult, onFieldChange, onSelectChang
                 <FormControl fullWidth>
                         <SelectTags 
                         options={columnsValues} 
-                        values={orderBy} 
+                        values={orderBy && orderBy.map(d => d.label)} 
                         label="Order by"
-                        onSelectChange={(event, value) => onSelectChange(event, "chartSettings", {
-                        ...chartSettings,
-                        "orderBy": value,
-                    })}/>
+                        onSelectChange={(event, value) => {
+                            const newArray = value.map(listValue => {return {label: listValue, value: listValue}});
+                            return onSelectChange(event, "chartSettings", {
+                            ...chartSettings,
+                            "orderBy": newArray,
+                    })}}/>
                 </FormControl>
             </Grid>
             {orderBy && orderBy.length > 0 && <Grid item xs={12}>

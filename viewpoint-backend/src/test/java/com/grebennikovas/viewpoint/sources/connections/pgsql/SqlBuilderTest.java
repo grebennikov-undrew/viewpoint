@@ -1,6 +1,7 @@
 package com.grebennikovas.viewpoint.sources.connections.pgsql;
 
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.utils.Column;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -12,11 +13,13 @@ class SqlBuilderTest {
     @Test
     public void testBuildQuery() {
         // Arrange
-        List<String> columns = Arrays.asList("col1", "col2");
+        Column col1 = new Column("col1");
+        Column col2 = new Column("col2", "label");
+        List<Column> columns = Arrays.asList(col1, col2);
         String tableName = "example_table";
         String conditions = "col1 > 10";
-        List<String> groupByColumns = Arrays.asList("col1");
-        List<String> orderByColumns = Arrays.asList("col2", "col1");
+        List<Column> groupByColumns = Arrays.asList(col1);
+        List<Column> orderByColumns = Arrays.asList(col1,col2);
         int limitCount = 5;
 
         SqlBuilder builder = new SqlBuilder()
@@ -31,12 +34,14 @@ class SqlBuilderTest {
         String query = builder.build();
 
         // Assert
-        String expectedQuery = "SELECT col1, col2\n" +
-                "FROM example_table\n" +
-                "WHERE col1 > 10\n" +
-                "GROUP BY col1\n" +
-                "ORDER BY col2, col1 DESC\n" +
-                "LIMIT 5\n";
+        String expectedQuery = """
+                SELECT col1 as "col1", col2 as "label"
+                FROM example_table
+                WHERE col1 > 10
+                GROUP BY col1
+                ORDER BY col1, col2 DESC
+                LIMIT 5
+                """;
 
         assertEquals(expectedQuery, query);
     }
@@ -44,11 +49,13 @@ class SqlBuilderTest {
     @Test
     public void testBuildQueryWithParameters() {
         // Arrange
-        List<String> columns = Arrays.asList("col1", "col2");
+        Column col1 = new Column("col1");
+        Column col2 = new Column("col2", "label");
+        List<Column> columns = Arrays.asList(col1, col2);
         String tableName = "example_table";
         String conditions = "col1 > {:param1}";
-        List<String> groupByColumns = Arrays.asList("col1");
-        List<String> orderByColumns = Arrays.asList("col2", "col1");
+        List<Column> groupByColumns = Arrays.asList(col1);
+        List<Column> orderByColumns = Arrays.asList(col1,col2);
         int limitCount = 5;
 
         List<Parameter> paramInfo= new ArrayList<>();
@@ -73,12 +80,14 @@ class SqlBuilderTest {
         String query = builder.build();
 
         // Assert
-        String expectedQuery = "SELECT col1, col2\n" +
-                "FROM example_table\n" +
-                "WHERE col1 > 10 \n" +
-                "GROUP BY col1\n" +
-                "ORDER BY col2, col1 DESC\n" +
-                "LIMIT 5\n";
+        String expectedQuery = """
+                SELECT col1 as "col1", col2 as "label"
+                FROM example_table
+                WHERE col1 > 10\s
+                GROUP BY col1
+                ORDER BY col1, col2 DESC
+                LIMIT 5
+                """;
 
         assertEquals(expectedQuery, query);
     }

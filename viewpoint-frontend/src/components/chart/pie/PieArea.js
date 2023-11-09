@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { Box } from '@mui/system';
+import { Box, height, width } from '@mui/system';
 
 const PieArea = ({chartData, chartResult}) => {
     if (!chartResult) return;
 
     const { rows, coltypes } = chartResult;
     const { chartSettings } = chartData;
-    const { xColumns, aggFunction, groupBy } = chartSettings;
+    const { metrics, dimensions } = chartSettings;
 
-    const valueName = aggFunction + "(" + xColumns[0] + ")"
+    const metric = metrics[0];
 
     const data = rows.map(((r, idx) => {
         let label = "";
-        groupBy.map((c, idx) => {
-            label += r[c] + ", ";
+        dimensions.map((c, idx) => {
+            label += r[c.label] + ", ";
         })
         label = label.substring(0, label.length - 2)
-        return { id: idx, value: r[valueName], label: label}
+        return { id: idx, value: r[metric.label], label: label}
     }))
     
     return (
@@ -29,7 +29,7 @@ const PieArea = ({chartData, chartResult}) => {
                     arcLabelMinAngle: 45,
             },
             ]}
-            
+            sx={{marginBottom: "30px"}}
         />
     )
 }

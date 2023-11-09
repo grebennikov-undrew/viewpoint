@@ -14,10 +14,10 @@ class SqlUtilsTest {
     @Test
     public void testConvertToStringSingleElement() {
         // Arrange
-        List<String> list = Arrays.asList("Element");
+        List<Column> list = Arrays.asList(new Column("Element"));
 
         // Act
-        String result = SqlUtils.convertToString(list);
+        String result = SqlUtils.getColumns(list);
 
         // Assert
         assertEquals("Element", result);
@@ -26,10 +26,10 @@ class SqlUtilsTest {
     @Test
     public void testConvertToStringMultipleElements() {
         // Arrange
-        List<String> list = Arrays.asList("Element1", "Element2", "Element3");
+        List<Column> list = Arrays.asList(new Column("Element1"), new Column("Element2"), new Column("Element3"));
 
         // Act
-        String result = SqlUtils.convertToString(list);
+        String result = SqlUtils.getColumns(list);
 
         // Assert
         assertEquals("Element1, Element2, Element3", result);
@@ -91,21 +91,23 @@ class SqlUtilsTest {
 
     @Test
     void buildAggregationQueryManyValues() {
-        List<String> columns = Arrays.asList("col_1", "col_2");
-        AggFunction aggregateFunction = AggFunction.AVG;
+        Column col1 = new Column("col_1","label1", AggFunction.AVG);
+        Column col2 = new Column("col_2", "label2", AggFunction.MAX);
+        List<Column> columns = Arrays.asList(col1, col2);
 
-        String result = SqlUtils.buildAggregationQuery(aggregateFunction, columns);
+        String result = SqlUtils.getColumnsWithLabels(columns);
 
-        assertEquals("AVG(col_1) as \"AVG(col_1)\", AVG(col_2) as \"AVG(col_2)\"", result);
+        assertEquals("AVG(col_1) as \"label1\", MAX(col_2) as \"label2\"", result);
     }
 
     @Test
     void buildAggregationQueryOneValue() {
-        List<String> columns = Arrays.asList("col_1");
+        Column col1 = new Column("col_1","label", AggFunction.AVG);
+        List<Column> columns = Arrays.asList(col1);
         AggFunction aggregateFunction = AggFunction.AVG;
 
-        String result = SqlUtils.buildAggregationQuery(aggregateFunction, columns);
+        String result = SqlUtils.getColumnsWithLabels(columns);
 
-        assertEquals("AVG(col_1) as \"AVG(col_1)\"", result);
+        assertEquals("AVG(col_1) as \"label\"", result);
     }
 }

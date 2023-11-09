@@ -14,16 +14,30 @@ public class SqlUtils {
     private SqlUtils() {
     }
 
-    // Приводит лист к строке с разделителем запятая
-    public static String convertToString(List<String> list) {
-        return String.join(", ", list);
+    // Приводит лист столбцов к строке с лейблами
+    public static String getColumnsWithLabels(List<Column> columns) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (Column column : columns) {
+            String columnString;
+            if (column.getAggFunction() != null)
+                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            else
+                columnString = column.getValue();
+            joiner.add(columnString + " as \"" + column.getLabel() + "\"");
+        }
+        return joiner.toString();
     }
 
-    // Добавляет каждому элементу списка агрегатную функцию
-    public static String buildAggregationQuery(AggFunction aggregateFunction, List<String> columns) {
+    // Приводит лист столбцов к строке без лейблов
+    public static String getColumns(List<Column> columns) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (String column : columns) {
-            joiner.add(aggregateFunction.getFunc() + "(" + column + ") as \"" + aggregateFunction.getFunc() + "(" + column + ")\"");
+        for (Column column : columns) {
+            String columnString;
+            if (column.getAggFunction() != null)
+                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            else
+                columnString = column.getValue();
+            joiner.add(columnString);
         }
         return joiner.toString();
     }

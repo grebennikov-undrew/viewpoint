@@ -27,13 +27,8 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder select(List<String> columns) {
-        this.select = "SELECT " + SqlUtils.convertToString(columns);
-        return this;
-    }
-
-    public SqlBuilder select(List<String> columns, AggFunction aggFunction, List<String> aggColumns) {
-        this.select = "SELECT " + SqlUtils.convertToString(columns) + ", " + SqlUtils.buildAggregationQuery(aggFunction, aggColumns);
+    public SqlBuilder select(List<Column> columns) {
+        this.select = "SELECT " + SqlUtils.getColumnsWithLabels(columns);
         return this;
     }
 
@@ -53,9 +48,9 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder groupBy(List<String> columns) {
+    public SqlBuilder groupBy(List<Column> columns) {
         if (columns!= null && columns.size() > 0)
-            this.groupBy = "GROUP BY " + SqlUtils.convertToString(columns);
+            this.groupBy = "GROUP BY " + SqlUtils.getColumns(columns);
         return this;
     }
 
@@ -65,9 +60,9 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder orderBy(List<String> columns, Boolean desc) {
+    public SqlBuilder orderBy(List<Column> columns, Boolean desc) {
         if (columns != null && columns.size() > 0) {
-            this.orderBy = "ORDER BY " + SqlUtils.convertToString(columns);
+            this.orderBy = "ORDER BY " + SqlUtils.getColumns(columns);
             if (desc != null && desc)
                 this.orderBy = this.orderBy + " DESC";
         }

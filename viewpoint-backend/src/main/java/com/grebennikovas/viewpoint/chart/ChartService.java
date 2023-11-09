@@ -57,7 +57,7 @@ public class ChartService {
         String chartQuery = queryProcessor.buildQuery(chart);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
         if (queryProcessor.needPivot())
-            return queryProcessor.pivotResult(chartData);
+            return queryProcessor.pivotResult(chartData, chart.getChartSettings());
         return chartData;
     }
 

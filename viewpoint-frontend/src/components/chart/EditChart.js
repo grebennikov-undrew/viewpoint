@@ -34,7 +34,7 @@ const EditChart = () => {
         user: {id: 4, username: "grebennikovas"},
         name: "New chart",
         chartType: "TABLE",
-        chartSettings: { xColumns: [], orderBy: [] },
+        chartSettings: { dimensions: [], metrics: [] , orderBy: [] },
         dataset: {columns: []}
     }
 
@@ -164,8 +164,12 @@ const EditChart = () => {
                     </Stack>
                     <SettingsArea chartData={chartData} chartResult={chartResult} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
                 </Grid>
-                <Grid container xs={9} paddingLeft={5}>
-                    <div style={{width: "100%", height: "300px", marginLeft: "auto", marginRight: "auto"}}> <ChartArea chartData={chartData} chartResult={chartResult} /> </div>
+                <Grid container xs={9}>
+                    <Grid item xs={12} > 
+                        <div style={{ height: "400px", width: "100%"}}>
+                            <ChartArea chartData={chartData} chartResult={chartResult} />
+                        </div>
+                    </Grid>
                     {/* <ChartArea chartData={chartData} chartResult={chartResult} /> */}
                     <Snackbar open={needUpdate} anchorOrigin={{ vertical: "bottom", horizontal:"right" }} TransitionComponent={TransitionUp}>
                         <MuiAlert severity="warning" sx={{ width: '100%' }} action={<Button color="warning" size="small" onClick={handleRefresh}>REFRESH</Button>} >
