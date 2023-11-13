@@ -1,5 +1,7 @@
 package com.grebennikovas.viewpoint.dashboard;
 
+import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartDto;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,30 @@ public class DashboardController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 //        }
 //    }
+
+    // Получить все диаграммы
+    @GetMapping("/")
+    public List<Dashboard> findAll() {
+        List<Dashboard> all = dashboardService.findAll();
+        return all;
+    }
+
+    // Сохранить/изменить диаграмму
+    @PostMapping("/")
+    public Dashboard save(@RequestBody Dashboard dashboard) {
+        return dashboardService.save(dashboard);
+    }
+
+    // Поулчить информацию о диаграмме по id
+    @GetMapping("/{id}")
+    public Dashboard findById(@PathVariable Long id) throws SQLException {
+        return dashboardService.findById(id);
+    }
+
+    @GetMapping("/{id}/data")
+    public List<ChartDataDto> getData(@PathVariable Long id) throws SQLException {
+        return dashboardService.getData(id);
+    }
 
     @PostMapping("/parameter")
     public ResponseEntity<?> getParameterValues(@RequestBody ParameterDto parameterDTO) {

@@ -16,6 +16,7 @@ import TableArea from './Table/TableArea';
 import PieArea from './pie/PieArea';
 import LineArea from './line/LineArea';
 import BarArea from './bar/BarArea';
+import Paper from '@mui/material/Paper';
 
 const ChartArea = (props) => {
     const { chartData, chartResult } = props;
@@ -23,8 +24,16 @@ const ChartArea = (props) => {
 
     return(
         // <Box>
-        <Box height={"100%"} bgcolor={"white"} p={2} m={2}>
-            <Typography variant="h4">{chartData.name}</Typography>
+        <Box 
+            height={"100%"} 
+            bgcolor={"white"} 
+            p={2} 
+            component={Paper} 
+            // elevation={1} 
+            borderRadius={4}
+            // style={{paddingBottom: "20px"}}
+        >
+            <Typography variant="h4" fontWeight={600}>{chartData.name}</Typography>
                 <Chart {...props}/>
         </Box>
         //{ </Box> }

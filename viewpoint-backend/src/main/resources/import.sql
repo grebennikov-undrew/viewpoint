@@ -8,9 +8,9 @@ INSERT INTO users (username, firstname, lastname, email, role, password, is_acti
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('default', 'POSTGRESQL', 'localhost', '5433', 'viewpoint', '', 'postgres', 'postgres');
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('external', 'MYSQL', '1.1.1.1', '5432', 'public', '', 'admin', '12345');
 
-INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, current_date, current_date, 1);
-INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, current_date, current_date, 1);
-INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, 1);
+INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, 1);
+INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, 1);
 
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'id','Double');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'created_on','Timestamp');
@@ -61,7 +61,7 @@ INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES (
 INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product B', '2023-09-02', 20, 20.00, 'Shop 2');
 INSERT INTO sales (product_name, sale_date, quantity, unit_price, shop) VALUES ('Product C', '2023-09-02', 1, 10.00, 'Shop 2');
 
-INSERT INTO datasets (name, sql_query, user_id, created_on, updated_on, source_id) VALUES ('Sales','SELECT *, quantity::DECIMAL * unit_price as total_amount FROM sales;', 4, current_date, current_date, 1);
+INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('Sales','SELECT *, quantity::DECIMAL * unit_price as total_amount FROM sales;', 4, 1);
 
 INSERT INTO columns (dataset_id, name, type) VALUES (4, 'quantity','Double');
 INSERT INTO columns (dataset_id, name, type) VALUES (4, 'unit_price','Double');
@@ -74,3 +74,8 @@ INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUE
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов по магазинам', 'BAR', 1, 4, '{"dimensions": [{"value": "shop", "label": "shop"}], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);
 
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов', 'BAR', 1, 4, '{"dimensions": [], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);
+
+INSERT INTO dashboards (name, user_id, layout) VALUES ('Отчет по продажам', 1, '{"position": [{"w": 6, "h": 2, "x": 0, "y": 0, "i": "3"}, {"w": 6, "h": 2, "x": 7, "y": 0, "i": "4"}]}'::json)
+
+INSERT INTO dashboard_chart (dashboard_id, chart_id) VALUES (1, 3);
+INSERT INTO dashboard_chart (dashboard_id, chart_id) VALUES (1, 4);

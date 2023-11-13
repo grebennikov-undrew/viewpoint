@@ -57,7 +57,9 @@ public class ChartService {
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
         String chartQuery = queryProcessor.buildQuery(chart);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
-        return queryProcessor.postProcess(chartData, chart.getChartSettings());
+        ChartDataDto chartDataDto = queryProcessor.postProcess(chartData, chart.getChartSettings());
+        chartDataDto.setChart(chartMapper.mapToChartDto(chart));
+        return chartDataDto;
     }
 
 

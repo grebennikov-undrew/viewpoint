@@ -14,5 +14,6 @@ public class ChartDataDto {
     private Map<String, Map<String, Object>> data;
     private List<String> columns;
     private List<String> rows;
+    private ChartDto chart;
 
 }

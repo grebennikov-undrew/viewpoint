@@ -56,6 +56,8 @@ const LineArea = ({chartData, chartResult}) => {
             ]}
             margin={{ top: 10, bottom: 20 }}
             {...legendPlacement}
+            sx={{transform: "none"}}
+            skipAnimation 
         />
     )
 }

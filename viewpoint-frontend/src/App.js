@@ -12,6 +12,7 @@ import EditDataset from './components/dataset/EditDataset';
 import LoginForm from './routes/LoginForm';
 import Chart from './routes/Charts';
 import EditChart from './components/chart/EditChart';
+import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Routes>
               <Route exact path='/' element={<HomePage/>}/>
               <Route path='/dashboard' element={<Dashboards/>}/>
+              <Route path='/dashboard/:id' element={<Dashboard/>}/>
+              <Route path='/dashboard/:id/edit' element={<Dashboard/>}/>
               <Route path='/dataset' element={<Dataset/>}/>
               <Route path='/dataset/:id' element={<EditDataset/>}/>
               <Route path='/dataset/new' element={<EditDataset/>}/>

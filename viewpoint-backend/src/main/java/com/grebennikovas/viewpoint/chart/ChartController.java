@@ -30,6 +30,7 @@ public class ChartController {
         return chartService.save(chartDto);
     }
 
+    // Поулчить информацию о диаграмме по id
     @GetMapping("/{id}")
     public ChartDto findById(@PathVariable Long id) throws SQLException {
         return chartService.findById(id);

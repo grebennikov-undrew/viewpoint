@@ -30,7 +30,7 @@ public interface ChartMapper {
     @Mapping(target = "userDto", source = "user")
     @Mapping(target = "columnsDto", source = "columns")
     @Mapping(target = "sourceDto", source = "source", qualifiedByName = "sourceToShortDto")
-    DatasetDto DataetToDto(Dataset dataset);
+    DatasetDto DatasetToDto(Dataset dataset);
 
     @Named("sourceToShortDto")
     @BeanMapping(ignoreByDefault = true)
