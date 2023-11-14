@@ -1,11 +1,10 @@
 package com.grebennikovas.viewpoint.chart;
 
-import com.grebennikovas.viewpoint.chart.dto.ChartDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartRequestDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartShortDto;
 import com.grebennikovas.viewpoint.datasets.Dataset;
 import com.grebennikovas.viewpoint.datasets.DatasetDto;
-import com.grebennikovas.viewpoint.sources.Source;
-import com.grebennikovas.viewpoint.sources.SourceDto;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -16,30 +15,17 @@ public interface ChartMapper {
 
     ChartMapper MAPPER = Mappers.getMapper(ChartMapper.class);
 
-    @Mapping(target = "dataset", source = "datasetDto")
-    @Mapping(target = "user", source = "userDto")
-    @Mapping(target = "dataset.source", source = "datasetDto.sourceDto")
-    @Mapping(target = "dataset.columns", source = "datasetDto.columnsDto")
-    Chart mapToChart(ChartDto chartDto);
+    @Mapping(target = "dataset.id", source = "datasetId")
+    Chart mapToChart(ChartRequestDto chartRequestDto);
 
-    @Mapping(target = "userDto", source = "user")
-    @Mapping(target = "datasetDto", source = "dataset", qualifiedByName = "datasetToDto")
-    ChartDto mapToChartDto(Chart chart);
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "datasetId", source = "dataset.id")
+    @Mapping(target = "datasetName", source = "dataset.name")
+    ChartResponseDto mapToChartDto(Chart chart);
 
-    @Named("datasetToDto")
-    @Mapping(target = "userDto", source = "user")
-    @Mapping(target = "columnsDto", source = "columns")
-    @Mapping(target = "sourceDto", source = "source", qualifiedByName = "sourceToShortDto")
-    DatasetDto DatasetToDto(Dataset dataset);
-
-    @Named("sourceToShortDto")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id")
-    @Mapping(target = "name")
-    @Mapping(target = "type")
-    SourceDto sourceToShortDto(Source source);
-
-
-
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "datasetName", source = "dataset.name")
+    @Mapping(target = "sourceName", source = "dataset.source.name")
+    ChartShortDto mapToChartDtoShort(Chart chart);
 
 }

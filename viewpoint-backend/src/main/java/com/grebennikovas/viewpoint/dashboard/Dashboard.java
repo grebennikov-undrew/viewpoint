@@ -32,7 +32,7 @@ public class Dashboard {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "dashboard_chart",
             joinColumns = @JoinColumn(name = "dashboard_id"),

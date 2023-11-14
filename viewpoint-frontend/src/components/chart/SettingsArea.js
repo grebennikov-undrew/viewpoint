@@ -5,7 +5,7 @@ import LineSettings from "./line/LineSettings";
 import BarSettings from "./bar/BarSettings";
 
 const SettingsArea = (props) => {
-    const {chartData} = props;
+    const { chartData } = props;
 
     if (!chartData) return;
     if (chartData.chartType.toLowerCase() === "table") {

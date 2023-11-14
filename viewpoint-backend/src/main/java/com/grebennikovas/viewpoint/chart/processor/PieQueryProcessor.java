@@ -2,8 +2,6 @@ package com.grebennikovas.viewpoint.chart.processor;
 
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
-import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
-import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.utils.Column;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
 

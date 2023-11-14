@@ -6,13 +6,25 @@ import Grid from '@mui/material/Grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { Button } from '@mui/material';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { httpRequest } from '../../service/httpRequest';
 import DashboardLayot from './DashboardLayot';
 import SelectTags from '../basic/SelectTags';
-import { style } from '@mui/system';
+import DropdownCheckboxList from './utils/DropdownCheckboxList';
+
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 const Dashboard = (props) => {
     const { id } = useParams(); 
@@ -76,8 +88,10 @@ const Dashboard = (props) => {
         setMode("read");
     }
 
+    const backgroundColor = mode==="read" ? "transparent" : "#transparent";
+
     return (
-        <div>
+        <div style={{backgroundColor: backgroundColor, height: "100%" }}>
             <Container maxWidth="xl">
                 <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
                     <Typography variant="h2" >
@@ -103,7 +117,7 @@ const Dashboard = (props) => {
                     </ButtonGroup>
                 </div>
                 <Grid container columns={12}>
-                    <Grid item xs={2} height={"100%"} bgcolor={"white"} borderRadius={4} p={2} mt={1.3} component={Paper}>
+                    <Grid item xs={2} height={"100%"} bgcolor={"white"} borderRadius={4} p={2} mt={2.5} component={Paper}>
                         <Typography variant="h4" fontWeight={600}>
                             Filters
                         </Typography>
@@ -139,6 +153,7 @@ const Dashboard = (props) => {
                             handleSettingsChange={handleSettingsChange}/>
                     </Grid>
                 </Grid>
+                {mode === "edit" && <DropdownCheckboxList/>}
             </Container>
         </div>
         
@@ -149,5 +164,14 @@ const customButtonStyle = {
     margin: 'auto 0', // Задаем отступы
     padding: '0 12px',
   };
+
+const fabStyle = {
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
+};
 
 export default Dashboard;

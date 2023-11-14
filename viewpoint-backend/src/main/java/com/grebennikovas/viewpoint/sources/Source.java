@@ -39,4 +39,7 @@ public class Source {
 
     private String password;
 
+    public Source(Long id) {
+        this.id = id;
+    }
 }

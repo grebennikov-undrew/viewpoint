@@ -20,23 +20,20 @@ import { httpRequest } from '../../service/httpRequest';
 import SettingsArea from './SettingsArea';
 import ChartArea from './ChartArea';
 
-
+const defaultChartData = {
+    name: "New chart",
+    chartType: "TABLE",
+    username: "user",
+    datasetName: "",
+    datasetId: null,
+    chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
+}
 
 const EditChart = () => {
     const { id } = useParams(); 
-    const [chartData, setChartData] = useState();
-    const [chartResult, setChartResult] = useState();
+    const [chartData, setChartData] = useState(defaultChartData);
     const [needUpdate, setNeedUpdate] = useState(false);
     const navigate = useNavigate();
-
-    const defaultValues = {
-        parameters: [],
-        user: {id: 4, username: "grebennikovas"},
-        name: "New chart",
-        chartType: "TABLE",
-        chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
-        dataset: {columns: []}
-    }
 
     useEffect(() => {
         if (id) {
@@ -50,23 +47,6 @@ const EditChart = () => {
             }
             fetchData();
         }
-        else {
-            setChartData(defaultValues);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const response = await httpRequest.get(`/chart/${id}/data`)
-                    setChartResult(response.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-            fetchData();
-        }
     }, []);
 
     const handleRefresh = (event) => {
@@ -74,7 +54,7 @@ const EditChart = () => {
             const fetchData = async () => {
                 try {
                     const response = await httpRequest.post(`/chart/data`, chartData)
-                    setChartResult(response.data);
+                    setChartData(response.data);
                     setNeedUpdate(false);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -162,12 +142,12 @@ const EditChart = () => {
                             <SsidChartIcon />
                         </IconButton>
                     </Stack>
-                    <SettingsArea chartData={chartData} chartResult={chartResult} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
+                    <SettingsArea chartData={chartData} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
                 </Grid>
                 <Grid container xs={9}>
                     <Grid item xs={12} > 
                         <div style={{ height: "400px", width: "100%"}}>
-                            <ChartArea chartData={chartData} chartResult={chartResult} />
+                            <ChartArea chartData={chartData} />
                         </div>
                     </Grid>
                     {/* <ChartArea chartData={chartData} chartResult={chartResult} /> */}

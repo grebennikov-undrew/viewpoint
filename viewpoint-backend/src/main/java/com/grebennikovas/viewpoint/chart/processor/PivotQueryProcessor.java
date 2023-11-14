@@ -2,7 +2,7 @@ package com.grebennikovas.viewpoint.chart.processor;
 
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
-import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
@@ -45,19 +45,23 @@ public class PivotQueryProcessor implements QueryProcessor {
     }
 
     @Override
-    public ChartDataDto postProcess(Result result, ChartSettings settings) {
+    public ChartResponseDto postProcess(ChartResponseDto chartResponseDto, Result result) {
         // Данные в виде листа
         List<Row> rawData = result.getRows();
+
         // Настройки сводной таблицы
+        ChartSettings settings = chartResponseDto.getChartSettings();
         String xAxis = settings.getXAxis();
         String metric = settings.getMetrics().get(0).getLabel();
         String dimension = settings.getDimensions().size()>0 ? settings.getDimensions().get(0).getLabel() : null;
-        // Расчет всех значений измерения
+
+        // Расчет допустимых значений измерения
         Map<String, Object> emptyValues = rawData.stream()
                 .collect(Collectors.toMap(
                         k -> k.getEntries().get(xAxis).toString(),
                         v -> 0,
                         (exist, replace) -> exist));
+
         // Расчет сводной таблицы
         Map<String, Map<String, Object>> actualValues = rawData.stream().
                 collect(Collectors.groupingBy(
@@ -67,15 +71,16 @@ public class PivotQueryProcessor implements QueryProcessor {
                                 v -> v.getEntries().get(metric),
                                 (existing, replacement) -> existing
                         )));
+
         // Заполнение пустых значений в сводной таблице
         actualValues.forEach((serie, values) -> {
             emptyValues.forEach(values::putIfAbsent);
         });
+
         // Создание DTO
-        ChartDataDto chartDataDto = new ChartDataDto();
-        chartDataDto.setColumns(new ArrayList<>(emptyValues.keySet()));
-        chartDataDto.setRows(new ArrayList<>(actualValues.keySet()));
-        chartDataDto.setData(actualValues);
-        return chartDataDto;
+        chartResponseDto.setColumns(new ArrayList<>(emptyValues.keySet()));
+        chartResponseDto.setRows(new ArrayList<>(actualValues.keySet()));
+        chartResponseDto.setData(actualValues);
+        return chartResponseDto;
     }
 }

@@ -38,7 +38,7 @@ const DashboardLayot = (props) => {
                 useCSSTransforms={true}
                 isDraggable={mode === "edit"}
                 isResizable={mode === "edit"}
-                
+                margin={[20,20]}
         >
             {dashboardData && dashboardData.map((chartEntry) => {
                 const chartData = chartEntry["chart"];

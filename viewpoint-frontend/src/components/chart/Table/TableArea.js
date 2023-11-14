@@ -9,14 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const TableArea = ({chartData, chartResult}) => {
-    if (!chartResult) return;
-
-    const { rows, columns, data } = chartResult;
+const TableArea = ({chartData}) => {
+    const { rows, columns, data } = chartData;
     const { chartSettings } = chartData;
     const { dimensions } = chartSettings;
-
-
 
     return (
         <TableContainer component={Paper} style={{backgroundColor:"white"}}>

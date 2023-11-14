@@ -41,9 +41,9 @@ const ChartArea = (props) => {
 }
 
 const Chart = (props) => {
-    const { chartData, chartResult } = props;
+    const { chartData } = props;
 
-    if (!chartData) return;
+    if (!chartData.data) return;
     if (chartData.chartType.toLowerCase() === "table") {
         return (<TableArea {...props}/>);
     } else if (chartData.chartType.toLowerCase() === "pie") {

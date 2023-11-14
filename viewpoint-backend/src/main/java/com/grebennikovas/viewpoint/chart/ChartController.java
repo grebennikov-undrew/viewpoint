@@ -1,9 +1,13 @@
 package com.grebennikovas.viewpoint.chart;
 
-import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
-import com.grebennikovas.viewpoint.chart.dto.ChartDto;
-import com.grebennikovas.viewpoint.datasets.results.Result;
+import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartRequestDto;
+import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
+import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -17,50 +21,43 @@ public class ChartController {
     @Autowired
     ChartService chartService;
 
-
     // Получить все диаграммы
     @GetMapping("/")
-    public List<ChartDto> findAll() {
-        return chartService.findAll();
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(chartService.findAll());
     }
 
     // Сохранить/изменить диаграмму
     @PostMapping("/")
-    public ChartDto save(@RequestBody ChartDto chartDto) {
-        return chartService.save(chartDto);
+    public ResponseEntity<?> save(@RequestBody ChartRequestDto chartRequestDto,
+                                  @AuthenticationPrincipal ViewPointUserDetails userDetails) {
+        try {
+            ChartResponseDto savedChart = chartService.save(chartRequestDto, userDetails.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(savedChart);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // Поулчить информацию о диаграмме по id
     @GetMapping("/{id}")
-    public ChartDto findById(@PathVariable Long id) throws SQLException {
-        return chartService.findById(id);
-    }
-
-    // Получить данные из диагрммы по ее настройкам в БД (для дашборда)
-    // TODO: возможно, этот метод не нужен
-    @GetMapping("/{id}/data")
-    public ChartDataDto getData(@PathVariable Long id) throws SQLException {
-        return chartService.getData(id);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            ChartResponseDto foundChart = chartService.findById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(foundChart);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // Получить данные из диагрммы по ее настройкам без сохранения (для редактора диаграмм)
     @PostMapping("/data")
-    public ChartDataDto getDataRaw(@RequestBody ChartDto chartDto) throws SQLException {
-        return chartService.getData(chartDto);
+    public ResponseEntity<?> getDataRaw(@RequestBody ChartRequestDto chartRequestDto) {
+        try {
+            ChartResponseDto newChart = chartService.getData(chartRequestDto);
+            return ResponseEntity.status(HttpStatus.OK).body(newChart);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
-
-//    @GetMapping("/test")
-//    public Chart test() {
-//        ChartSettings settings = new ChartSettings();
-//        settings.setWhere("123");
-//        settings.setGroupBy(new ArrayList<>(List.of("col1","col2","col3")));
-////        Map<String,Object> settings = new HashMap<>();
-////        settings.put("where", "abc = 123");
-////        settings.put("group by ", new ArrayList<>(List.of("col1","col2","col3")));
-//        Chart c = new Chart();
-//        c.setId(1L);
-//        c.setName("test chart");
-//        c.setChartSettings(settings);
-//        return chartService.save(c);
-//    }
 }

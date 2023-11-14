@@ -42,9 +42,9 @@ const Chart = () => {
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'name', headerName: 'Name', width: 150 },
         { field: 'type', headerName: 'Type', width: 100, valueGetter: (params) => `${params.row.chartType}`},
-        { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.user.username}`},
-        { field: 'dataset', headerName: 'Dataset', width: 150, valueGetter: (params) => `${params.row.dataset.name}`},
-        { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.dataset.source.name}` },
+        { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.username}`},
+        { field: 'dataset', headerName: 'Dataset', width: 150, valueGetter: (params) => `${params.row.datasetName}`},
+        { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.sourceName}` },
     ];
 
     return (

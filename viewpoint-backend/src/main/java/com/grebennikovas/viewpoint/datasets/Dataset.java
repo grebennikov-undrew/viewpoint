@@ -55,6 +55,9 @@ public class Dataset {
 //    @OneToMany(mappedBy = "dataset", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 //    private List<Parameter> parameters;
 
+    public Dataset(Long id) {
+        this.id = id;
+    }
 
     @Override
     public boolean equals(Object o) {
