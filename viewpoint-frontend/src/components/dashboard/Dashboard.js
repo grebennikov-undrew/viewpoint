@@ -26,14 +26,18 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
+const defaultSettings = {
+    name: "New dashboard",
+    charts: [],
+    description: "",
+    layot: {},
+}
+
 const Dashboard = (props) => {
     const { id } = useParams(); 
     const [ mode, setMode ] = useState("read");
-    const [ dashboardSettings, setDashboardSettings] = useState({});
-    const [ dashboardData, setDashboardData ] = useState([]);
-
-
-    const { name } = dashboardSettings;
+    // const [ dashboardSettings, setDashboardSettings] = useState({});
+    const [ dashboardData, setDashboardData ] = useState();
 
     useEffect(() => {
         if (id) {
@@ -42,32 +46,35 @@ const Dashboard = (props) => {
                     const response = await httpRequest.get(`/dashboard/${id}`)
                     const settings = response.data;
                     settings["layout"] = JSON.parse(settings["layout"])["position"];
-                    setDashboardSettings(settings);
+                    setDashboardData(settings);
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
             }
             fetchData();
+        }
+        else {
+            setDashboardData(defaultSettings);
         }
     }, []);
 
-    useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const response = await httpRequest.get(`/dashboard/${id}/data`)
-                    setDashboardData(response.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-            fetchData();
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (id) {
+    //         const fetchData = async () => {
+    //             try {
+    //                 const response = await httpRequest.get(`/dashboard/${id}/data`)
+    //                 setDashboardData(response.data);
+    //             } catch (error) {
+    //                 console.error('Error fetching data:', error);
+    //             }
+    //         }
+    //         fetchData();
+    //     }
+    // }, []);
 
     const handleSettingsChange = (property, value) => {
-        setDashboardSettings({
-            ...dashboardSettings,
+        setDashboardData({
+            ...dashboardData,
             [property]: value,
         })
     }
@@ -90,12 +97,12 @@ const Dashboard = (props) => {
 
     const backgroundColor = mode==="read" ? "transparent" : "#transparent";
 
-    return (
+    return ( dashboardData &&
         <div style={{backgroundColor: backgroundColor, height: "100%" }}>
             <Container maxWidth="xl">
                 <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
                     <Typography variant="h2" >
-                        {name}
+                        {dashboardData.name}
                     </Typography>
                     {/* <Button variant="text">Add</Button> */}
                     <IconButton
@@ -149,7 +156,6 @@ const Dashboard = (props) => {
                         <DashboardLayot 
                             mode={mode}
                             dashboardData={dashboardData} 
-                            dashboardSettings={dashboardSettings} 
                             handleSettingsChange={handleSettingsChange}/>
                     </Grid>
                 </Grid>

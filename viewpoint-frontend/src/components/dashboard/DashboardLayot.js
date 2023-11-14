@@ -12,20 +12,12 @@ const ReactGridLayout = WidthProvider(RGL);
 
 const DashboardLayot = (props) => {
 
-    const { mode, dashboardData, dashboardSettings } = props;
+    const { mode, dashboardData } = props;
     const { handleSettingsChange } = props;
-    const { layout } = dashboardSettings;
-
-    // const layout = [
-    //     { i: "a", x: 0, y: 0, w: 3, h: 3 },
-    //     { i: "b", x: 1, y: 0, w: 3, h: 2 },
-    //     { i: "c", x: 4, y: 0, w: 1, h: 2 }
-    //   ];
-    // const layout = dashboardSettings && dashboardSettings["dashboardSettings"] && dashboardSettings["dashboardSettings"]["layout"];
+    const { layout, charts } = dashboardData;
 
     const cursor = mode === "edit" ? "grab" : "default";
 
-    if (!dashboardData[0]) return;
     return(
         <Box position={"relative"} width={"100%"}>
             <ReactGridLayout
@@ -40,10 +32,8 @@ const DashboardLayot = (props) => {
                 isResizable={mode === "edit"}
                 margin={[20,20]}
         >
-            {dashboardData && dashboardData.map((chartEntry) => {
-                const chartData = chartEntry["chart"];
-                const chartResult = chartEntry;
-                return <div key={chartData["id"]} style={{cursor: cursor}} ><ChartArea chartData={chartData} chartResult={chartResult} /></div>
+            {charts.map((chartData) => {
+                return <div key={chartData["id"]} style={{cursor: cursor}} ><ChartArea chartData={chartData}/></div>
             })}
             {/* <div key="a" ><ChartArea chartData={dashboardData[0]["chart"]} chartResult={dashboardData[0]} /></div>
             <div key="b" style={{backgroundColor: "gray"}}>b</div>

@@ -50,7 +50,7 @@ public class DashboardController {
         }
     }
 
-    // Поулчить информацию о диаграмме по id
+    // Поулчить информацию о дашборде по id
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
