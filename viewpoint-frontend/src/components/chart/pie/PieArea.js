@@ -2,10 +2,10 @@ import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { Box, height, width } from '@mui/system';
 
-const PieArea = ({chartData, chartResult}) => {
-    if (!chartResult) return;
+const PieArea = ({chartData}) => {
+    if (!chartData.data) return;
 
-    const { rows, columns, data } = chartResult;
+    const { rows, columns, data } = chartData;
     const { chartSettings } = chartData;
     const { metrics, dimensions } = chartSettings;
 

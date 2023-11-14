@@ -29,6 +29,9 @@ public class ChartSettings implements Serializable {
     @JsonProperty("xAxis")
     String xAxis;
 
+    @JsonProperty("xAxisType")
+    String xAxisType;
+
     @JsonProperty("where")
     String where;
 //    @JsonProperty("groupBy")

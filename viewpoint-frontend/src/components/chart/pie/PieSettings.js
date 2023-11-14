@@ -24,80 +24,13 @@ import SelectTags from '../../basic/SelectTags';
 import { aggFunctions } from '../../basic/Enum';
 import SelectValue from '../../basic/SelectValue'
 
-const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) => {
-    const [ datasets, setDatasets] = useState();
-    const { chartSettings, dataset, chartType } = chartData;
-    const { where, orderBy, desc, dimensions, metrics } = chartSettings;
-    const { columns } = dataset;
-
-    const columnsValues = columns.map(c => c.name);
-
-    useEffect(() => {
-        const fetchSources = async () => {
-            try {
-                const response = await httpRequest.get(`/dataset/`)
-                setDatasets(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        fetchSources();
-    }, []);
-
-    const getDatasetInfo = async (e, id) => {
-        try {
-            const response = await httpRequest.get(`/dataset/${id}`)
-            onSelectChange(e, "dataset", response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
+const PieSettings = ({chartData, columns, onFieldChange, onSelectChange}) => {
+    const { chartSettings } = chartData;
+    const { dimensions, metrics } = chartSettings;
     
-    if (!chartData.dataset) return;
+    if (!chartData) return;
     return (
-        <Grid container spacing={3}>
-            <Grid item xs={12}>
-                <TextField
-                    required
-                    id="name"
-                    label="Name"
-                    defaultValue="Unnamed"
-                    value={chartData.name}
-                    fullWidth
-                    onChange={onFieldChange}
-                    variant='standard'
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth >
-                    <InputLabel id="dataset-select-label">Dataset</InputLabel>
-                    <Select
-                        labelId="dataset-select-label"
-                        id="dataset_id"
-                        value={chartData.dataset && chartData.dataset.name}
-                        label="Dataset"
-                        required
-                        onChange={(e) => {
-                            const datasetId = datasets.find(d => d.name === e.target.value).id;
-                            getDatasetInfo(e, datasetId);
-                        }}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                <Chip label={selected} />
-                            </Box>
-                        )}
-                    >
-                        {datasets && datasets.map((datasets) => (
-                            <MenuItem
-                            key={datasets.id}
-                            value={datasets.name}
-                            >
-                            {datasets.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
+        <>
             <Grid item xs={12} >
                 <Box style={{backgroundColor: "#F3F3F3"}} pt={1} pb={1} pl={1} pr={1}>
                     <InputLabel style={{fontWeight: "bold", marginBottom: "5px"}} fullWidth>Metric</InputLabel>
@@ -134,7 +67,7 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
                         </Grid>
                         <Grid item xs={6}>
                             <SelectValue 
-                                options={columnsValues} 
+                                options={columns.map(c => c.name)} 
                                 value={metrics[0].value}
                                 label="Column"
                                 onChange={
@@ -156,7 +89,7 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
             <Grid item xs={12}>
                 <FormControl fullWidth>
                     <SelectTags 
-                        options={columnsValues} 
+                        options={columns.map(c => c.name)} 
                         values={dimensions && dimensions.map(d => d.label)} 
                         label="Dimensions"
                         onSelectChange={(event, value) => {
@@ -167,56 +100,7 @@ const PieSettings = ({chartData, chartResult, onFieldChange, onSelectChange}) =>
                     })}}/>
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="where"
-                    label="Conditions"
-                    value={where}
-                    fullWidth
-                    onChange={(event) => onSelectChange(event, "chartSettings", {
-                        ...chartSettings,
-                        "where": event.target.value,
-                    })}
-                    variant='standard'
-                    multiline
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <FormControl fullWidth>
-                    <SelectTags 
-                        options={columnsValues} 
-                        values={orderBy && orderBy.map(d => d.label)} 
-                        label="Order by"
-                        onSelectChange={(event, value) => {
-                            const newArray = value.map(listValue => {return {label: listValue, value: listValue}});
-                            return onSelectChange(event, "chartSettings", {
-                            ...chartSettings,
-                            "orderBy": newArray,
-                    })}}/>
-                </FormControl>
-            </Grid>
-            {orderBy && orderBy.length > 0 && <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth >
-                    <InputLabel id="desc-select-label">Sort</InputLabel>
-                    <Select
-                        labelId="desc-select-label"
-                        id="desc-id"
-                        label="Sort"
-                        required
-                        value={desc ? "descending" : "ascending"}
-                        onChange={
-                            (e) => onSelectChange(e, "chartSettings", {
-                                    ...chartSettings,
-                                    "desc": e.target.value === "descending" ? true : false,
-                                })
-                        }
-                    >
-                        <MenuItem value="ascending">ascending</MenuItem>
-                        <MenuItem value="descending">descending</MenuItem>
-                    </Select>
-                </FormControl>
-            </Grid>}
-        </Grid>
+        </>
     )
 }
 

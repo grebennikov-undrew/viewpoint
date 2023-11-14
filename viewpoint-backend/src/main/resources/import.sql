@@ -70,10 +70,10 @@ INSERT INTO columns (dataset_id, name, type) VALUES (4, 'product_name','String')
 INSERT INTO columns (dataset_id, name, type) VALUES (4, 'shop','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (4, 'total_amount','Double');
 
-INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Продажи за неделю', 'LINE', 1, 4, '{"dimensions": [{"value": "product_name", "label": "product_name"}], "metrics": [{"value" : "quantity", "label": "SUM(quantity)", "aggFunction": "SUM"}], "xAxis": "sale_date"}'::json);
-INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов по магазинам', 'BAR', 1, 4, '{"dimensions": [{"value": "shop", "label": "shop"}], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Продажи за неделю', 'LINE', 1, 4, '{"dimensions": [{"value": "product_name", "label": "product_name"}], "metrics": [{"value" : "quantity", "label": "SUM(quantity)", "aggFunction": "SUM"}], "xAxis": "sale_date", "xAxisType": "Timestamp"}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов по магазинам', 'BAR', 1, 4, '{"dimensions": [{"value": "shop", "label": "shop"}], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name", "xAxisType": "String"}'::json);
 
-INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов', 'BAR', 1, 4, '{"dimensions": [], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name"}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов', 'BAR', 1, 4, '{"dimensions": [], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name", "xAxisType": "String"}'::json);
 
 INSERT INTO dashboards (name, user_id, layout) VALUES ('Отчет по продажам', 1, '{"position": [{"w": 6, "h": 2, "x": 0, "y": 0, "i": "3"}, {"w": 6, "h": 2, "x": 7, "y": 0, "i": "4"}]}'::json)
 

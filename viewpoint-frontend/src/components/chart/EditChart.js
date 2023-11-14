@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert from '@mui/material/Alert';
 
 import IconButton from '@mui/material/IconButton';
 import GridOnIcon from '@mui/icons-material/GridOn';
@@ -31,7 +31,7 @@ const defaultChartData = {
 
 const EditChart = () => {
     const { id } = useParams(); 
-    const [chartData, setChartData] = useState(defaultChartData);
+    const [chartData, setChartData] = useState();
     const [needUpdate, setNeedUpdate] = useState(false);
     const navigate = useNavigate();
 
@@ -46,6 +46,8 @@ const EditChart = () => {
                 }
             }
             fetchData();
+        } else {
+            setChartData(defaultChartData);
         }
     }, []);
 
@@ -111,10 +113,9 @@ const EditChart = () => {
         return true;
     }
 
-    if (!chartData) return
+    // if (!dataLoaded) return <></>
 
-    return (
-        <form onSubmit={handleSubmit}>
+    return (chartData && <form onSubmit={handleSubmit}>
         <Container maxWidth="xl">
             <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
                 <Typography variant="h2" m={1}>

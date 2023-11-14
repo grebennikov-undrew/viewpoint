@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { Box, height, width } from '@mui/system';
 import dayjs from 'dayjs';
 
 const legendPlacement = {
@@ -19,26 +18,28 @@ const legendPlacement = {
     },
   };
 
-const LineArea = ({chartData, chartResult}) => {
-    if (!chartResult || !chartData) return;
-
-    const { rows, columns, data } = chartResult;
-    const { chartSettings, dataset } = chartData;
-    const { metrics, dimensions, xAxis } = chartSettings;
+const LineArea = (props) => {
+    const {chartData} = props;
+    const { chartSettings, rows, columns, data } = chartData;
+    const { metrics, dimensions, xAxis, xAxisType } = chartSettings;
 
     // Устаноить тип оси
     const sortedKeys = columns.sort();
-    const xColumn = dataset.columns.find(c => c.name == xAxis);
-    const xAxisSettings = {
-        data: sortedKeys.map(stringDate => new Date(stringDate)),
-    }
-    if (xColumn["type"] === "Timestamp") {
-        xAxisSettings["scaleType"] = 'time';
-        xAxisSettings["tickMinStep"] = 3600 * 1000 * 24; // 24 h
-        xAxisSettings["valueFormatter"] = (value) => (dayjs(value).format("YYYY-MM-DD"));
-    } else if (xColumn["type"] === "String") {
-        xAxisSettings["scaleType"] = 'band';
-    }
+    const xColumn = columns.find(c => c.name == xAxis);
+
+    // const getxAxisSettings = () => {
+        const xAxisSettings = {
+            data: sortedKeys.map(stringDate => new Date(stringDate)),
+        }
+
+        if (xAxisType === "Timestamp") {
+            xAxisSettings["scaleType"] = 'time';
+            xAxisSettings["tickMinStep"] = 3600 * 1000 * 24; // 24 h
+            xAxisSettings["valueFormatter"] = (value) => (dayjs(value).format("YYYY-MM-DD"));
+        } else if (xAxisType === "String") {
+            xAxisSettings["scaleType"] = 'band';
+        }
+    // }
 
     const metric = metrics[0];
 
