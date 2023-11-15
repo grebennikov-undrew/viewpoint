@@ -25,7 +25,7 @@ const LineArea = (props) => {
 
     // Устаноить тип оси
     const sortedKeys = columns.sort();
-    const xColumn = columns.find(c => c.name == xAxis);
+    const xColumn = columns.find(c => c.name === xAxis);
 
     // const getxAxisSettings = () => {
         const xAxisSettings = {

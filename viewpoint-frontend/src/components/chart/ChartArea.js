@@ -11,7 +11,7 @@ const ChartArea = (props) => {
     const { chartData } = props;
 
     return(
-        chartData && 
+        chartData && chartData.datasetId &&
         <Box 
             height={"100%"} 
             bgcolor={"white"} 

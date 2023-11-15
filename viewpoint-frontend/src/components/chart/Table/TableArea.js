@@ -14,7 +14,7 @@ const TableArea = ({chartData}) => {
     const { chartSettings } = chartData;
     const { dimensions } = chartSettings;
 
-    return (
+    return ( data &&
         <TableContainer component={Paper} style={{backgroundColor:"white"}}>
             <Table sx={{ minWidth: 650}} size="small" aria-label="a dense table">
                 <TableHead>

@@ -25,7 +25,6 @@ const defaultChartData = {
     chartType: "TABLE",
     username: "user",
     datasetName: "",
-    datasetId: null,
     chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
 }
 

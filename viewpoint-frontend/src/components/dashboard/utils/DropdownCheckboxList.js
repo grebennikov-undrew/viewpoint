@@ -24,7 +24,8 @@ const DropdownCheckboxList = (props) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [chartList, setChartList] = useState([]);
-    const { handleAddChart } = props;
+    const { dashboardData, handleAddChart } = props;
+    const { charts } = dashboardData;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,7 +53,8 @@ const DropdownCheckboxList = (props) => {
       };
     
     const filteredChartList = chartList.filter(option =>
-        option["name"].toLowerCase().includes(searchValue.toLowerCase())
+        option["name"].toLowerCase().includes(searchValue.toLowerCase()) &&
+        !charts.find(existing => existing["id"] === option["id"])
     );
 
     const open = Boolean(anchorEl);
@@ -87,10 +89,10 @@ const DropdownCheckboxList = (props) => {
                 />
             <List style={listStyle}>
             {filteredChartList.map((option) => (
-                <ListItem key={option["id"]}>
+                <ListItem key={option["id"]} onClick={() => handleAddChart(option["id"])}>
                     <ListItemText primary={option["name"]} />
                     <IconButton edge="end" aria-label="add">
-                    <AddCircleOutlineIcon />
+                        <AddCircleOutlineIcon />
                     </IconButton>
                 </ListItem>
             ))}

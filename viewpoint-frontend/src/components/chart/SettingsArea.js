@@ -50,8 +50,7 @@ const SettingsArea = (props) => {
     }, [chartData]);
 
 
-    return (datasetData && datasets &&
-        <Grid container spacing={3}>
+    return (<Grid container spacing={3}>
             <Grid item xs={12}>
                 <TextField
                     required
@@ -64,6 +63,7 @@ const SettingsArea = (props) => {
                     variant='standard'
                 />
             </Grid>
+            {datasets &&
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth >
                     <InputLabel id="dataset-select-label">Dataset</InputLabel>
@@ -96,8 +96,9 @@ const SettingsArea = (props) => {
                     </Select>
                 </FormControl>
             </Grid>
-            <GetSettingsArea {...props} columns={datasetData.columns}/>
-            <Grid item xs={12}>
+            }
+            {datasetData && <GetSettingsArea {...props} columns={datasetData.columns}/>}
+            {datasetData && <Grid item xs={12}>
                 <TextField
                     id="where"
                     label="Conditions"
@@ -110,8 +111,8 @@ const SettingsArea = (props) => {
                     variant='standard'
                     multiline
                 />
-            </Grid>
-            <Grid item xs={12}>
+            </Grid>}
+            {datasetData && <Grid item xs={12}>
                 <FormControl fullWidth>
                         <SelectTags 
                         options={datasetData.columns.map(c => c.name)} 
@@ -124,7 +125,7 @@ const SettingsArea = (props) => {
                             "orderBy": newArray,
                     })}}/>
                 </FormControl>
-            </Grid>
+            </Grid>}
             {orderBy && orderBy.length > 0 && <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth >
                     <InputLabel id="desc-select-label">Sort</InputLabel>

@@ -23,7 +23,7 @@ function App() {
               <Route exact path='/' element={<HomePage/>}/>
               <Route path='/dashboard' element={<Dashboards/>}/>
               <Route path='/dashboard/:id' element={<Dashboard/>}/>
-              <Route path='/dashboard/:id/edit' element={<Dashboard/>}/>
+              <Route path='/dashboard/new' element={<Dashboard/>}/>
               <Route path='/dataset' element={<Dataset/>}/>
               <Route path='/dataset/:id' element={<EditDataset/>}/>
               <Route path='/dataset/new' element={<EditDataset/>}/>

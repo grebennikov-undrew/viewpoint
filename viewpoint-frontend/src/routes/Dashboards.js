@@ -61,15 +61,6 @@ function Dashboards() {
                   <Grid item xs={4}>
                       <DashboardCard {...dashData} handleEditClick={handleEditClick} handleOpenClick={handleOpenClick}/>
                   </Grid>
-                  <Grid item xs={4}>
-                      <DashboardCard {...dashData}/>
-                  </Grid>
-                  <Grid item xs={4}>
-                      <DashboardCard {...dashData}/>
-                  </Grid>
-                  <Grid item xs={4}>
-                      <DashboardCard {...dashData}/>
-                  </Grid>
                 </>
               ))}
           </Grid>

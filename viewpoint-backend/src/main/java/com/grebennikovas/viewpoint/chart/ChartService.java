@@ -39,8 +39,8 @@ public class ChartService {
     public ChartResponseDto save(ChartRequestDto chartRequestDto, Long userId) throws SQLException {
         Chart chart = chartMapper.mapToChart(chartRequestDto);
         chart.setUser(new User(userId));
-        Chart savedChart = chartRepository.save(chart);
-        return getData(savedChart);
+        chartRepository.save(chart);
+        return getData(chartRequestDto);
     }
 
     public ChartResponseDto findById(Long chartId) throws SQLException {
