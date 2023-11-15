@@ -25,8 +25,8 @@ const BarArea = (props) => {
     const { metrics, dimensions, xAxis, xAxisType } = chartSettings;
 
     // Устаноить тип оси
-    const sortedKeys = columns.sort();
-    const xColumn = columns.find(c => c.name === xAxis);
+    const sortedKeys = columns && columns.sort();
+    const xColumn = columns && columns.find(c => c.name === xAxis);
 
     const xAxisSettings = {
         data: sortedKeys,
