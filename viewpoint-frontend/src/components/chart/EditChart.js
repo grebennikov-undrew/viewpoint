@@ -127,7 +127,7 @@ const EditChart = () => {
                 </ButtonGroup>
             </div>
             <Grid container >
-                <Grid container xs={3}>
+                <Grid container xs={3} pr={3}>
                     <Stack direction="row" spacing={1} mb={3}>
                         <IconButton aria-label="delete" color={chartData.chartType.toLowerCase() === "table" ? "primary" : "disabled"} onClick={(e) => handleSelectChange(e,"chartType", "TABLE")}>
                             <GridOnIcon />
@@ -146,7 +146,7 @@ const EditChart = () => {
                 </Grid>
                 <Grid container xs={9}>
                     <Grid item xs={12} > 
-                        <div style={{ height: "400px", width: "100%"}}>
+                        <div style={{ width: "100%", height: "400px"}}>
                             <ChartArea chartData={chartData} />
                         </div>
                     </Grid>

@@ -15,14 +15,14 @@ const ChartArea = (props) => {
         <Box 
             height={"100%"} 
             bgcolor={"white"} 
-            p={2} 
             component={Paper} 
-            // elevation={1} 
             borderRadius={4}
-            // style={{paddingBottom: "20px"}}
+            overflow={"hidden"}
         >
-            <Typography variant="h4" fontWeight={600}>{chartData.name}</Typography>
-                <Chart {...props}/>
+                <Typography variant="h4" pt={2} pl={2} pb={0} fontWeight={600}>{chartData.name}</Typography>
+                <Box height= {"100%"}>
+                    <Chart {...props}/>
+                </Box>
         </Box>
     )
 }

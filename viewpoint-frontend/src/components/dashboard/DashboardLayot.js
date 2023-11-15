@@ -38,7 +38,7 @@ const DashboardLayot = (props) => {
                 className="layout"
                 layout={layout}
                 cols={12}
-                rowHeight={200}
+                rowHeight={100}
                 isBounded={true}
                 onLayoutChange={onChangeLayout}
                 useCSSTransforms={true}
@@ -98,7 +98,7 @@ const RemoveButton = ({itemKey, onDelete}) => {
                 style={{
                     backgroundColor: "white",
                     borderRadius: "100%",
-                    border: "2px solid #e0e0e0"
+                    border: "2px solid #e9e9e9"
                 }}
             />
         </span>

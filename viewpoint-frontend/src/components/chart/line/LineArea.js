@@ -55,10 +55,8 @@ const LineArea = (props) => {
             series={[
                 ...seriesSettings
             ]}
-            margin={{ top: 10, bottom: 20 }}
             {...legendPlacement}
-            sx={{transform: "none"}}
-            skipAnimation 
+            margin={{bottom: 70, left: 60}}
         />
     )
 }

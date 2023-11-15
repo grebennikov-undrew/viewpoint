@@ -39,7 +39,7 @@ const PieArea = ({chartData}) => {
                     arcLabelMinAngle: 45,
             },
             ]}
-            sx={{marginBottom: "30px"}}
+            margin={{bottom: 70, left: 60}}
         />
     )
 }

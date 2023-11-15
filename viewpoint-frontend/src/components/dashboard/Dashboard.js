@@ -94,7 +94,7 @@ const Dashboard = (props) => {
             x: 0,
             y: Infinity, // Поместить новую диарамму вниз
             w: 6,
-            h: 2,
+            h: 5,
         }
         newLayout.push(newItem)
         fetchAndAddChart(key, newLayout);

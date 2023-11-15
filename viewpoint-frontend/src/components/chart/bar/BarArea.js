@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import dayjs from 'dayjs';
+import { bottom } from '@popperjs/core';
 
 const legendPlacement = {
     slotProps: {
@@ -54,8 +55,8 @@ const BarArea = (props) => {
             series={[
                 ...seriesSettings
             ]}
-            margin={{ top: 10, bottom: 20 }}
             {...legendPlacement}
+            margin={{bottom: 70, left: 60}}
         />
     )
 }
