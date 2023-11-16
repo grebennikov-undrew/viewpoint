@@ -9,8 +9,8 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-// import { InputBase, TextField } from "@material-ui/core";
 
+import { ToggleDateRange } from '../../basic/ToggleDateRange';
 import SelectTags from '../../basic/SelectTags';
 import DatePicker from '../../basic/DatePicker';
 import { httpRequest } from '../../../service/httpRequest';
@@ -50,7 +50,7 @@ const Filters = (props) => {
                         )
                     } else if (filter.type === "Timestamp") {
                         return (
-                            <Grid item xs={1} mr={"16px"}>
+                            <Grid item xs={1}>
                                 <Typography variant="h4" fontWeight={600} >{filter.name}</Typography>
                                 <TimestampFilter {...filter} handleSetFilterValues={handleSetFilterValues} />
                             </Grid>
@@ -156,13 +156,7 @@ const TimestampFilter = (filter) => {
     }, []);
 
     return (
-        <DatePicker 
-            // options={options} 
-            // values={values}
-            // placeholder={"Options..."} 
-            // variant={'outlined'} 
-            // size={"small"}
-            // onSelectChange={(e, values) => handleSetFilterValues(e, name, values)}
+        <ToggleDateRange
         />
     )
 
