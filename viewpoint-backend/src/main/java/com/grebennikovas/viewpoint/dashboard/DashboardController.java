@@ -71,21 +71,16 @@ public class DashboardController {
         }
     }
 
-//    @GetMapping("/{id}/data")
-//    public List<ChartDataDto> getData(@PathVariable Long id) throws SQLException {
-//        return dashboardService.getData(id);
+//    @PostMapping("/parameter")
+//    public ResponseEntity<?> getParameterValues(@RequestBody ParameterDto parameterDTO) {
+//        Long sourceId = parameterDTO.getSourceId();
+//        String sqlQuery = parameterDTO.getSqlQuery();
+//        try {
+//            List<String> paramValues = dashboardService.getFilterValues(sourceId, sqlQuery);
+//            return ResponseEntity.status(HttpStatus.OK).body(paramValues);
+//        } catch (SQLException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
 //    }
-
-    @PostMapping("/parameter")
-    public ResponseEntity<?> getParameterValues(@RequestBody ParameterDto parameterDTO) {
-        Long sourceId = parameterDTO.getSourceId();
-        String sqlQuery = parameterDTO.getSqlQuery();
-        try {
-            List<String> paramValues = dashboardService.getFilterValues(sourceId, sqlQuery);
-            return ResponseEntity.status(HttpStatus.OK).body(paramValues);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 
 }

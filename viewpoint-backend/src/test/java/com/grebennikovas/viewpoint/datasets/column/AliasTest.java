@@ -98,7 +98,7 @@ class ColumnTest {
         d.setColumns(Set.of(c2,c3,c4));
         datasetRepository.save(d);
 
-        List<Column> dsColumns = columnRepository.findAllByDataset_id(d.getId());
+        Set<Column> dsColumns = columnRepository.findAllByDatasetId(d.getId());
         int columnCount = dsColumns.size();
         boolean firstInResult = dsColumns.contains(c1);
         boolean thirdInResult = dsColumns.contains(c3);

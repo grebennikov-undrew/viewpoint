@@ -1,7 +1,7 @@
 package com.grebennikovas.viewpoint.sources.connections.pgsql;
 
 import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
-import com.grebennikovas.viewpoint.utils.Column;
+import com.grebennikovas.viewpoint.utils.Alias;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -13,21 +13,21 @@ class SqlBuilderTest {
     @Test
     public void testBuildQuery() {
         // Arrange
-        Column col1 = new Column("col1");
-        Column col2 = new Column("col2", "label");
-        List<Column> columns = Arrays.asList(col1, col2);
+        Alias col1 = new Alias("col1");
+        Alias col2 = new Alias("col2", "label");
+        List<Alias> aliases = Arrays.asList(col1, col2);
         String tableName = "example_table";
         String conditions = "col1 > 10";
-        List<Column> groupByColumns = Arrays.asList(col1);
-        List<Column> orderByColumns = Arrays.asList(col1,col2);
+        List<Alias> groupByAliases = Arrays.asList(col1);
+        List<Alias> orderByAliases = Arrays.asList(col1,col2);
         int limitCount = 5;
 
         SqlBuilder builder = new SqlBuilder()
-                .select(columns)
+                .select(aliases)
                 .from(tableName)
                 .where(conditions)
-                .groupBy(groupByColumns)
-                .orderBy(orderByColumns, true)
+                .groupBy(groupByAliases)
+                .orderBy(orderByAliases, true)
                 .limit(limitCount);
 
         // Act
@@ -49,13 +49,13 @@ class SqlBuilderTest {
     @Test
     public void testBuildQueryWithParameters() {
         // Arrange
-        Column col1 = new Column("col1");
-        Column col2 = new Column("col2", "label");
-        List<Column> columns = Arrays.asList(col1, col2);
+        Alias col1 = new Alias("col1");
+        Alias col2 = new Alias("col2", "label");
+        List<Alias> aliases = Arrays.asList(col1, col2);
         String tableName = "example_table";
         String conditions = "col1 > {:param1}";
-        List<Column> groupByColumns = Arrays.asList(col1);
-        List<Column> orderByColumns = Arrays.asList(col1,col2);
+        List<Alias> groupByAliases = Arrays.asList(col1);
+        List<Alias> orderByAliases = Arrays.asList(col1,col2);
         int limitCount = 5;
 
         List<Parameter> paramInfo= new ArrayList<>();
@@ -68,11 +68,11 @@ class SqlBuilderTest {
         paramValues.put("param1", 10);
 
         SqlBuilder builder = new SqlBuilder()
-                .select(columns)
+                .select(aliases)
                 .from(tableName)
                 .where(conditions)
-                .groupBy(groupByColumns)
-                .orderBy(orderByColumns, true)
+                .groupBy(groupByAliases)
+                .orderBy(orderByAliases, true)
                 .limit(limitCount)
                 .parameters(paramInfo, paramValues);
 

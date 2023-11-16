@@ -1,6 +1,5 @@
 package com.grebennikovas.viewpoint.utils;
 
-import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
@@ -15,28 +14,28 @@ public class SqlUtils {
     }
 
     // Приводит лист столбцов к строке с лейблами
-    public static String getColumnsWithLabels(List<Column> columns) {
+    public static String getColumnsWithLabels(List<Alias> aliases) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (Column column : columns) {
+        for (Alias alias : aliases) {
             String columnString;
-            if (column.getAggFunction() != null)
-                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            if (alias.getAggFunction() != null)
+                columnString = alias.getAggFunction().getFunc() + "(" + alias.getValue() + ")";
             else
-                columnString = column.getValue();
-            joiner.add(columnString + " as \"" + column.getLabel() + "\"");
+                columnString = alias.getValue();
+            joiner.add(columnString + " as \"" + alias.getLabel() + "\"");
         }
         return joiner.toString();
     }
 
     // Приводит лист столбцов к строке без лейблов
-    public static String getColumns(List<Column> columns) {
+    public static String getColumns(List<Alias> aliases) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (Column column : columns) {
+        for (Alias alias : aliases) {
             String columnString;
-            if (column.getAggFunction() != null)
-                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            if (alias.getAggFunction() != null)
+                columnString = alias.getAggFunction().getFunc() + "(" + alias.getValue() + ")";
             else
-                columnString = column.getValue();
+                columnString = alias.getValue();
             joiner.add(columnString);
         }
         return joiner.toString();

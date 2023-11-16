@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, IconButton, Paper, InputBase, TextField } from '@mui/material';
+import { Container, IconButton, Paper, InputBase, TextField, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,23 +15,16 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { httpRequest } from '../../service/httpRequest';
 import DashboardLayot from './DashboardLayot';
 import SelectTags from '../basic/SelectTags';
-import DropdownCheckboxList from './utils/DropdownCheckboxList';
-
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import DropdownCheckboxList from './utils/dropdown/DropdownCheckboxList';
+import DropdownFilters from './utils/dropdown/DropdownFilters';
+import Filters from './utils/Filters';
 
 const defaultSettings = {
     name: "New dashboard",
     charts: [],
     description: "",
     layot: {},
+    filters: [],
 }
 
 const Dashboard = (props) => {
@@ -40,12 +33,18 @@ const Dashboard = (props) => {
     const [ dashboardData, setDashboardData ] = useState();
 
     useEffect(() => {
+        fetchData()
+    }, []);
+
+    const fetchData = () => {
         if (id) {
             const fetchData = async () => {
                 try {
                     const response = await httpRequest.get(`/dashboard/${id}`)
                     const settings = response.data;
-                    settings["layout"] = JSON.parse(settings["layout"])["position"];
+                    const extraSettings = JSON.parse(settings["layout"]);
+                    settings["layout"] = extraSettings["position"];
+                    settings["filters"] = extraSettings["filters"];
                     setDashboardData(settings);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -57,7 +56,7 @@ const Dashboard = (props) => {
             setDashboardData(defaultSettings);
             setMode("edit");
         }
-    }, []);
+    }
 
     const handleLayoutChange = (newCharts, newLayout) => {
         setDashboardData({
@@ -100,16 +99,30 @@ const Dashboard = (props) => {
         fetchAndAddChart(key, newLayout);
     }
 
+    const handleChangeFilter = (e, newFilter) => {
+        e.preventDefault();
+        const oldFilters = dashboardData.filters ? dashboardData.filters.slice() : [];
+        const checked = e.target.checked;
+        const newFilters = checked ?
+            [...oldFilters, newFilter] :
+            oldFilters.filter(old => old.name !== newFilter.name || old.type !== newFilter.type)
+        
+        handleDataChange(e, "filters", newFilters)
+    }
+
     const handleSaveClick = (event) => {
         event.preventDefault();
         const submitData = Object.assign({},dashboardData);
         delete submitData.charts;
+        delete submitData.filters;
         submitData["chartsId"] = dashboardData.charts.map(c => c.id);
-        submitData["layout"] = JSON.stringify({position: (dashboardData.layout)});
+        submitData["layout"] = JSON.stringify({position: (dashboardData.layout), filters: dashboardData.filters});
         httpRequest.post(`/dashboard/`, submitData)
             .then(response => {
                 const settings = response.data;
-                settings["layout"] = JSON.parse(settings["layout"])["position"];
+                const extraSettings = JSON.parse(settings["layout"]);
+                settings["layout"] = extraSettings["position"];
+                settings["filters"] = extraSettings["filters"];
                 setDashboardData(settings);
             })
             .catch(error => {
@@ -128,22 +141,7 @@ const Dashboard = (props) => {
     }
 
     const handleCancelClick = (e) => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const response = await httpRequest.get(`/dashboard/${id}`)
-                    const settings = response.data;
-                    settings["layout"] = JSON.parse(settings["layout"])["position"];
-                    setDashboardData(settings);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-            fetchData();
-        }
-        else {
-            setDashboardData(defaultSettings);
-        }
+        fetchData();
         setMode("read");
     }
 
@@ -184,42 +182,18 @@ const Dashboard = (props) => {
                     </ButtonGroup>
                 </div>
                 <Grid container columns={12}>
-                    <Grid item xs={2} height={"100%"} bgcolor={"white"} borderRadius={4} p={2} mt={2.5} component={Paper}>
-                        <Typography variant="h4" fontWeight={600}>
-                            Filters
-                        </Typography>
-                        <Grid container columns={1} spacing={3}>
-                            <Grid item xs={1}>
-                                <SelectTags options={["test", "test2", "test3", "test4", "test5"]} label={"test label"}/>
-                            </Grid>
-                            <Grid item xs={1}>
-                                {mode === "edit" && <Button 
-                                    startIcon={<AddCircleIcon />} 
-                                    variant="contained" 
-                                    fullWidth 
-                                    // onClick={handleExecuteQuery}
-                                    >
-                                    Add filter
-                                </Button>}
-                                {mode === "read" && <Button 
-                                    startIcon={<SendIcon />} 
-                                    variant="contained" 
-                                    fullWidth 
-                                    // onClick={handleExecuteQuery}
-                                    >
-                                    Apply
-                                </Button>}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={10}>
+                    <Filters dashboardData={dashboardData} mode={mode} fetchData={fetchData}/>
+                    <Grid item xs>
                         <DashboardLayot 
                             mode={mode}
                             dashboardData={dashboardData} 
                             handleLayoutChange={handleLayoutChange}/>
                     </Grid>
                 </Grid>
-                {mode === "edit" && <DropdownCheckboxList dashboardData={dashboardData} handleAddChart={handleAddChart}/>}
+                {mode === "edit" && <Stack spacing={1} style={stackStyle}>
+                    <DropdownCheckboxList dashboardData={dashboardData} handleAddChart={handleAddChart}/>
+                    <DropdownFilters dashboardData={dashboardData} handleChangeFilter={handleChangeFilter}/>
+                </Stack>}
             </Container>
         </div>
         
@@ -231,7 +205,7 @@ const customButtonStyle = {
     padding: '0 12px',
   };
 
-const fabStyle = {
+const stackStyle = {
     margin: 0,
     top: 'auto',
     right: 20,

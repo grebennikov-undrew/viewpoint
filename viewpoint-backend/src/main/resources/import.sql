@@ -9,7 +9,7 @@ INSERT INTO sources (name, type, netloc, port, dbname, params, username, passwor
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('external', 'MYSQL', '1.1.1.1', '5432', 'public', '', 'admin', '12345');
 
 INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, 1);
-INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list with params', 'SELECT * FROM users WHERE firstname = {:p_name};', 4, 1);
+INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list with params', 'SELECT * FROM users;', 4, 1);
 INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('Very very veryyyyyyyyyy long name','SELECT * FROM customers;', 4, 1);
 
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'id','Double');
@@ -30,7 +30,7 @@ INSERT INTO columns (dataset_id, name, type) VALUES (2, 'lastname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'username','String');
 
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Табличная диаграмма', 'TABLE', 1, 1, '{"dimensions": [{"value": "id", "label": "id"}, {"value": "username", "label": "username"}, {"value": "lastname", "label": "lastname"}, {"value": "firstname", "label": "firstname"}],"where": "id>1", "orderBy": [{"value": "lastname", "label": "lastname"}]}'::json);
-INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Круговая диаграмма', 'PIE', 1, 1, '{"metrics": [{"value": "role", "label": "COUNT(role)", "aggFunction": "COUNT" }],"where": "id>1", "dimensions": [{"value": "role", "label": "role"}]}'::json);
+INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Круговая диаграмма', 'PIE', 1, 2, '{"metrics": [{"value": "role", "label": "COUNT(role)", "aggFunction": "COUNT" }],"where": "id>1", "dimensions": [{"value": "role", "label": "role"}]}'::json);
 
 --  Тестовые данные ---------------------------
 DROP TABLE IF EXISTS sales;
@@ -75,7 +75,7 @@ INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUE
 
 INSERT INTO charts (name, chart_type, user_id, dataset_id, chart_settings) VALUES ('Доходы от продуктов', 'BAR', 1, 4, '{"dimensions": [], "metrics": [{"value" : "total_amount", "label": "SUM(total_amount)", "aggFunction": "SUM"}], "xAxis": "product_name", "xAxisType": "String"}'::json);
 
-INSERT INTO dashboards (name, user_id, layout) VALUES ('Отчет по продажам', 1, '{"position": [{"w": 6, "h": 2, "x": 0, "y": 0, "i": "3"}, {"w": 6, "h": 2, "x": 7, "y": 0, "i": "4"}]}'::json)
+INSERT INTO dashboards (name, user_id, layout) VALUES ('Отчет по продажам', 1, '{"position": [{"w": 6, "h": 2, "x": 0, "y": 0, "i": "3"}, {"w": 6, "h": 2, "x": 7, "y": 0, "i": "4"}], "filters": []}'::json)
 
 INSERT INTO dashboard_chart (dashboard_id, chart_id) VALUES (1, 3);
 INSERT INTO dashboard_chart (dashboard_id, chart_id) VALUES (1, 4);

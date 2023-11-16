@@ -2,9 +2,7 @@ package com.grebennikovas.viewpoint.chart;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grebennikovas.viewpoint.utils.AggFunction;
-import com.grebennikovas.viewpoint.utils.Column;
-import lombok.AllArgsConstructor;
+import com.grebennikovas.viewpoint.utils.Alias;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,10 +19,10 @@ public class ChartSettings implements Serializable {
 //    List<String> yColumns;
     // Название столбца
     @JsonProperty("dimensions")
-    List<Column> dimensions;
+    List<Alias> dimensions;
 
     @JsonProperty("metrics")
-    List<Column> metrics;
+    List<Alias> metrics;
 
     @JsonProperty("xAxis")
     String xAxis;
@@ -39,7 +37,7 @@ public class ChartSettings implements Serializable {
     @JsonProperty("having")
     String having;
     @JsonProperty("orderBy")
-    List<Column> orderBy;
+    List<Alias> orderBy;
     @JsonProperty("desc")
     Boolean desc;
     @JsonProperty("limit")

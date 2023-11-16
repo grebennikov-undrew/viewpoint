@@ -7,7 +7,7 @@ import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.utils.AggFunction;
-import com.grebennikovas.viewpoint.utils.Column;
+import com.grebennikovas.viewpoint.utils.Alias;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
 
 import java.util.ArrayList;
@@ -26,18 +26,18 @@ public class PivotQueryProcessor implements QueryProcessor {
         String datasetQuery = chart.getDataset().getSqlQuery();
         ChartSettings settings = chart.getChartSettings();
 
-        List<Column> selectColumns = new ArrayList<>(settings.getDimensions());
-        selectColumns.addAll(settings.getMetrics());
-        selectColumns.add(new Column(settings.getXAxis()));
+        List<Alias> selectAliases = new ArrayList<>(settings.getDimensions());
+        selectAliases.addAll(settings.getMetrics());
+        selectAliases.add(new Alias(settings.getXAxis()));
 
-        List<Column> groupByColumns = new ArrayList<>(settings.getDimensions());
-        groupByColumns.add(new Column(settings.getXAxis()));
+        List<Alias> groupByAliases = new ArrayList<>(settings.getDimensions());
+        groupByAliases.add(new Alias(settings.getXAxis()));
 
         String chartQuery = new SqlBuilder()
-                .select(selectColumns)
+                .select(selectAliases)
                 .fromSubQuery(datasetQuery)
                 .where(settings.getWhere())
-                .groupBy(groupByColumns)
+                .groupBy(groupByAliases)
                 .orderBy(settings.getOrderBy(),settings.getDesc())
                 .limit(settings.getLimit())
                 .build();

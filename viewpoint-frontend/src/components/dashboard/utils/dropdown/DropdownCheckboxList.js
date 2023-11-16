@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Fab, Popover, List, ListItem, ListItemText, IconButton, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
-import { httpRequest } from '../../../service/httpRequest';
+import { httpRequest } from '../../../../service/httpRequest';
 
 const fabStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
+//   margin: 0,
+//   top: 'auto',
+//   right: 20,
+//   bottom: 20,
+//   left: 'auto',
+//   position: 'fixed',
 };
 
 const listStyle = {
@@ -62,7 +63,7 @@ const DropdownCheckboxList = (props) => {
     return (
         <div>
         <Fab color="primary" aria-label="add" style={fabStyle} onClick={handleClick} variant="extended">
-            <AddIcon /> Add chart
+            <AddIcon style={{marginRight: "5px"}}/>Add chart
         </Fab>
         <Popover
             open={open}
