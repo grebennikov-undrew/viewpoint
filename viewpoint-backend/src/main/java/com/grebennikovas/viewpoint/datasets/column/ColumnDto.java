@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grebennikovas.viewpoint.datasets.column.Column;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -18,6 +19,8 @@ public class ColumnDto {
     private String name;
 
     private String type;
+
+    private List<Object> filterValues;
 
     // Сравнение только по name и type
     // В DTO столбцы из различных датасетов не должны повторяться

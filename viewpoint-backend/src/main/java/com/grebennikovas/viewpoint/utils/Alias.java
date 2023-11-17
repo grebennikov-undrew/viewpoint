@@ -30,4 +30,8 @@ public class Alias implements Serializable {
         this.label = column;
         this.value = column;
     }
+
+    public String getValue() {
+        return "\"" + value + "\"";
+    }
 }

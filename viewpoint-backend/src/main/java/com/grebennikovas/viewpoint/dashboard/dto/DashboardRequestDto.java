@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -17,5 +18,6 @@ public class DashboardRequestDto {
     private String description;
     private List<Long> chartsId;
     private String layout;
+    private Map<String, List<Object>> filterValues;
 
 }

@@ -3,6 +3,7 @@ package com.grebennikovas.viewpoint.dashboard;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardShortDto;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class DashboardController {
         }
     }
 
-    // Поулчить информацию о дашборде по id
+    // Поулчить данные для наполнения дашборда по id
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -61,15 +62,26 @@ public class DashboardController {
         }
     }
 
-    @PostMapping("/data")
-    public ResponseEntity<?> getData(@RequestBody DashboardRequestDto dashboardRequestDto) {
+    // Поулчить отфильтрованные данные для наполнения дашборда по id
+    @PostMapping("/{id}")
+    public ResponseEntity<?> findByIdWithFilters(@PathVariable Long id, @RequestBody List<ColumnDto> columnFilters) {
         try {
-            DashboardResponseDto newDashboard = dashboardService.getData(dashboardRequestDto);
-            return ResponseEntity.status(HttpStatus.OK).body(newDashboard);
+            DashboardResponseDto foundDashboard = dashboardService.findById(id, columnFilters);
+            return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+//    @PostMapping("/data")
+//    public ResponseEntity<?> getData(@RequestBody DashboardRequestDto dashboardRequestDto) {
+//        try {
+//            DashboardResponseDto newDashboard = dashboardService.getData(dashboardRequestDto);
+//            return ResponseEntity.status(HttpStatus.OK).body(newDashboard);
+//        } catch (SQLException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
 
 //    @PostMapping("/parameter")
 //    public ResponseEntity<?> getParameterValues(@RequestBody ParameterDto parameterDTO) {

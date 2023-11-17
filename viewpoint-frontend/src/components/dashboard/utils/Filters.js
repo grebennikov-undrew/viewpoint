@@ -1,43 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, IconButton, Paper, InputBase, TextField, Stack, FormLabel } from '@mui/material';
+import dayjs from 'dayjs';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Button } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 
 import { ToggleDateRange } from '../../basic/ToggleDateRange';
 import SelectTags from '../../basic/SelectTags';
-import DatePicker from '../../basic/DatePicker';
 import { httpRequest } from '../../../service/httpRequest';
 
 const Filters = (props) => {
-    const { dashboardData, handleRefresh, mode } = props;
+    const { dashboardData, handleApplyFilters, mode } = props;
     const { filters, charts } = dashboardData;
 
     const [ filterValues, setFilterValues ] = useState();
 
     const handleSetFilterValues = (e, field, values) => {
-        setFilterValues({
-            ...filterValues,
-            [field]: values,
-        })
+        if (values && values.length > 0)
+            setFilterValues({
+                ...filterValues,
+                [field]: values,
+            })
+        else 
+            delete filterValues[field];
+    }
+
+    const handleButtonApply = (e) => {
+        handleApplyFilters(e,filterValues);
     }
     
     return ( filters && filters.length>0 &&
         <Grid item xs={2} height={"100%"} bgcolor={"white"} borderRadius={4} p={2} mt={2.5} component={Paper}>
             {/* <Typography variant="h4" fontWeight={600} mb={1}>Filters</Typography> */}
-            <Grid container columns={1} spacing={3} >
+            <Grid container columns={1} spacing={5} >
                 {filters.map(filter => {
                     if (filter.type === "String") {
                         return (
                             <Grid item xs={1}>
                                 <Typography variant="h4" fontWeight={600} >{filter.name}</Typography>
-                                {/* <FormLabel style={{marginLeft: "5px"}}>{filter.name}</FormLabel> */}
                                 <StringFilter {...filter} handleSetFilterValues={handleSetFilterValues}/>
                             </Grid>
                         )
@@ -63,7 +66,7 @@ const Filters = (props) => {
                         variant="contained" 
                         disabled={mode === "edit"}
                         fullWidth 
-                        // onClick={handleExecuteQuery}
+                        onClick={handleButtonApply}
                         >
                         Apply
                     </Button>
@@ -110,7 +113,7 @@ const DoubleFilter = (filter) => {
         const fetchData = async () => {
             try {
                 const response = await httpRequest.get(`/dataset/${datasetId}/${name}/bounds`)
-                setBounds([response.data.min_value, response.data.max_value]);
+                setBounds(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -143,10 +146,14 @@ const TimestampFilter = (filter) => {
     const { name, datasetId, values, handleSetFilterValues } = filter;
     const [ options, setOptions ] = useState([]);
 
+    const handleSettingDate = (startDate, endDate) => {
+        handleSetFilterValues(null,name,[`${dayjs(startDate).format("YYYY-MM-DD")}`, `${dayjs(endDate).format("YYYY-MM-DD")}`]);
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await httpRequest.get(`/dataset/${datasetId}/${name}/values`)
+                const response = await httpRequest.get(`/dataset/${datasetId}/${name}/bounds`)
                 setOptions(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -156,8 +163,7 @@ const TimestampFilter = (filter) => {
     }, []);
 
     return (
-        <ToggleDateRange
-        />
+        <ToggleDateRange {...filter} handleSettingDate={handleSettingDate} defaultRange={options}/>
     )
 
 }

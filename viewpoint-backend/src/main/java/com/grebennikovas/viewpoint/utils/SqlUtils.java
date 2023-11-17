@@ -1,5 +1,6 @@
 package com.grebennikovas.viewpoint.utils;
 
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
@@ -8,6 +9,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SqlUtils {
     private SqlUtils() {
@@ -155,13 +157,36 @@ public class SqlUtils {
         }
     }
 
-    // Составление списка значений фильтра
-    public static List<String> getFilterValues(Result result) {
-        List<String> filterOptions = new ArrayList<>();
-        result.getRows().forEach(r -> {
-            Optional<Entry> entry = r.getEntries().values().stream().findFirst();
-            entry.ifPresent(value -> filterOptions.add(value.getValue().toString()));
-        });
-        return filterOptions;
+    // Преобразовать значения фильтров в условия SQL
+    public static List<String> getConditionsFromFilters (List<ColumnDto> columnFilters) {
+        List<String> conditions = new ArrayList<>();
+
+        for (ColumnDto filter : columnFilters) {
+            String type = filter.getType();
+
+            // Обработка строковых фильтров в формат "column IN ("v1", "v2", "v3")
+            if (type.equals("String")) {
+                String separatedValues = filter.getFilterValues().stream()
+                        .map(value -> "\'" + value.toString() + "\'")
+                        .collect(Collectors.joining(", "));
+
+                conditions.add("\"" + filter.getName() + "\"" + " IN (" + separatedValues + ")");
+            }
+
+            // Обработка фильтров в формат column BETWEEN min AND max
+            if (type.equals("Double")) {
+                Object minValue = filter.getFilterValues().get(0);
+                Object maxValue = filter.getFilterValues().get(1);
+                conditions.add("\"" + filter.getName() + "\"" + " BETWEEN " + minValue + " AND " + maxValue);
+            }
+
+            if (type.equals("Timestamp")) {
+                Object minValue = filter.getFilterValues().get(0);
+                Object maxValue = filter.getFilterValues().get(1);
+                conditions.add("\"" + filter.getName() + "\"" + " BETWEEN \'" + minValue + "\' AND \'" + maxValue + "\'");
+            }
+
+        }
+        return conditions;
     }
 }

@@ -72,7 +72,7 @@ public class DatasetController {
     // Получить минимальное и максимальное значение столбца
     @GetMapping("/{id}/{column}/bounds")
     public ResponseEntity<?> getBounds(@PathVariable Long id, @PathVariable String column) throws SQLException {
-        Map<String,Object> columnBounds = datasetService.getColumnBounds(id, column);
+        List<Object> columnBounds = datasetService.getColumnBounds(id, column);
         return ResponseEntity.status(HttpStatus.OK).body(columnBounds);
     }
 }

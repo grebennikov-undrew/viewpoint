@@ -7,6 +7,7 @@ import com.grebennikovas.viewpoint.chart.processor.QueryProcessor;
 import com.grebennikovas.viewpoint.chart.processor.QueryProcessorFactory;
 import com.grebennikovas.viewpoint.datasets.DatasetDto;
 import com.grebennikovas.viewpoint.datasets.DatasetService;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.sources.SourceService;
@@ -54,6 +55,12 @@ public class ChartService {
         return getData(chart);
     }
 
+    // Получение данных для диаграммы по ID с фильтрами
+    public ChartResponseDto getData(Long chartId, List<ColumnDto> columnFilters) throws SQLException {
+        Chart chart = chartRepository.findById(chartId).get();
+        return getData(chart, columnFilters);
+    }
+
     // Получение данных для диаграммы по DTO - для редактора диаграммы
     public ChartResponseDto getData(ChartRequestDto chartRequestDto) throws SQLException {
         Chart chart = chartMapper.mapToChart(chartRequestDto);
@@ -63,11 +70,23 @@ public class ChartService {
         return getData(chart);
     }
 
-    // // Получение данных для диаграммы по Entity - общий метод
-    public ChartResponseDto getData(Chart chart) throws SQLException {
+    // Получение данных для диаграммы
+    private ChartResponseDto getData(Chart chart) throws SQLException {
         ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
         String chartQuery = queryProcessor.buildQuery(chart);
+        Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
+        return queryProcessor.postProcess(chartResponseDto, chartData);
+    }
+
+    // Получение отфильтрованных данных для диаграммы
+    private ChartResponseDto getData(Chart chart, List<ColumnDto> columnFilters) throws SQLException {
+        // Получить данные о диаграмме и процессор
+        ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);
+        QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
+
+        // Преобразовать фильтры в условия
+        String chartQuery = queryProcessor.buildQuery(chart, columnFilters);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
         return queryProcessor.postProcess(chartResponseDto, chartData);
     }

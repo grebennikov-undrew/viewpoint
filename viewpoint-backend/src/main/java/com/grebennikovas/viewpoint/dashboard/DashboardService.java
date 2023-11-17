@@ -7,6 +7,7 @@ import com.grebennikovas.viewpoint.chart.dto.ChartShortDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardShortDto;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.SourceService;
@@ -33,6 +34,10 @@ public class DashboardService {
     @Autowired
     DashboardMapper dashboardMapper;
 
+    /**
+     * Получить список дашбордов
+     * @return список дашбордов в формте коротких DTO
+     * */
     public List<DashboardShortDto> findAll() {
         List<DashboardShortDto> dashboardList = new ArrayList<>();
         List<Dashboard> dashboards = dashboardRepository.findAll();
@@ -40,6 +45,12 @@ public class DashboardService {
         return dashboardList;
     };
 
+    /**
+     * Сохранить новый/измененный дашборд
+     * @param dashboardRequestDto новый дашборд
+     * @param userId пользователь, внесший изменения
+     * @return данные для построения дашборда
+     * */
     public DashboardResponseDto save(DashboardRequestDto dashboardRequestDto, Long userId) throws SQLException {
         // Сохранить дашборд
         Dashboard dashboard = dashboardMapper.mapToDashboard(dashboardRequestDto);
@@ -50,6 +61,11 @@ public class DashboardService {
         return getData(savedDashboard);
     }
 
+    /**
+     * Построить дашборд по ID
+     * @param dashboardId ID дашборда
+     * @return данные для построения дашборда
+     * */
     public DashboardResponseDto findById(Long dashboardId) throws SQLException {
         // Получить настройки дашборда
         Dashboard dashboard = dashboardRepository.findById(dashboardId).get();
@@ -58,33 +74,45 @@ public class DashboardService {
         return getData(dashboard);
     }
 
-//    public List<String> getFilterValues(Long id) throws SQLException {
-//        Parameter p = parameterRepository.findById(id).get();
-////        Dataset ds = p.getDataset();
-//        return getFilterValues(ds.getSource().getId(), p.getSqlQuery());
-//    }
+    /**
+     * Построить дашборд по ID с фильтрами
+     * @param dashboardId ID дашборда
+     * @param columnFilters список значений для фильтров
+     * @return данные для построения дашборда
+     * */
+    public DashboardResponseDto findById(Long dashboardId, List<ColumnDto> columnFilters) throws SQLException {
+        // Получить настройки дашборда
+        Dashboard dashboard = dashboardRepository.findById(dashboardId).get();
 
-    public List<String> getFilterValues(Long sourceId, String sqlQuery) throws SQLException {
-        Result column = sourceService.execute(sourceId,sqlQuery);
-        List<String> filterOptions = SqlUtils.getFilterValues(column);
-        return filterOptions;
+        // Получить данные для диаграмм
+        return getData(dashboard, columnFilters);
     }
 
-    public DashboardResponseDto getData(Long id) throws SQLException {
-        Dashboard dashboard = dashboardRepository.findById(id).get();
-        return getData(dashboard);
-    }
-
-    public DashboardResponseDto getData(DashboardRequestDto dashboardRequestDto) throws SQLException {
-        Dashboard dashboard = dashboardMapper.mapToDashboard(dashboardRequestDto);
-        return getData(dashboard);
-    }
-
+    /**
+     * Построить дашборд
+     * @param dashboard дашборд
+     * @return данные для построения дашборда
+     * */
     private DashboardResponseDto getData(Dashboard dashboard) throws SQLException {
         List<ChartResponseDto> chartData = new ArrayList<>();
         List<Chart> charts = dashboard.getCharts();
         for (Chart chart: charts) {
             chartData.add(chartService.getData(chart.getId()));
+        }
+        return dashboardMapper.mapToDashboardDto(dashboard, chartData);
+    }
+
+    /**
+     * Построить дашборд с фильтрами
+     * @param dashboard дашборд
+     * @param columnFilters значения фильтров
+     * @return данные для построения дашборда
+     * */
+    private DashboardResponseDto getData(Dashboard dashboard, List<ColumnDto> columnFilters) throws SQLException {
+        List<ChartResponseDto> chartData = new ArrayList<>();
+        List<Chart> charts = dashboard.getCharts();
+        for (Chart chart: charts) {
+            chartData.add(chartService.getData(chart.getId(), columnFilters));
         }
         return dashboardMapper.mapToDashboardDto(dashboard, chartData);
     }

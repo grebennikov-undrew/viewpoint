@@ -6,6 +6,7 @@ import com.grebennikovas.viewpoint.datasets.column.ColumnRepository;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterMapper;
 import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
+import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.utils.AggFunction;
@@ -102,7 +103,7 @@ public class DatasetService {
     }
 
     // Получить минимальное и максимальное значение столбца
-    public Map<String,Object> getColumnBounds(Long datasetId, String columnName) throws SQLException {
+    public List<Object> getColumnBounds(Long datasetId, String columnName) throws SQLException {
         // Построение запроса для получения минимума и максимума по столбцу
         Dataset dataset = datasetRepository.findById(datasetId).get();
         String sqlQuery = new SqlBuilder()
@@ -114,12 +115,8 @@ public class DatasetService {
         Result result = sourceService.execute(dataset.getSource().getId(),sqlQuery);
 
         // Маппинг строки результата таблицы на мин и макс
-        Map<String,Object> columnBounds = result.getRows().get(0).getEntries().entrySet().stream()
-                .collect(Collectors.toMap(
-                        key -> key.getKey(),
-                        value -> value.getValue()
-                ));
-
+        List<Object> columnBounds = result.getRows().get(0).getEntries().values().stream()
+                .map(Entry::getValue).sorted().toList();
         return columnBounds;
     }
 

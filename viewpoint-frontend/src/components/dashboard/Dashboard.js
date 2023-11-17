@@ -27,6 +27,22 @@ const defaultSettings = {
     filters: [],
 }
 
+function buildRequestBody(dashboardData) {
+    const submitData = Object.assign({},dashboardData);
+    delete submitData.charts;
+    delete submitData.filters;
+    submitData["chartsId"] = dashboardData.charts.map(c => c.id);
+    submitData["layout"] = JSON.stringify({position: (dashboardData.layout), filters: dashboardData.filters});
+    return submitData;
+}
+
+function destructResponseBody(body) {
+    const extraSettings = JSON.parse(body["layout"]);
+    body["layout"] = extraSettings["position"];
+    body["filters"] = extraSettings["filters"];
+    return body;
+}
+
 const Dashboard = (props) => {
     const { id } = useParams(); 
     const [ mode, setMode ] = useState("read");
@@ -36,16 +52,15 @@ const Dashboard = (props) => {
         fetchData()
     }, []);
 
+    
+
     const fetchData = () => {
         if (id) {
             const fetchData = async () => {
                 try {
                     const response = await httpRequest.get(`/dashboard/${id}`)
-                    const settings = response.data;
-                    const extraSettings = JSON.parse(settings["layout"]);
-                    settings["layout"] = extraSettings["position"];
-                    settings["filters"] = extraSettings["filters"];
-                    setDashboardData(settings);
+                    const newData = destructResponseBody(response.data)
+                    setDashboardData(newData);
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
@@ -112,18 +127,11 @@ const Dashboard = (props) => {
 
     const handleSaveClick = (event) => {
         event.preventDefault();
-        const submitData = Object.assign({},dashboardData);
-        delete submitData.charts;
-        delete submitData.filters;
-        submitData["chartsId"] = dashboardData.charts.map(c => c.id);
-        submitData["layout"] = JSON.stringify({position: (dashboardData.layout), filters: dashboardData.filters});
+        const submitData = buildRequestBody(dashboardData);
         httpRequest.post(`/dashboard/`, submitData)
             .then(response => {
-                const settings = response.data;
-                const extraSettings = JSON.parse(settings["layout"]);
-                settings["layout"] = extraSettings["position"];
-                settings["filters"] = extraSettings["filters"];
-                setDashboardData(settings);
+                const newData = destructResponseBody(response.data)
+                setDashboardData(newData);
             })
             .catch(error => {
                 console.error('Error submitting data:', error);
@@ -143,6 +151,27 @@ const Dashboard = (props) => {
     const handleCancelClick = (e) => {
         fetchData();
         setMode("read");
+    }
+
+    const handleApplyFilters = (e, filterValues) => {
+        e.preventDefault();
+        if (filterValues) {
+            const submitData = Object.keys(filterValues).map(key => {
+                const filter = filterValues[key]
+                const column = dashboardData.filters.find(c => c.name === key);
+                column['filterValues'] = filter;
+                return column;
+            });
+
+            httpRequest.post(`/dashboard/${id}`, submitData)
+            .then(response => {
+                const newData = destructResponseBody(response.data)
+                setDashboardData(newData);
+            })
+            .catch(error => {
+                console.error('Error submitting data:', error);
+            });
+        }
     }
 
     const backgroundColor = mode==="read" ? "transparent" : "#transparent";
@@ -182,7 +211,7 @@ const Dashboard = (props) => {
                     </ButtonGroup>
                 </div>
                 <Grid container columns={12}>
-                    <Filters dashboardData={dashboardData} mode={mode} fetchData={fetchData}/>
+                    <Filters dashboardData={dashboardData} mode={mode} handleApplyFilters={handleApplyFilters}/>
                     <Grid item xs>
                         <DashboardLayot 
                             mode={mode}
