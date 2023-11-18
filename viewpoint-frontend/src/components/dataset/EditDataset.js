@@ -14,12 +14,15 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+
+import { useAlert } from '../AlertContext';
 import GeneralTab from './GeneralTab';
 import SqlTab from './SqlTab';
 import ResultTab from './ResultTab';
 import { httpRequest } from '../../service/httpRequest';
 
 const EditDataset = () => {
+    const { showAlert } = useAlert();
     const { id } = useParams(); 
     const [tab, setTab] = React.useState(0);
     const [datasetData, setDatasetData] = useState({});
@@ -37,7 +40,11 @@ const EditDataset = () => {
         if (id) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.get(`/dataset/${id}`)
+                    const response = await httpRequest.get(`/dataset/${id}`);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
                     setDatasetData(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -55,6 +62,10 @@ const EditDataset = () => {
         const {...submitData} = datasetData;
         httpRequest.post(`/dataset/`, submitData)
           .then(response => {
+            if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
             setDatasetData(response.data);
           })
           .catch(error => {

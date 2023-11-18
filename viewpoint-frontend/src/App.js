@@ -1,5 +1,7 @@
 import React, {useContext, useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MuiAlert from '@mui/material/Alert';
+import { AlertProvider } from './components/AlertContext';
 import HomePage from './routes/HomePage';
 import Dashboards from './routes/Dashboards'
 import ErrorPage from './routes/ErrorPage';
@@ -13,28 +15,32 @@ import LoginForm from './routes/LoginForm';
 import Chart from './routes/Charts';
 import EditChart from './components/chart/EditChart';
 import Dashboard from './components/dashboard/Dashboard';
+import Sources from './routes/Sources';
 
 function App() {
-  return (
-    <ThemeProvider theme={customTheme}>
-        <Router>
-        <Navbar/>
-          <Routes>
-              <Route exact path='/' element={<HomePage/>}/>
-              <Route path='/dashboard' element={<Dashboards/>}/>
-              <Route path='/dashboard/:id' element={<Dashboard/>}/>
-              <Route path='/dashboard/new' element={<Dashboard/>}/>
-              <Route path='/dataset' element={<Dataset/>}/>
-              <Route path='/dataset/:id' element={<EditDataset/>}/>
-              <Route path='/dataset/new' element={<EditDataset/>}/>
-              <Route path='/chart' element={<Chart/>}/>
-              <Route path='/chart/:id' element={<EditChart/>}/>
-              <Route path='/chart/new' element={<EditChart/>}/>
-              <Route exact path='/login' element={<LoginForm/>}/>
-          </Routes>
-        </Router>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider theme={customTheme}>
+          <AlertProvider>
+            <Router>
+            <Navbar/>
+                <Routes>
+                    <Route exact path='/' element={<HomePage/>}/>
+                    <Route path='/dashboard' element={<Dashboards/>}/>
+                    <Route path='/dashboard/:id' element={<Dashboard/>}/>
+                    <Route path='/dashboard/new' element={<Dashboard/>}/>
+                    <Route path='/dataset' element={<Dataset/>}/>
+                    <Route path='/dataset/:id' element={<EditDataset/>}/>
+                    <Route path='/dataset/new' element={<EditDataset/>}/>
+                    <Route path='/chart' element={<Chart/>}/>
+                    <Route path='/chart/:id' element={<EditChart/>}/>
+                    <Route path='/chart/new' element={<EditChart/>}/>
+                    <Route path='/source' element={<Sources/>}/>
+                    <Route exact path='/login' element={<LoginForm/>}/>
+                </Routes>
+            </Router>
+          </AlertProvider>
+        </ThemeProvider>
+    );
 }
 
 export default App;

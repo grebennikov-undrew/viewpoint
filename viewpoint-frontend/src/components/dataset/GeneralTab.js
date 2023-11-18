@@ -11,15 +11,22 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 import SendIcon from '@mui/icons-material/Send';
+
+import { useAlert } from '../AlertContext';
 import { httpRequest } from '../../service/httpRequest';
 
 const GeneralTab = ({datasetData, onFieldChange, onSelectChange, setTableData, setTab}) => {
+    const { showAlert } = useAlert();
     const [sources, setSources] = useState();
 
     useEffect(() => {
         const fetchSources = async () => {
             try {
-                const response = await httpRequest.get(`/source/`)
+                const response = await httpRequest.get(`/source/`);
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 setSources(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -38,6 +45,10 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange, setTableData, s
 
         const fetchData = async () => httpRequest.post(`/dataset/execute`, queryData)
         .then(response => {
+            if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
             setTableData(response.data);
             onSelectChange(null, "columns", Object.keys(response.data.coltypes).map(k => {return {"name": k, "type": response.data.coltypes[k] }}));
             setTab(1);

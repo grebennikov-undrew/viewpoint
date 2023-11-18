@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import { useAlert } from '../components/AlertContext';
 import { httpRequest } from '../service/httpRequest';
 
 const customButtonStyle = {
@@ -14,6 +16,7 @@ const customButtonStyle = {
 };
 
 const Chart = () => {
+    const { showAlert } = useAlert();
     const [data, setData] = useState([]);
     const navigate = useNavigate();
 
@@ -21,6 +24,10 @@ const Chart = () => {
         const fetchData = async () => {
             try {
                 const response = await httpRequest.get('/chart/', {withCredentials: true});
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

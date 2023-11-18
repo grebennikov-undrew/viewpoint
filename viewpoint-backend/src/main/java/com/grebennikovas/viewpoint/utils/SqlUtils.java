@@ -21,9 +21,9 @@ public class SqlUtils {
         for (Alias alias : aliases) {
             String columnString;
             if (alias.getAggFunction() != null)
-                columnString = alias.getAggFunction().getFunc() + "(" + alias.getValue() + ")";
+                columnString = alias.getAggFunction().getFunc() + "(\"" + alias.getValue() + "\")";
             else
-                columnString = alias.getValue();
+                columnString = "\"" + alias.getValue() + "\"";
             joiner.add(columnString + " as \"" + alias.getLabel() + "\"");
         }
         return joiner.toString();
@@ -35,9 +35,9 @@ public class SqlUtils {
         for (Alias alias : aliases) {
             String columnString;
             if (alias.getAggFunction() != null)
-                columnString = alias.getAggFunction().getFunc() + "(" + alias.getValue() + ")";
+                columnString = alias.getAggFunction().getFunc() + "(\"" + alias.getValue() + "\")";
             else
-                columnString = alias.getValue();
+                columnString = "\"" + alias.getValue() + "\"";
             joiner.add(columnString);
         }
         return joiner.toString();
@@ -145,15 +145,14 @@ public class SqlUtils {
     }
 
     // Проверка подключения к БД
-    public static boolean validateConnection (String dbUrl) {
-        try {
-            Connection connection = DriverManager.getConnection(dbUrl);
+    public static boolean validateConnection (String dbUrl) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(dbUrl)){
             boolean valid = connection.isValid(10);
             connection.close();
             return valid;
         } catch (SQLException e) {
             e.printStackTrace(); // Обработка ошибки подключения
-            return false;
+            throw e;
         }
     }
 

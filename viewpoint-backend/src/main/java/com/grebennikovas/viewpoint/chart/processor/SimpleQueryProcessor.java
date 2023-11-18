@@ -26,12 +26,15 @@ public class SimpleQueryProcessor implements QueryProcessor{
     }
 
     public String buildQuery(Chart chart, List<ColumnDto> columnFilters) {
+        // Получить запрос и настройки диаграммы
         String datasetQuery = chart.getDataset().getSqlQuery();
         ChartSettings settings = chart.getChartSettings();
 
+        // Применить фильтры
         List<String> filters = SqlUtils.getConditionsFromFilters(columnFilters);
         String queryWithFilters = applyFilters(datasetQuery,filters);
 
+        // Построить запрос
         String chartQuery = new SqlBuilder()
                 .select(settings.getDimensions())
                 .fromSubQuery(queryWithFilters)

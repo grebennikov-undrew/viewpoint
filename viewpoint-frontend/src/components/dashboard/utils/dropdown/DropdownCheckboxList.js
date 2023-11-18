@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import BarChartIcon from '@mui/icons-material/BarChart';
 
+import { useAlert } from '../../../AlertContext';
 import { httpRequest } from '../../../../service/httpRequest';
 
 const fabStyle = {
@@ -22,6 +23,7 @@ const listStyle = {
 };
 
 const DropdownCheckboxList = (props) => {
+    const { showAlert } = useAlert();
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [chartList, setChartList] = useState([]);
@@ -32,6 +34,10 @@ const DropdownCheckboxList = (props) => {
         const fetchData = async () => {
             try {
                 const response = await httpRequest.get('/chart/', {withCredentials: true});
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 setChartList(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

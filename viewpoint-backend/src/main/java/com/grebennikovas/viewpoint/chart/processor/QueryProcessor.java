@@ -51,9 +51,6 @@ public interface QueryProcessor {
         return queryWithFilters;
     }
 
-    //temp
-    default String buildQuery(Chart chart, List<ColumnDto> columnFilters) {
-        return null;
-    }
+    String buildQuery(Chart chart, List<ColumnDto> columnFilters);
 
 }

@@ -3,12 +3,14 @@ package com.grebennikovas.viewpoint.chart.processor;
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
 import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
 import com.grebennikovas.viewpoint.utils.AggFunction;
 import com.grebennikovas.viewpoint.utils.Alias;
 import com.grebennikovas.viewpoint.utils.SqlBuilder;
+import com.grebennikovas.viewpoint.utils.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,32 @@ public class PivotQueryProcessor implements QueryProcessor {
         String chartQuery = new SqlBuilder()
                 .select(selectAliases)
                 .fromSubQuery(datasetQuery)
+                .where(settings.getWhere())
+                .groupBy(groupByAliases)
+                .orderBy(settings.getOrderBy(),settings.getDesc())
+                .limit(settings.getLimit())
+                .build();
+        return chartQuery;
+    }
+
+    @Override
+    public String buildQuery(Chart chart, List<ColumnDto> columnFilters) {
+        String datasetQuery = chart.getDataset().getSqlQuery();
+        List<String> filters = SqlUtils.getConditionsFromFilters(columnFilters);
+        String queryWithFilters = applyFilters(datasetQuery,filters);
+
+        ChartSettings settings = chart.getChartSettings();
+
+        List<Alias> selectAliases = new ArrayList<>(settings.getDimensions());
+        selectAliases.addAll(settings.getMetrics());
+        selectAliases.add(new Alias(settings.getXAxis()));
+
+        List<Alias> groupByAliases = new ArrayList<>(settings.getDimensions());
+        groupByAliases.add(new Alias(settings.getXAxis()));
+
+        String chartQuery = new SqlBuilder()
+                .select(selectAliases)
+                .fromSubQuery(queryWithFilters)
                 .where(settings.getWhere())
                 .groupBy(groupByAliases)
                 .orderBy(settings.getOrderBy(),settings.getDesc())

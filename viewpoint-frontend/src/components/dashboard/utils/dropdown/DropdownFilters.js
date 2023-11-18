@@ -3,6 +3,7 @@ import { Fab, Popover, List, ListItem, ListItemText, IconButton, TextField, Typo
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+import { useAlert } from '../../../AlertContext';
 import { httpRequest } from '../../../../service/httpRequest';
 import { TypeIcon } from '../../../basic/TypeIcon';
 
@@ -22,6 +23,7 @@ const listStyle = {
 };
 
 const DropdownFilters = (props) => {
+    const { showAlert } = useAlert();
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [columnList, setColumnList] = useState([]);
@@ -35,6 +37,10 @@ const DropdownFilters = (props) => {
         const body = charts.map(c => c.datasetId);
         httpRequest.post(`/dataset/columns`, body)
             .then(response => {
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 setColumnList(response.data);
             })
             .catch(error => {

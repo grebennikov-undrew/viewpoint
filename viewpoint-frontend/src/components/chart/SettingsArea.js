@@ -11,12 +11,15 @@ import Chip from '@mui/material/Chip';
 import { httpRequest } from '../../service/httpRequest';
 import SelectTags from '../basic/SelectTags';
 
+import { useAlert } from '../AlertContext';
 import TableSettingsArea from "./Table/TableSettingsArea";
 import PieSettings from "./pie/PieSettings";
 import LineSettings from "./line/LineSettings";
 import BarSettings from "./bar/BarSettings";
 
 const SettingsArea = (props) => {
+    const { showAlert } = useAlert();
+
     const [ datasets, setDatasets] = useState();
     const [ datasetData, setDatasetData] = useState();
 
@@ -26,7 +29,11 @@ const SettingsArea = (props) => {
 
     const getDatasetInfo = async (id) => {
         try {
-            const response = await httpRequest.get(`/dataset/${id}`)
+            const response = await httpRequest.get(`/dataset/${id}`);
+            if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
             setDatasetData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -36,7 +43,11 @@ const SettingsArea = (props) => {
     useEffect(() => {
         const fetchSources = async () => {
             try {
-                const response = await httpRequest.get(`/dataset/`)
+                const response = await httpRequest.get(`/dataset/`);
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 setDatasets(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

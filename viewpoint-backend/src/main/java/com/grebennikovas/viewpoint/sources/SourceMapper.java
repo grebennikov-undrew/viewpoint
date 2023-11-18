@@ -14,11 +14,14 @@ public interface SourceMapper {
 
     Source toEntity(SourceDto sourceDto);
 
+    @Mapping(target = "password", ignore = true)
     SourceDto toDto(Source source);
 
     @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "source.id")
     @Mapping(target = "name", source = "source.name")
     @Mapping(target = "type", source = "source.type")
+    @Mapping(target = "dbname", source = "source.dbname")
     SourceDto toShortDto(Source source);
 
 }

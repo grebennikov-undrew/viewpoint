@@ -16,6 +16,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import PieChartIcon from '@mui/icons-material/PieChart';
 
+import { useAlert } from '../AlertContext';
 import { httpRequest } from '../../service/httpRequest';
 import SettingsArea from './SettingsArea';
 import ChartArea from './ChartArea';
@@ -29,6 +30,7 @@ const defaultChartData = {
 }
 
 const EditChart = () => {
+    const { showAlert } = useAlert();
     const { id } = useParams(); 
     const [chartData, setChartData] = useState();
     const [needUpdate, setNeedUpdate] = useState(false);
@@ -38,7 +40,11 @@ const EditChart = () => {
         if (id) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.get(`/chart/${id}`)
+                    const response = await httpRequest.get(`/chart/${id}`);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
                     setChartData(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -54,7 +60,11 @@ const EditChart = () => {
         if (needUpdate) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.post(`/chart/data`, chartData)
+                    const response = await httpRequest.post(`/chart/data`, chartData);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
                     setChartData(response.data);
                     setNeedUpdate(false);
                 } catch (error) {
@@ -70,6 +80,10 @@ const EditChart = () => {
         const {...submitData} = chartData;
         httpRequest.post(`/chart/`, submitData)
           .then(response => {
+            if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
             setChartData(response.data);
           })
           .catch(error => {

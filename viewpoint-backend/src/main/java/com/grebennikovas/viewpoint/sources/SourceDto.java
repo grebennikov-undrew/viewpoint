@@ -31,4 +31,6 @@ public class SourceDto {
 
     private String username;
 
+    private String password;
+
 }

@@ -8,10 +8,12 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import { useAlert } from '../components/AlertContext';
 import { httpRequest } from '../service/httpRequest';
 
 function Dashboards() {
-
+  const { showAlert } = useAlert();
   const [dashboardList, setDashboardList] = useState([]);
   const navigate = useNavigate();
 
@@ -19,6 +21,10 @@ function Dashboards() {
       const fetchData = async () => {
           try {
               const response = await httpRequest.get('/dashboard/', {withCredentials: true});
+              if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
               setDashboardList(response.data);
           } catch (error) {
               console.error('Error fetching data:', error);

@@ -72,21 +72,29 @@ public class ChartService {
 
     // Получение данных для диаграммы
     private ChartResponseDto getData(Chart chart) throws SQLException {
+        // Получить данные о диаграмме и процессор
         ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
+
+        // Построить SQL запрос по заданной стратегии и выполнить
         String chartQuery = queryProcessor.buildQuery(chart);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
         return queryProcessor.postProcess(chartResponseDto, chartData);
     }
 
     // Получение отфильтрованных данных для диаграммы
-    private ChartResponseDto getData(Chart chart, List<ColumnDto> columnFilters) throws SQLException {
+    private ChartResponseDto getData(Chart chart, List<ColumnDto> dashboardFilters) throws SQLException {
         // Получить данные о диаграмме и процессор
         ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);
         QueryProcessor queryProcessor = QueryProcessorFactory.getQueryProcessor(chart);
 
-        // Преобразовать фильтры в условия
-        String chartQuery = queryProcessor.buildQuery(chart, columnFilters);
+        // Оставить фильтры только тех столбцов, которые есть в датасете
+        Set<ColumnDto> chartColumns = datasetService.getColumns(Set.of(chart.getDataset().getId()));
+        List<ColumnDto> availFilters = dashboardFilters.stream()
+                .filter(chartColumns::contains).toList();
+
+        // Построить SQL запрос по заданной стратегии и выполнить
+        String chartQuery = queryProcessor.buildQuery(chart, availFilters);
         Result chartData = sourceService.execute(chart.getDataset().getSource().getId(),chartQuery);
         return queryProcessor.postProcess(chartResponseDto, chartData);
     }

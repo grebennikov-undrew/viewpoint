@@ -12,6 +12,7 @@ import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 // import { InputBase, TextField } from "@material-ui/core";
 
+import { useAlert } from '../AlertContext';
 import { httpRequest } from '../../service/httpRequest';
 import DashboardLayot from './DashboardLayot';
 import SelectTags from '../basic/SelectTags';
@@ -44,6 +45,7 @@ function destructResponseBody(body) {
 }
 
 const Dashboard = (props) => {
+    const { showAlert } = useAlert();
     const { id } = useParams(); 
     const [ mode, setMode ] = useState("read");
     const [ dashboardData, setDashboardData ] = useState();
@@ -58,7 +60,11 @@ const Dashboard = (props) => {
         if (id) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.get(`/dashboard/${id}`)
+                    const response = await httpRequest.get(`/dashboard/${id}`);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
                     const newData = destructResponseBody(response.data)
                     setDashboardData(newData);
                 } catch (error) {
@@ -93,7 +99,11 @@ const Dashboard = (props) => {
 
         const fetchAndAddChart = async (chartId, newLayout) => {
             try {
-                const response = await httpRequest.get(`/chart/${chartId}`)
+                const response = await httpRequest.get(`/chart/${chartId}`);
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 const newCharts = dashboardData.charts ? dashboardData.charts.slice() : [];
                 newCharts.push(response.data)
                 handleLayoutChange(newCharts,newLayout);
@@ -130,6 +140,10 @@ const Dashboard = (props) => {
         const submitData = buildRequestBody(dashboardData);
         httpRequest.post(`/dashboard/`, submitData)
             .then(response => {
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
                 const newData = destructResponseBody(response.data)
                 setDashboardData(newData);
             })
@@ -165,7 +179,11 @@ const Dashboard = (props) => {
 
             httpRequest.post(`/dashboard/${id}`, submitData)
             .then(response => {
-                const newData = destructResponseBody(response.data)
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
+                const newData = destructResponseBody(response.data);
                 setDashboardData(newData);
             })
             .catch(error => {
