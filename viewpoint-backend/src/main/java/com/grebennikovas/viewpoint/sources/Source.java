@@ -15,8 +15,8 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Source extends BaseEntity {
+//@EqualsAndHashCode(callSuper = true)
+public class Source {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +39,7 @@ public class Source extends BaseEntity {
 
     private String password;
 
+    public Source(Long id) {
+        this.id = id;
+    }
 }

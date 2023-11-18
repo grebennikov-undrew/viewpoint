@@ -27,8 +27,13 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder select(List<Column> columns) {
-        this.select = "SELECT " + SqlUtils.getColumnsWithLabels(columns);
+    public SqlBuilder select(List<Alias> aliases) {
+        this.select = "SELECT " + SqlUtils.getColumnsWithLabels(aliases);
+        return this;
+    }
+
+    public SqlBuilder selectDistinct(List<Alias> aliases) {
+        this.select = "SELECT DISTINCT " + SqlUtils.getColumnsWithLabels(aliases);
         return this;
     }
 
@@ -48,9 +53,9 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder groupBy(List<Column> columns) {
-        if (columns!= null && columns.size() > 0)
-            this.groupBy = "GROUP BY " + SqlUtils.getColumns(columns);
+    public SqlBuilder groupBy(List<Alias> aliases) {
+        if (aliases != null && aliases.size() > 0)
+            this.groupBy = "GROUP BY " + SqlUtils.getColumns(aliases);
         return this;
     }
 
@@ -60,9 +65,9 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder orderBy(List<Column> columns, Boolean desc) {
-        if (columns != null && columns.size() > 0) {
-            this.orderBy = "ORDER BY " + SqlUtils.getColumns(columns);
+    public SqlBuilder orderBy(List<Alias> aliases, Boolean desc) {
+        if (aliases != null && aliases.size() > 0) {
+            this.orderBy = "ORDER BY " + SqlUtils.getColumns(aliases);
             if (desc != null && desc)
                 this.orderBy = this.orderBy + " DESC";
         }

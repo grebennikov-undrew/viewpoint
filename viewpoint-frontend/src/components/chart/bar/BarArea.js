@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { Box, height, width } from '@mui/system';
 import dayjs from 'dayjs';
+import { bottom } from '@popperjs/core';
 
 const legendPlacement = {
     slotProps: {
@@ -19,25 +19,25 @@ const legendPlacement = {
     },
   };
 
-const BarArea = ({chartData, chartResult}) => {
-    if (!chartResult || !chartData) return;
-
-    const { rows, columns, data } = chartResult;
-    const { chartSettings, dataset } = chartData;
-    const { metrics, dimensions, xAxis } = chartSettings;
+const BarArea = (props) => {
+    const {chartData} = props;
+    const { chartSettings, rows, columns, data } = chartData;
+    const { metrics, dimensions, xAxis, xAxisType } = chartSettings;
 
     // Устаноить тип оси
-    const sortedKeys = columns.sort();
-    const xColumn = dataset.columns.find(c => c.name == xAxis);
+    const sortedKeys = columns && columns.sort();
+    const xColumn = columns && columns.find(c => c.name === xAxis);
+
     const xAxisSettings = {
         data: sortedKeys,
     };
-    if (xColumn["type"] === "Timestamp") {
+
+    if (xAxisType === "Timestamp") {
         xAxisSettings["data"] = sortedKeys.map(stringDate => new Date(stringDate));
         xAxisSettings["scaleType"] = 'time';
         xAxisSettings["tickMinStep"] = 3600 * 1000 * 24; // 24 h
         xAxisSettings["valueFormatter"] = (value) => (dayjs(value).format("YYYY-MM-DD"));
-    } else if (xColumn["type"] === "String") {
+    } else if (xAxisType === "String") {
         xAxisSettings["scaleType"] = 'band';
     }
 
@@ -55,8 +55,8 @@ const BarArea = ({chartData, chartResult}) => {
             series={[
                 ...seriesSettings
             ]}
-            margin={{ top: 10, bottom: 20 }}
             {...legendPlacement}
+            margin={{bottom: 70, left: 60}}
         />
     )
 }

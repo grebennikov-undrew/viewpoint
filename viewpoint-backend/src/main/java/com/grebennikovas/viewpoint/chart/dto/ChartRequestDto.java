@@ -1,31 +1,32 @@
 package com.grebennikovas.viewpoint.chart.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
 import com.grebennikovas.viewpoint.chart.ChartType;
-import com.grebennikovas.viewpoint.datasets.DatasetDto;
-import com.grebennikovas.viewpoint.users.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Dto для построения и сохранения диаграммы
+ * */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChartDto {
+public class ChartRequestDto {
 
+    /** Id диаграммы */
     private Long id;
 
+    /** Название диаграммы */
     private String name;
 
+    /** Тип диаграммы */
     private ChartType chartType;
 
-    @JsonProperty("user")
-    private UserDto userDto;
+    /** Id набора данных */
+    private Long datasetId;
 
-    @JsonProperty("dataset")
-    private DatasetDto datasetDto;
-
+    /** Настройки диаграммы */
     private ChartSettings chartSettings;
 
 }

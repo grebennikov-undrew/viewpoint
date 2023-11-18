@@ -4,9 +4,12 @@ import { TextField, Button, Grid, Typography, Container } from '@mui/material';
 import AuthenticationService from "../service/AuthenticationService"
 import { margin } from '@mui/system';
 
+import { useAlert } from '../components/AlertContext';
+
 const API_URL = 'http://localhost:8080'
 
 const LoginForm = () => {
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -26,7 +29,8 @@ const LoginForm = () => {
     const fetchData = async () => {
         try {
             const response = await AuthenticationService.executeBasicAuthenticationService(formData.username, formData.password);
-            if (response.status === 200) navigate('/dataset');
+            if (response.status === 200) navigate('/dataset')
+            else showAlert("Authorization failed", "error");
         } catch (error) {
             console.error('Error fetching data:', error);
         }

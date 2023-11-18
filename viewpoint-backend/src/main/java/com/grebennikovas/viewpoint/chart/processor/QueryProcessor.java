@@ -2,9 +2,12 @@ package com.grebennikovas.viewpoint.chart.processor;
 
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
-import com.grebennikovas.viewpoint.chart.dto.ChartDataDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
+import com.grebennikovas.viewpoint.datasets.Dataset;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
+import com.grebennikovas.viewpoint.utils.SqlBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ public interface QueryProcessor {
 
     String buildQuery(Chart chart);
 
-    default ChartDataDto postProcess(Result result, ChartSettings settings) {
+    default ChartResponseDto postProcess(ChartResponseDto chartResponseDto, Result result) {
         List<Row> rawRows = result.getRows();
         Map<String, Map<String, Object>> newRows = new HashMap<>();
 
@@ -31,10 +34,23 @@ public interface QueryProcessor {
             idx += 1;
         }
 
-        ChartDataDto chartDataDto = new ChartDataDto();
-        chartDataDto.setColumns(new ArrayList<>(result.getColtypes().keySet()));
-        chartDataDto.setData(newRows);
-        return chartDataDto;
+        chartResponseDto.setColumns(new ArrayList<>(result.getColtypes().keySet()));
+        chartResponseDto.setData(newRows);
+        return chartResponseDto;
     }
+
+    default String applyFilters(String sqlQuery, List<String> conditions) {
+        String conditionsString = String.join(" AND ", conditions);
+
+        String queryWithFilters = new SqlBuilder()
+                .select()
+                .fromSubQuery(sqlQuery)
+                .where(conditionsString)
+                .build();
+
+        return queryWithFilters;
+    }
+
+    String buildQuery(Chart chart, List<ColumnDto> columnFilters);
 
 }

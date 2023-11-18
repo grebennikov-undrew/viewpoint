@@ -5,13 +5,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ColumnRepository extends JpaRepository<Column, Long> {
+
     List<Column> findAll();
-    List<Column> findAllByDataset_id(Long id);
+
     Optional<Column> findById(Long id);
+
     Dataset save(Dataset person);
-    int countByDataset_id(Long datasetId);
+
+    Set<Column> findAllByDatasetId(Long id);
+
+    Set<Column> findAllByDatasetIdIn(Set<Long> ids);
+
+    int countByDatasetId(Long datasetId);
+
     @Transactional
-    void deleteByDataset_id(Long datasetId);
+    void deleteByDatasetId(Long datasetId);
+
 }

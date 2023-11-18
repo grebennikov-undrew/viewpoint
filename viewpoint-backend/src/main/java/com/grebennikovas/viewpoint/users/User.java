@@ -15,8 +15,9 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class User extends BaseEntity {
+//@EqualsAndHashCode(callSuper = true)
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,4 +30,8 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String password;
     private boolean isActive;
+
+    public User (Long id) {
+        this.id = id;
+    }
 }

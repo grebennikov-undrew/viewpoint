@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 
 export default function SelectTags(props) {
 
-    const {options, values, label, onSelectChange} = props;
+    const {options, values, label, onSelectChange, placeholder, variant, size} = props;
 
     // if (!options) return;
     return (
@@ -19,7 +19,7 @@ export default function SelectTags(props) {
             getOptionLabel={(option) => option}
             onChange={onSelectChange}
             renderInput={(params) => (
-                <TextField {...params} size="medium" variant="standard" label={label} placeholder="  add..." />
+                <TextField {...params} size={size || "medium"} variant={variant || "standard"} label={label} placeholder={placeholder || "add.."} />
             )}
         />
     );

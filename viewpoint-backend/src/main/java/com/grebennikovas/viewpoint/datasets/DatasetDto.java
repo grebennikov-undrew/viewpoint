@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -32,7 +33,7 @@ public class DatasetDto {
     private SourceDto sourceDto;
 
     @JsonProperty("columns")
-    private List<ColumnDto> columnsDto;
+    private Set<ColumnDto> columnsDto;
 
 //    @JsonProperty("parameters")
 //    private List<ParameterDto> parametersDto;

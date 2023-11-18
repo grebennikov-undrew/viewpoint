@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert from '@mui/material/Alert';
 
 import IconButton from '@mui/material/IconButton';
 import GridOnIcon from '@mui/icons-material/GridOn';
@@ -16,56 +16,43 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import PieChartIcon from '@mui/icons-material/PieChart';
 
+import { useAlert } from '../AlertContext';
 import { httpRequest } from '../../service/httpRequest';
 import SettingsArea from './SettingsArea';
 import ChartArea from './ChartArea';
 
-
+const defaultChartData = {
+    name: "New chart",
+    chartType: "TABLE",
+    username: "user",
+    datasetName: "",
+    chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
+}
 
 const EditChart = () => {
+    const { showAlert } = useAlert();
     const { id } = useParams(); 
     const [chartData, setChartData] = useState();
-    const [chartResult, setChartResult] = useState();
     const [needUpdate, setNeedUpdate] = useState(false);
     const navigate = useNavigate();
-
-    const defaultValues = {
-        parameters: [],
-        user: {id: 4, username: "grebennikovas"},
-        name: "New chart",
-        chartType: "TABLE",
-        chartSettings: { dimensions: [], metrics: [{}] , orderBy: [] },
-        dataset: {columns: []}
-    }
 
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.get(`/chart/${id}`)
+                    const response = await httpRequest.get(`/chart/${id}`);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
                     setChartData(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
             }
             fetchData();
-        }
-        else {
-            setChartData(defaultValues);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const response = await httpRequest.get(`/chart/${id}/data`)
-                    setChartResult(response.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-            fetchData();
+        } else {
+            setChartData(defaultChartData);
         }
     }, []);
 
@@ -73,8 +60,12 @@ const EditChart = () => {
         if (needUpdate) {
             const fetchData = async () => {
                 try {
-                    const response = await httpRequest.post(`/chart/data`, chartData)
-                    setChartResult(response.data);
+                    const response = await httpRequest.post(`/chart/data`, chartData);
+                    if (response.status === 400) {
+                        showAlert('Error: ' + response.data, "error");
+                        return;
+                    } 
+                    setChartData(response.data);
                     setNeedUpdate(false);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -89,6 +80,10 @@ const EditChart = () => {
         const {...submitData} = chartData;
         httpRequest.post(`/chart/`, submitData)
           .then(response => {
+            if (response.status === 400) {
+                showAlert('Error: ' + response.data, "error");
+                return;
+            } 
             setChartData(response.data);
           })
           .catch(error => {
@@ -131,10 +126,9 @@ const EditChart = () => {
         return true;
     }
 
-    if (!chartData) return
+    // if (!dataLoaded) return <></>
 
-    return (
-        <form onSubmit={handleSubmit}>
+    return (chartData && <form onSubmit={handleSubmit}>
         <Container maxWidth="xl">
             <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
                 <Typography variant="h2" m={1}>
@@ -147,7 +141,7 @@ const EditChart = () => {
                 </ButtonGroup>
             </div>
             <Grid container >
-                <Grid container xs={3}>
+                <Grid container xs={3} pr={3}>
                     <Stack direction="row" spacing={1} mb={3}>
                         <IconButton aria-label="delete" color={chartData.chartType.toLowerCase() === "table" ? "primary" : "disabled"} onClick={(e) => handleSelectChange(e,"chartType", "TABLE")}>
                             <GridOnIcon />
@@ -162,12 +156,12 @@ const EditChart = () => {
                             <SsidChartIcon />
                         </IconButton>
                     </Stack>
-                    <SettingsArea chartData={chartData} chartResult={chartResult} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
+                    <SettingsArea chartData={chartData} onFieldChange={handleFieldChange} onSelectChange={handleSelectChange}/>
                 </Grid>
                 <Grid container xs={9}>
                     <Grid item xs={12} > 
-                        <div style={{ height: "400px", width: "100%"}}>
-                            <ChartArea chartData={chartData} chartResult={chartResult} />
+                        <div style={{ width: "100%", height: "400px"}}>
+                            <ChartArea chartData={chartData} />
                         </div>
                     </Grid>
                     {/* <ChartArea chartData={chartData} chartResult={chartResult} /> */}

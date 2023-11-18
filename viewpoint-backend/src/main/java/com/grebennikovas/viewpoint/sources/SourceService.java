@@ -8,6 +8,7 @@ import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,20 +17,39 @@ import java.util.Map;
 
 @Service
 public class SourceService {
+
     @Autowired
     SourceRepository sourceRepository;
 
     @Autowired
+    SourceMapper sourceMapper;
+
+    @Autowired
     private ConnectionFactory connectionFactory;
 
-    public List<Source> findAll(){
-        return sourceRepository.findAll();
-    }
-    public Source check_and_save(Source source){
-        return sourceRepository.save(source);
+    public List<SourceDto> findAll(){
+        List<Source> sources = sourceRepository.findAll();
+        List<SourceDto> mappedSources = sources.stream().map(sourceMapper::toShortDto).toList();
+        return mappedSources;
     }
 
-    public boolean validate(Source source) {
+    public SourceDto findById(Long sourceId) {
+        Source foundSource =  sourceRepository.findById(sourceId).get();
+        SourceDto mappedSource = sourceMapper.toDto(foundSource);
+        return mappedSource;
+    }
+
+    public SourceDto validateAndSave(SourceDto newSource) throws SQLException {
+        if (validate(newSource)) {
+            Source source = sourceMapper.toEntity(newSource);
+            Source savedSource = sourceRepository.save(source);
+            return sourceMapper.toDto(savedSource);
+        }
+        return newSource;
+    }
+
+    public boolean validate(SourceDto newSource) throws SQLException {
+        Source source = sourceMapper.toEntity(newSource);
         DbConnection connection = connectionFactory.getConnection(source);
         String url = connection.getUrl();
         return SqlUtils.validateConnection(url);

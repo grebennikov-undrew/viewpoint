@@ -3,6 +3,7 @@ package com.grebennikovas.viewpoint.utils;
 public enum AggFunction {
     SUM ("SUM"),
     AVG ("AVG"),
+    MIN ("MIN"),
     MAX ("MAX"),
     COUNT ("COUNT");
 

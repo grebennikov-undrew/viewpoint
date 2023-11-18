@@ -1,6 +1,6 @@
 package com.grebennikovas.viewpoint.utils;
 
-import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
+import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.datasets.results.Entry;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.datasets.results.Row;
@@ -9,34 +9,35 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SqlUtils {
     private SqlUtils() {
     }
 
     // Приводит лист столбцов к строке с лейблами
-    public static String getColumnsWithLabels(List<Column> columns) {
+    public static String getColumnsWithLabels(List<Alias> aliases) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (Column column : columns) {
+        for (Alias alias : aliases) {
             String columnString;
-            if (column.getAggFunction() != null)
-                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            if (alias.getAggFunction() != null)
+                columnString = alias.getAggFunction().getFunc() + "(\"" + alias.getValue() + "\")";
             else
-                columnString = column.getValue();
-            joiner.add(columnString + " as \"" + column.getLabel() + "\"");
+                columnString = "\"" + alias.getValue() + "\"";
+            joiner.add(columnString + " as \"" + alias.getLabel() + "\"");
         }
         return joiner.toString();
     }
 
     // Приводит лист столбцов к строке без лейблов
-    public static String getColumns(List<Column> columns) {
+    public static String getColumns(List<Alias> aliases) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (Column column : columns) {
+        for (Alias alias : aliases) {
             String columnString;
-            if (column.getAggFunction() != null)
-                columnString = column.getAggFunction().getFunc() + "(" + column.getValue() + ")";
+            if (alias.getAggFunction() != null)
+                columnString = alias.getAggFunction().getFunc() + "(\"" + alias.getValue() + "\")";
             else
-                columnString = column.getValue();
+                columnString = "\"" + alias.getValue() + "\"";
             joiner.add(columnString);
         }
         return joiner.toString();
@@ -144,25 +145,47 @@ public class SqlUtils {
     }
 
     // Проверка подключения к БД
-    public static boolean validateConnection (String dbUrl) {
-        try {
-            Connection connection = DriverManager.getConnection(dbUrl);
+    public static boolean validateConnection (String dbUrl) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(dbUrl)){
             boolean valid = connection.isValid(10);
             connection.close();
             return valid;
         } catch (SQLException e) {
             e.printStackTrace(); // Обработка ошибки подключения
-            return false;
+            throw e;
         }
     }
 
-    // Составление списка значений фильтра
-    public static List<String> getFilterValues(Result result) {
-        List<String> filterOptions = new ArrayList<>();
-        result.getRows().forEach(r -> {
-            Optional<Entry> entry = r.getEntries().values().stream().findFirst();
-            entry.ifPresent(value -> filterOptions.add(value.getValue().toString()));
-        });
-        return filterOptions;
+    // Преобразовать значения фильтров в условия SQL
+    public static List<String> getConditionsFromFilters (List<ColumnDto> columnFilters) {
+        List<String> conditions = new ArrayList<>();
+
+        for (ColumnDto filter : columnFilters) {
+            String type = filter.getType();
+
+            // Обработка строковых фильтров в формат "column IN ("v1", "v2", "v3")
+            if (type.equals("String")) {
+                String separatedValues = filter.getFilterValues().stream()
+                        .map(value -> "\'" + value.toString() + "\'")
+                        .collect(Collectors.joining(", "));
+
+                conditions.add("\"" + filter.getName() + "\"" + " IN (" + separatedValues + ")");
+            }
+
+            // Обработка фильтров в формат column BETWEEN min AND max
+            if (type.equals("Double")) {
+                Object minValue = filter.getFilterValues().get(0);
+                Object maxValue = filter.getFilterValues().get(1);
+                conditions.add("\"" + filter.getName() + "\"" + " BETWEEN " + minValue + " AND " + maxValue);
+            }
+
+            if (type.equals("Timestamp")) {
+                Object minValue = filter.getFilterValues().get(0);
+                Object maxValue = filter.getFilterValues().get(1);
+                conditions.add("\"" + filter.getName() + "\"" + " BETWEEN \'" + minValue + "\' AND \'" + maxValue + "\'");
+            }
+
+        }
+        return conditions;
     }
 }

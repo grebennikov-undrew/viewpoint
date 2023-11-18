@@ -14,7 +14,7 @@ class SqlUtilsTest {
     @Test
     public void testConvertToStringSingleElement() {
         // Arrange
-        List<Column> list = Arrays.asList(new Column("Element"));
+        List<Alias> list = Arrays.asList(new Alias("Element"));
 
         // Act
         String result = SqlUtils.getColumns(list);
@@ -26,7 +26,7 @@ class SqlUtilsTest {
     @Test
     public void testConvertToStringMultipleElements() {
         // Arrange
-        List<Column> list = Arrays.asList(new Column("Element1"), new Column("Element2"), new Column("Element3"));
+        List<Alias> list = Arrays.asList(new Alias("Element1"), new Alias("Element2"), new Alias("Element3"));
 
         // Act
         String result = SqlUtils.getColumns(list);
@@ -91,22 +91,22 @@ class SqlUtilsTest {
 
     @Test
     void buildAggregationQueryManyValues() {
-        Column col1 = new Column("col_1","label1", AggFunction.AVG);
-        Column col2 = new Column("col_2", "label2", AggFunction.MAX);
-        List<Column> columns = Arrays.asList(col1, col2);
+        Alias col1 = new Alias("col_1","label1", AggFunction.AVG);
+        Alias col2 = new Alias("col_2", "label2", AggFunction.MAX);
+        List<Alias> aliases = Arrays.asList(col1, col2);
 
-        String result = SqlUtils.getColumnsWithLabels(columns);
+        String result = SqlUtils.getColumnsWithLabels(aliases);
 
         assertEquals("AVG(col_1) as \"label1\", MAX(col_2) as \"label2\"", result);
     }
 
     @Test
     void buildAggregationQueryOneValue() {
-        Column col1 = new Column("col_1","label", AggFunction.AVG);
-        List<Column> columns = Arrays.asList(col1);
+        Alias col1 = new Alias("col_1","label", AggFunction.AVG);
+        List<Alias> aliases = Arrays.asList(col1);
         AggFunction aggregateFunction = AggFunction.AVG;
 
-        String result = SqlUtils.getColumnsWithLabels(columns);
+        String result = SqlUtils.getColumnsWithLabels(aliases);
 
         assertEquals("AVG(col_1) as \"label\"", result);
     }
