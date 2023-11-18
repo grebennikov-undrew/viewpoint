@@ -6,10 +6,14 @@ import {
   DialogActions,
   Button,
   TextField,
+  FormControl
 } from '@mui/material';
 
 import { httpRequest } from '../../service/httpRequest';
 import { useAlert } from '../AlertContext';
+import SelectValue from '../basic/SelectValue';
+
+const dbTypes = [ "POSTGRESQL", "MYSQL" ]
 
 const EditSourceDialog = ({ source, open, onClose }) => {
     const [ editedSource, setEditedSource ] = useState({});
@@ -80,7 +84,7 @@ const EditSourceDialog = ({ source, open, onClose }) => {
             value={editedSource.name}
             onChange={(e) => handleFieldChange('name', e.target.value)}
             />
-            <TextField
+            {/* <TextField
             label="Type"
             fullWidth
             margin="normal"
@@ -89,7 +93,18 @@ const EditSourceDialog = ({ source, open, onClose }) => {
             required={true}
             value={editedSource.type}
             onChange={(e) => handleFieldChange('type', e.target.value)}
-            />
+            /> */}
+            <FormControl fullWidth>
+                <SelectValue 
+                    id="Type"
+                    options={dbTypes} 
+                    value={editedSource.type}
+                    label="Type *"
+                    onChange={(e) => handleFieldChange('type', e.target.value)}
+                    variant='standard'
+                    required={true}
+                />
+            </FormControl>
             <TextField
             label="Address"
             fullWidth
