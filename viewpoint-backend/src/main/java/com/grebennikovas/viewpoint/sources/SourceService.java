@@ -1,6 +1,5 @@
 package com.grebennikovas.viewpoint.sources;
 
-import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.connections.ConnectionFactory;
 import com.grebennikovas.viewpoint.sources.connections.DbConnection;
@@ -8,9 +7,7 @@ import com.grebennikovas.viewpoint.utils.SqlBuilder;
 import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -53,17 +50,6 @@ public class SourceService {
         DbConnection connection = connectionFactory.getConnection(source);
         String url = connection.getUrl();
         return SqlUtils.validateConnection(url);
-    }
-
-    // Выполнение запроса с параметрами
-    public Result execute(Long sourceId, String query, List<Parameter> parameters, Map<String,String> paramValues) throws SQLException {
-        SqlBuilder sqlBuilder = new SqlBuilder();
-        String preparedQuery = sqlBuilder
-                .select()
-                .fromSubQuery(query)
-                .parameters(parameters,paramValues)
-                .build();
-        return execute(sourceId,preparedQuery);
     }
 
     // Выполнение запроса без параметров и определение типов столбцов

@@ -1,11 +1,10 @@
 package com.grebennikovas.viewpoint.datasets;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import com.grebennikovas.viewpoint.sources.SourceDto;
 import com.grebennikovas.viewpoint.users.UserDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,9 +33,6 @@ public class DatasetDto {
 
     @JsonProperty("columns")
     private Set<ColumnDto> columnsDto;
-
-//    @JsonProperty("parameters")
-//    private List<ParameterDto> parametersDto;
 
     private Date createdOn;
 

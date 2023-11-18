@@ -1,9 +1,6 @@
 package com.grebennikovas.viewpoint.datasets;
 
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
 import com.grebennikovas.viewpoint.datasets.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +36,6 @@ public class DatasetController {
     }
 
     // Вернуть таблицу по запросу
-    // TODO: перетащить в source controller
     @PostMapping("/execute")
     public ResponseEntity<?> execute(@RequestBody DatasetExecDto execInfo) {
         String sqlQuery = execInfo.getSqlQuery();

@@ -1,7 +1,5 @@
 package com.grebennikovas.viewpoint.utils;
 
-import com.grebennikovas.viewpoint.datasets.parameter.Parameter;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +14,6 @@ public class SqlBuilder {
     private String having;
     private String orderBy;
     private String limit;
-    private Map<String,String> paramValues;
-
-    public SqlBuilder() {
-        paramValues = new HashMap<>();
-    }
 
     public SqlBuilder select() {
         this.select = "SELECT *";
@@ -80,20 +73,6 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder parameters(List<Parameter> parameters, Map<String,?> values) {
-        for (Parameter parameterInfo: parameters) {
-            String name = parameterInfo.getName();
-            if (values.containsKey(name)){
-                String value = SqlUtils.prepareParamValue(parameterInfo.getType(), values.get(name).toString());
-                this.paramValues.put(name, value);
-            }
-            else {
-                this.paramValues.put(name, "NULL");
-            }
-        }
-        return this;
-    }
-
     public String build() {
         StringBuilder query = new StringBuilder();
 
@@ -121,13 +100,7 @@ public class SqlBuilder {
         if (limit != null) {
             query.append(limit).append("\n");
         }
-
-        String builtQuery = query.toString();
-        // Подстановка параметров в запрос
-        if (paramValues.size() > 0) {
-            return SqlUtils.setParameters(builtQuery,paramValues);
-        }
-        return builtQuery;
+        return query.toString();
     }
 
 }

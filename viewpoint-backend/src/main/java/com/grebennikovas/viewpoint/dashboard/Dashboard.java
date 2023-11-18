@@ -5,23 +5,22 @@ import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartSettings;
 import com.grebennikovas.viewpoint.users.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "dashboards")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
 public class Dashboard {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,4 +42,19 @@ public class Dashboard {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private String layout;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Dashboard dashboard = (Dashboard) o;
+
+        return Objects.equals(id, dashboard.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

@@ -3,16 +3,9 @@ package com.grebennikovas.viewpoint.dashboard;
 import com.grebennikovas.viewpoint.chart.Chart;
 import com.grebennikovas.viewpoint.chart.ChartService;
 import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
-import com.grebennikovas.viewpoint.chart.dto.ChartShortDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardShortDto;
+import com.grebennikovas.viewpoint.dashboard.dto.*;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
-import com.grebennikovas.viewpoint.datasets.results.Result;
-import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.users.User;
-import com.grebennikovas.viewpoint.utils.SqlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +16,6 @@ import java.util.List;
 @Service
 public class DashboardService {
 
-    @Autowired
-    ParameterRepository parameterRepository;
-    @Autowired
-    SourceService sourceService;
     @Autowired
     DashboardRepository dashboardRepository;
     @Autowired
@@ -93,6 +82,7 @@ public class DashboardService {
      * @param dashboard дашборд
      * @return данные для построения дашборда
      * */
+//    TODO: Отправлять только DTO в другие сервисы
     private DashboardResponseDto getData(Dashboard dashboard) throws SQLException {
         List<ChartResponseDto> chartData = new ArrayList<>();
         List<Chart> charts = dashboard.getCharts();

@@ -1,10 +1,7 @@
 package com.grebennikovas.viewpoint.dashboard;
 
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardShortDto;
+import com.grebennikovas.viewpoint.dashboard.dto.*;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

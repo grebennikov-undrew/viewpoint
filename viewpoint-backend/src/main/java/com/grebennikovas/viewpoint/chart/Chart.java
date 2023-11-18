@@ -20,7 +20,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
 public class Chart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

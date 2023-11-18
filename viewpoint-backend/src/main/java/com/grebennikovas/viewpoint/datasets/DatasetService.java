@@ -1,13 +1,7 @@
 package com.grebennikovas.viewpoint.datasets;
 
-import com.grebennikovas.viewpoint.datasets.column.Column;
-import com.grebennikovas.viewpoint.datasets.column.ColumnMapper;
-import com.grebennikovas.viewpoint.datasets.column.ColumnRepository;
-import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterMapper;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterRepository;
-import com.grebennikovas.viewpoint.datasets.results.Entry;
-import com.grebennikovas.viewpoint.datasets.results.Result;
+import com.grebennikovas.viewpoint.datasets.column.*;
+import com.grebennikovas.viewpoint.datasets.results.*;
 import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.utils.AggFunction;
 import com.grebennikovas.viewpoint.utils.Alias;
@@ -17,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DatasetService {
