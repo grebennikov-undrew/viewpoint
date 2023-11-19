@@ -14,47 +14,64 @@ import java.util.List;
 @RequestMapping("/api/source")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SourceController {
+
     @Autowired
     SourceService sourceService;
 
+    /**
+     * Получить список источников данных
+     * @return список источников в формте коротких DTO
+     * */
     @GetMapping("/")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<List<SourceDto>> findAll() {
+        List<SourceDto> foundSources = sourceService.findAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(sourceService.findAll());
+                .body(foundSources);
     }
 
+    /**
+     * Получить данные по источнику данных по id
+     * @param id id источника
+     * @return информация о подключении
+     * */
     @GetMapping("/{id}")
-    public SourceDto findById(@PathVariable Long id) {
-        return sourceService.findById(id);
+    public ResponseEntity<SourceDto> findById(@PathVariable Long id) {
+        SourceDto foundSource = sourceService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(foundSource);
     }
 
+    /**
+     * Проверить и сохранить новое подключение
+     * @param newSource новое подключение
+     * @return информация о сохраненном подключении
+     * */
     @PostMapping("/")
-    public ResponseEntity<?> validateAndSave(@RequestBody SourceDto newSource) {
-        try {
-            SourceDto savedSource = sourceService.validateAndSave(newSource);
-            return ResponseEntity.status(HttpStatus.OK).
-                    body(savedSource);
-        }
-        catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(e.getMessage());
-        }
+    public ResponseEntity<SourceDto> validateAndSave(@RequestBody SourceDto newSource) throws SQLException {
+        SourceDto savedSource = sourceService.validateAndSave(newSource);
+        return ResponseEntity.status(HttpStatus.OK).
+                body(savedSource);
     }
 
+    /**
+     * Проверить подключение
+     * @param newSource настройки подключения для проверки
+     * */
     @PostMapping("/validate")
-    public ResponseEntity<?> validate(@RequestBody SourceDto newSource) {
-        try {
-             sourceService.validate(newSource);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(e.getMessage());
-        }
+    public ResponseEntity<?> validate(@RequestBody SourceDto newSource) throws SQLException {
+        sourceService.validate(newSource);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
-
+    /**
+     * Удалить источник данных по id
+     * @param id id источника
+     * @return сообщение об ошибке
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
+        sourceService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }

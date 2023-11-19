@@ -53,24 +53,11 @@ public class Chart {
 
         Chart chart = (Chart) o;
 
-        if (!Objects.equals(id, chart.id)) return false;
-        if (!Objects.equals(name, chart.name)) return false;
-        if (chartType != chart.chartType) return false;
-        if (!Objects.equals(user, chart.user)) return false;
-        if (!Objects.equals(dataset, chart.dataset)) return false;
-        return Objects.equals(chartSettings, chart.chartSettings);
-//        return Objects.equals(dashboards, chart.dashboards);
+        return Objects.equals(id, chart.id);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (chartType != null ? chartType.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (dataset != null ? dataset.hashCode() : 0);
-        result = 31 * result + (chartSettings != null ? chartSettings.hashCode() : 0);
-//        result = 31 * result + (dashboards != null ? dashboards.hashCode() : 0);
-        return result;
+        return id != null ? id.hashCode() : 0;
     }
 }

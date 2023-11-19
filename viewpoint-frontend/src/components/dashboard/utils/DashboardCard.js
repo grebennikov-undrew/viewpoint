@@ -8,7 +8,7 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 
 const DashboardCard = (props) => {
     const { id, name, description, picture } = props
-    const { handleOpenClick, handleEditClick } = props
+    const { handleOpenClick, handleEditClick, handleDeleteClick } = props
     return (
     <Card >
       <CardActionArea>
@@ -33,6 +33,9 @@ const DashboardCard = (props) => {
         </Button>
         <Button size="small" color="primary" onClick={(e) => handleEditClick(e,id)}>
           Edit
+        </Button>
+        <Button size="small" color="error" style={{marginLeft: "auto"}} onClick={(e) => handleDeleteClick(e,id)}>
+          Delete
         </Button>
       </CardActions>
     </Card>

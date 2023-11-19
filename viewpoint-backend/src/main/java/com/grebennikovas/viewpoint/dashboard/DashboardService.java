@@ -51,6 +51,15 @@ public class DashboardService {
     }
 
     /**
+     * Удалить дашборд по id
+     * @param dashboardId id дашборда
+     * @return сообщение об ошибке
+     * */
+    public void deleteById(Long dashboardId) throws SQLException {
+        dashboardRepository.deleteById(dashboardId);
+    }
+
+    /**
      * Построить дашборд по ID
      * @param dashboardId ID дашборда
      * @return данные для построения дашборда
