@@ -3,6 +3,8 @@ package com.grebennikovas.viewpoint.dashboard;
 import com.grebennikovas.viewpoint.dashboard.dto.*;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dashboard")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Модуль построения дашбордов")
 public class DashboardController {
 
     @Autowired
@@ -25,6 +28,7 @@ public class DashboardController {
      * @return список дашбордов в формте коротких DTO
      * */
     @GetMapping("/")
+    @Operation(summary = "Все дашборды")
     public ResponseEntity<List<DashboardShortDto>> findAll() {
         List<DashboardShortDto> all = dashboardService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(all);
@@ -37,6 +41,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @PostMapping("/")
+    @Operation(summary = "Сохранить/изменить дашборд")
     public ResponseEntity<DashboardResponseDto> save(@RequestBody DashboardRequestDto dashboardRequestDto,
                                   @AuthenticationPrincipal ViewPointUserDetails userDetails) throws SQLException {
         DashboardResponseDto savedDasboard = dashboardService.save(dashboardRequestDto, userDetails.getId());
@@ -49,6 +54,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @GetMapping("/{id}")
+    @Operation(summary = "Данные для построения дашборда", description = "Настройки дашборда, настройки диаграмм и данные для их наполнения")
     public ResponseEntity<DashboardResponseDto> findById(@PathVariable Long id) throws SQLException {
         DashboardResponseDto foundDashboard = dashboardService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
@@ -62,6 +68,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @PostMapping("/{id}")
+    @Operation(summary = "Данные для построения дашборда с фильтрами", description = "Настройки дашборда, настройки диаграмм и данные для их наполнения")
     public ResponseEntity<DashboardResponseDto> findByIdWithFilters(@PathVariable Long id, @RequestBody List<ColumnDto> columnFilters) throws SQLException {
         DashboardResponseDto foundDashboard = dashboardService.findById(id, columnFilters);
         return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
@@ -73,6 +80,7 @@ public class DashboardController {
      * @return сообщение об ошибке
      * */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить дашборд")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         dashboardService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).build();

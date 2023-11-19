@@ -2,6 +2,8 @@ package com.grebennikovas.viewpoint.sources;
 
 import com.grebennikovas.viewpoint.datasets.DatasetDto;
 import com.grebennikovas.viewpoint.datasets.results.Result;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/source")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Модуль подключений к внешним источникам данных")
 public class SourceController {
 
     @Autowired
@@ -23,6 +26,7 @@ public class SourceController {
      * @return список источников в формте коротких DTO
      * */
     @GetMapping("/")
+    @Operation(summary = "Все подключенные источники данных")
     public ResponseEntity<List<SourceDto>> findAll() {
         List<SourceDto> foundSources = sourceService.findAll();
         return ResponseEntity
@@ -36,6 +40,7 @@ public class SourceController {
      * @return информация о подключении
      * */
     @GetMapping("/{id}")
+    @Operation(summary = "Детализация источника данных")
     public ResponseEntity<SourceDto> findById(@PathVariable Long id) {
         SourceDto foundSource = sourceService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(foundSource);
@@ -47,6 +52,7 @@ public class SourceController {
      * @return информация о сохраненном подключении
      * */
     @PostMapping("/")
+    @Operation(summary = "Проверить и сохранить новое подключение")
     public ResponseEntity<SourceDto> validateAndSave(@RequestBody SourceDto newSource) throws SQLException {
         SourceDto savedSource = sourceService.validateAndSave(newSource);
         return ResponseEntity.status(HttpStatus.OK).
@@ -58,6 +64,7 @@ public class SourceController {
      * @param newSource настройки подключения для проверки
      * */
     @PostMapping("/validate")
+    @Operation(summary = "Проверить подключение")
     public ResponseEntity<?> validate(@RequestBody SourceDto newSource) throws SQLException {
         sourceService.validate(newSource);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -69,6 +76,7 @@ public class SourceController {
      * @return сообщение об ошибке
      * */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить подключение")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         sourceService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
