@@ -9,6 +9,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { useAlert } from '../components/AlertContext';
 import { httpRequest } from '../service/httpRequest';
+import DeleteDialog from '../components/basic/DeleteDialog';
+import { RowActions } from '../components/basic/RowActions';
 
 const customButtonStyle = {
     margin: 'auto 0', // Задаем отступы
@@ -17,6 +19,8 @@ const customButtonStyle = {
 
 const Dataset = () => {
     const { showAlert } = useAlert();
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [data, setData] = useState([]);
     const navigate = useNavigate();
 
@@ -37,12 +41,18 @@ const Dataset = () => {
         fetchData();
     }, []);
 
-    const handleRowClick = (
-        params, // GridRowParams
-        event, // MuiEvent<React.MouseEvent<HTMLElement>>
-        details, // GridCallbackDetails
-    ) => {
-        navigate(`/dataset/${params.row.id}`)
+    const handleDeleteClick = (row) => {
+        setSelectedRow(row);
+        setDeleteConfirmationOpen(true);
+    };
+
+    const handleDeleteConfirmationClose = () => {
+        setDeleteConfirmationOpen(false);
+    };
+
+    const handleEditClick = (row) => {
+        setSelectedRow(row);
+        navigate(`/dataset/${row.id}`)
     };
 
     const columns = [
@@ -50,6 +60,17 @@ const Dataset = () => {
         { field: 'name', headerName: 'Name', width: 150 },
         { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.user.username}`},
         { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.source.name}` },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 130,
+            renderCell: (params) => (
+                <RowActions 
+                    onEdit = {() => handleEditClick(params.row)}
+                    onDelete={() => handleDeleteClick(params.row)}
+                />
+            ),
+            },
     ];
 
     return (
@@ -79,10 +100,16 @@ const Dataset = () => {
                 },
                 }}
                 pageSizeOptions={[10, 20, 50]}
-                // checkboxSelection
-                onRowClick={handleRowClick}
                 disableColumnMenu={true}
             />
+            {deleteConfirmationOpen && 
+            <DeleteDialog
+                open={deleteConfirmationOpen}
+                deleteUri={"dataset"}
+                id={selectedRow.id}
+                onClose={handleDeleteConfirmationClose}
+            />
+            }
         </Container>
     );
 }

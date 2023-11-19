@@ -11,10 +11,14 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { useAlert } from '../components/AlertContext';
 import { httpRequest } from '../service/httpRequest';
+import DeleteDialog from '../components/basic/DeleteDialog';
+import { RowActions } from '../components/basic/RowActions';
 
 function Dashboards() {
   const { showAlert } = useAlert();
   const [dashboardList, setDashboardList] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,13 +38,22 @@ function Dashboards() {
       fetchData();
   }, []);
 
-  const handleOpenClick = (e,id) => {
+  const handleOpenClick = (e, id) => {
       navigate(`/dashboard/${id}`)
   };
 
-  const handleEditClick = (e,id) => {
+  const handleEditClick = (e, id) => {
     navigate(`/dashboard/${id}/edit`)
-};
+  }
+
+  const handleDeleteClick = (e,id) => {
+      setSelectedId(id);
+      setDeleteConfirmationOpen(true);
+  };
+
+  const handleDeleteConfirmationClose = () => {
+      setDeleteConfirmationOpen(false);
+  };
 
   return (
     <Container maxWidth="xl">
@@ -65,25 +78,24 @@ function Dashboards() {
               {dashboardList.map(dashData => (
                 <>
                   <Grid item xs={4}>
-                      <DashboardCard {...dashData} handleEditClick={handleEditClick} handleOpenClick={handleOpenClick}/>
+                      <DashboardCard {...dashData} 
+                        handleEditClick={handleEditClick} 
+                        handleOpenClick={handleOpenClick}
+                        handleDeleteClick={handleDeleteClick}
+                      />
                   </Grid>
                 </>
               ))}
           </Grid>
         </div>
-        {/* <DataGrid
-            rows={data}
-            columns={columns}
-            initialState={{
-            pagination: {
-                paginationModel: { page: 0, pageSize: 10 },
-            },
-            }}
-            pageSizeOptions={[10, 20, 50]}
-            // checkboxSelection
-            onRowClick={handleRowClick}
-            disableColumnMenu={true}
-        /> */}
+        {deleteConfirmationOpen && 
+          <DeleteDialog
+              open={deleteConfirmationOpen}
+              deleteUri={"dashboard"}
+              id={selectedId}
+              onClose={handleDeleteConfirmationClose}
+          />
+          }
     </Container>
   );
 }

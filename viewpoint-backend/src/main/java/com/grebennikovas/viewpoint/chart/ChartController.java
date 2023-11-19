@@ -2,6 +2,7 @@ package com.grebennikovas.viewpoint.chart;
 
 import com.grebennikovas.viewpoint.chart.dto.ChartResponseDto;
 import com.grebennikovas.viewpoint.chart.dto.ChartRequestDto;
+import com.grebennikovas.viewpoint.chart.dto.ChartShortDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,43 +22,59 @@ public class ChartController {
     @Autowired
     ChartService chartService;
 
-    // Получить все диаграммы
+    /**
+     * Получить список всех диаграмм
+     * @return массив диаграмм
+     * */
     @GetMapping("/")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<List<ChartShortDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(chartService.findAll());
     }
 
-    // Сохранить/изменить диаграмму
+    /**
+     * Сохранить/изменить диаграмму
+     * @param chartRequestDto настройки дмаграммы
+     * @param userDetails пользователь, изменивший диаграмму
+     * @return сохраненная диаграмма с данными
+     * */
     @PostMapping("/")
-    public ResponseEntity<?> save(@RequestBody ChartRequestDto chartRequestDto,
-                                  @AuthenticationPrincipal ViewPointUserDetails userDetails) {
-        try {
-            ChartResponseDto savedChart = chartService.save(chartRequestDto, userDetails.getId());
-            return ResponseEntity.status(HttpStatus.OK).body(savedChart);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<ChartResponseDto> save(@RequestBody ChartRequestDto chartRequestDto,
+                                  @AuthenticationPrincipal ViewPointUserDetails userDetails) throws SQLException {
+        ChartResponseDto savedChart = chartService.save(chartRequestDto, userDetails.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(savedChart);
     }
 
-    // Поулчить информацию о диаграмме по id
+    /**
+     * Поулчить информацию о диаграмме по id
+     * @param id id диаграммы
+     * @return диаграмма с данными
+     * */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
-        try {
-            ChartResponseDto foundChart = chartService.findById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(foundChart);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<ChartResponseDto> findById(@PathVariable Long id) throws SQLException {
+        ChartResponseDto foundChart = chartService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(foundChart);
+    }
+
+    /**
+     * Удалить диаграмму по id
+     * @param id id диаграммы
+     * @return сообщение об ошибке
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
+        chartService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // Получить данные из диагрммы по ее настройкам без сохранения (для редактора диаграмм)
+    /**
+     * Получить данные для диаграммы по её настройкам (для редактора)
+     * @param chartRequestDto настройки диаграммы
+     * @return диаграмма с данными
+     * */
     @PostMapping("/data")
-    public ResponseEntity<?> getDataRaw(@RequestBody ChartRequestDto chartRequestDto) {
-        try {
-            ChartResponseDto newChart = chartService.getData(chartRequestDto);
-            return ResponseEntity.status(HttpStatus.OK).body(newChart);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<ChartResponseDto> getDataRaw(@RequestBody ChartRequestDto chartRequestDto) throws SQLException {
+        ChartResponseDto newChart = chartService.getData(chartRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(newChart);
     }
 }

@@ -2,20 +2,16 @@ package com.grebennikovas.viewpoint.sources;
 
 import com.grebennikovas.viewpoint.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "sources")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
 public class Source {
 
     @Id
@@ -41,5 +37,20 @@ public class Source {
 
     public Source(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Source source = (Source) o;
+
+        return Objects.equals(id, source.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

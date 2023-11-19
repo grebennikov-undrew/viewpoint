@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SourceRepository extends JpaRepository<Source, Long> {
+
     List<Source> findAll();
+
     Source save(Source person);
+
     Optional<Source> findById(Long Id);
+
 }

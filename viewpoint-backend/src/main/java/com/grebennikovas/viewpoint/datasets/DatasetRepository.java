@@ -14,7 +14,5 @@ public interface DatasetRepository extends JpaRepository<Dataset, Long> {
     List<Dataset> findAll();
     Dataset save(Dataset person);
     @EntityGraph(value = "Dataset.default")
-    Dataset getOne(Long id);
-    @EntityGraph(value = "Dataset.default")
     Optional<Dataset> findById(Long id);
 }

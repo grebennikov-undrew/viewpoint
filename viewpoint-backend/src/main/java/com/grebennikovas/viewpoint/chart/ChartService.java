@@ -30,6 +30,10 @@ public class ChartService {
     @Autowired
     ChartMapper chartMapper;
 
+    /**
+     * Получить список всех диаграмм в формате короткиго DTO
+     * @return массив диаграмм
+     * */
     public List<ChartShortDto> findAll() {
         List<ChartShortDto> chartsDTO = new ArrayList<>();
         List<Chart> charts = chartRepository.findAll();
@@ -37,6 +41,12 @@ public class ChartService {
         return chartsDTO;
     };
 
+    /**
+     * Сохранить/изменить диаграмму
+     * @param chartRequestDto настройки дмаграммы
+     * @param userId id пользователя, изменивший диаграмму
+     * @return сохраненная диаграмма с данными
+     * */
     public ChartResponseDto save(ChartRequestDto chartRequestDto, Long userId) throws SQLException {
         Chart chart = chartMapper.mapToChart(chartRequestDto);
         chart.setUser(new User(userId));
@@ -44,24 +54,51 @@ public class ChartService {
         return getData(chartRequestDto);
     }
 
+    /**
+     * Поулчить информацию о диаграмме по id
+     * @param chartId id диаграммы
+     * @return диаграмма с данными
+     * */
     public ChartResponseDto findById(Long chartId) throws SQLException {
         Chart chart = chartRepository.findById(chartId).get();
         return getData(chart);
     }
 
-    // Получение данных для диаграммы по ID
+    /**
+     * Удалить диаграмму по id
+     * @param chartId id диаграммы
+     * @return сообщение об ошибке
+     * */
+    public void deleteById(Long chartId) throws SQLException {
+        chartRepository.deleteById(chartId);
+    }
+
+    /**
+     * Получение данных для диаграммы по id
+     * @param chartId id диаграммы
+     * @return диаграмма с данными
+     * */
     public ChartResponseDto getData(Long chartId) throws SQLException {
         Chart chart = chartRepository.findById(chartId).get();
         return getData(chart);
     }
 
-    // Получение данных для диаграммы по ID с фильтрами
+    /**
+     * Получение данных для диаграммы по id с фильтрами
+     * @param chartId id диаграммы
+     * @param columnFilters список фильтров
+     * @return диаграмма с данными
+     * */
     public ChartResponseDto getData(Long chartId, List<ColumnDto> columnFilters) throws SQLException {
         Chart chart = chartRepository.findById(chartId).get();
         return getData(chart, columnFilters);
     }
 
-    // Получение данных для диаграммы по DTO - для редактора диаграммы
+    /**
+     * Получение данных для диаграммы по DTO - для редактора диаграммы
+     * @param chartRequestDto настройки диаграммы
+     * @return диаграмма с данными
+     * */
     public ChartResponseDto getData(ChartRequestDto chartRequestDto) throws SQLException {
         Chart chart = chartMapper.mapToChart(chartRequestDto);
         DatasetDto datasetInfo = datasetService.findById(chart.getDataset().getId());
@@ -70,7 +107,11 @@ public class ChartService {
         return getData(chart);
     }
 
-    // Получение данных для диаграммы
+    /**
+     * Получение данных для диаграммы по Entity
+     * @param chart настройки диаграммы
+     * @return диаграмма с данными
+     * */
     private ChartResponseDto getData(Chart chart) throws SQLException {
         // Получить данные о диаграмме и процессор
         ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);
@@ -82,7 +123,12 @@ public class ChartService {
         return queryProcessor.postProcess(chartResponseDto, chartData);
     }
 
-    // Получение отфильтрованных данных для диаграммы
+    /**
+     * Получение данных для диаграммы по Entity с фильтрами
+     * @param chart настройки диаграммы
+     * @param dashboardFilters все фильтры
+     * @return диаграмма с данными
+     * */
     private ChartResponseDto getData(Chart chart, List<ColumnDto> dashboardFilters) throws SQLException {
         // Получить данные о диаграмме и процессор
         ChartResponseDto chartResponseDto = chartMapper.mapToChartDto(chart);

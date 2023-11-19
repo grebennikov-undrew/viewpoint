@@ -1,10 +1,7 @@
 package com.grebennikovas.viewpoint.dashboard;
 
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardRequestDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
-import com.grebennikovas.viewpoint.dashboard.dto.DashboardShortDto;
+import com.grebennikovas.viewpoint.dashboard.dto.*;
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
-import com.grebennikovas.viewpoint.datasets.parameter.ParameterDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,80 +16,66 @@ import java.util.List;
 @RequestMapping("/api/dashboard")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DashboardController {
+
     @Autowired
     DashboardService dashboardService;
 
-//    @GetMapping("/parameter/{id}")
-//    public ResponseEntity<?> getParameterValues(@PathVariable Long id) {
-//        try {
-//            List<String> paramValues = dashboardService.getFilterValues(id);
-//            return ResponseEntity.status(HttpStatus.OK).body(paramValues);
-//        } catch (SQLException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
-
-    // Получить все диаграммы
+    /**
+     * Получить список дашбордов
+     * @return список дашбордов в формте коротких DTO
+     * */
     @GetMapping("/")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<List<DashboardShortDto>> findAll() {
         List<DashboardShortDto> all = dashboardService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(all);
     }
 
-    // Сохранить/изменить диаграмму
+    /**
+     * Сохранить новый/измененный дашборд
+     * @param dashboardRequestDto новый дашборд
+     * @param userDetails пользователь, внесший изменения
+     * @return данные для построения дашборда
+     * */
     @PostMapping("/")
-    public ResponseEntity<?> save(@RequestBody DashboardRequestDto dashboardRequestDto,
-                                  @AuthenticationPrincipal ViewPointUserDetails userDetails) {
-        try {
-            DashboardResponseDto savedDasboard = dashboardService.save(dashboardRequestDto, userDetails.getId());
-            return ResponseEntity.status(HttpStatus.OK).body(savedDasboard);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<DashboardResponseDto> save(@RequestBody DashboardRequestDto dashboardRequestDto,
+                                  @AuthenticationPrincipal ViewPointUserDetails userDetails) throws SQLException {
+        DashboardResponseDto savedDasboard = dashboardService.save(dashboardRequestDto, userDetails.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(savedDasboard);
     }
 
-    // Поулчить данные для наполнения дашборда по id
+    /**
+     * Поулчить данные для наполнения дашборда по id
+     * @param id ID дашборда
+     * @return данные для построения дашборда
+     * */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
-        try {
-            DashboardResponseDto foundDashboard = dashboardService.findById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<DashboardResponseDto> findById(@PathVariable Long id) throws SQLException {
+        DashboardResponseDto foundDashboard = dashboardService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
     }
 
     // Поулчить отфильтрованные данные для наполнения дашборда по id
+    /**
+     * Поулчить данные для наполнения дашборда по id с фильтрами
+     * @param id ID дашборда
+     * @param columnFilters список значений для фильтров
+     * @return данные для построения дашборда
+     * */
     @PostMapping("/{id}")
-    public ResponseEntity<?> findByIdWithFilters(@PathVariable Long id, @RequestBody List<ColumnDto> columnFilters) {
-        try {
-            DashboardResponseDto foundDashboard = dashboardService.findById(id, columnFilters);
-            return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<DashboardResponseDto> findByIdWithFilters(@PathVariable Long id, @RequestBody List<ColumnDto> columnFilters) throws SQLException {
+        DashboardResponseDto foundDashboard = dashboardService.findById(id, columnFilters);
+        return ResponseEntity.status(HttpStatus.OK).body(foundDashboard);
     }
 
-//    @PostMapping("/data")
-//    public ResponseEntity<?> getData(@RequestBody DashboardRequestDto dashboardRequestDto) {
-//        try {
-//            DashboardResponseDto newDashboard = dashboardService.getData(dashboardRequestDto);
-//            return ResponseEntity.status(HttpStatus.OK).body(newDashboard);
-//        } catch (SQLException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
-
-//    @PostMapping("/parameter")
-//    public ResponseEntity<?> getParameterValues(@RequestBody ParameterDto parameterDTO) {
-//        Long sourceId = parameterDTO.getSourceId();
-//        String sqlQuery = parameterDTO.getSqlQuery();
-//        try {
-//            List<String> paramValues = dashboardService.getFilterValues(sourceId, sqlQuery);
-//            return ResponseEntity.status(HttpStatus.OK).body(paramValues);
-//        } catch (SQLException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
+    /**
+     * Удалить дашборд по id
+     * @param id id диаграммы
+     * @return сообщение об ошибке
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
+        dashboardService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }
