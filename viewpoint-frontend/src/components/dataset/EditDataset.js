@@ -31,7 +31,6 @@ const EditDataset = () => {
 
     const defaultValues = {
         parameters: [],
-        user: {id: 4, username: "grebennikovas"},
         name: "New dataset",
         source: {}
     }

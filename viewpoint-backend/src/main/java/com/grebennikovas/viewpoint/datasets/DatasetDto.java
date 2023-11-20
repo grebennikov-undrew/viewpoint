@@ -2,7 +2,6 @@ package com.grebennikovas.viewpoint.datasets;
 
 import com.grebennikovas.viewpoint.datasets.column.ColumnDto;
 import com.grebennikovas.viewpoint.sources.SourceDto;
-import com.grebennikovas.viewpoint.users.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -25,8 +24,7 @@ public class DatasetDto {
 
     private String sqlQuery;
 
-    @JsonProperty("user")
-    private UserDto userDto;
+    private String user;
 
     @JsonProperty("source")
     private SourceDto sourceDto;

@@ -2,6 +2,7 @@ package com.grebennikovas.viewpoint.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grebennikovas.viewpoint.BaseEntity;
+import com.grebennikovas.viewpoint.BaseEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,26 +13,34 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+@EntityListeners(value = BaseEntityListener.class)
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String firstname;
 
+    @Column(nullable = false)
     private String lastname;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false)
     @JsonIgnore
     private String password;
 
+    @Column(nullable = false)
     private boolean isActive;
 
     public User (Long id) {

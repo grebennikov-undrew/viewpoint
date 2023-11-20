@@ -2,6 +2,7 @@ package com.grebennikovas.viewpoint.users;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class UserController {
      * */
     @PostMapping("/")
     @Operation(summary = "Сохранить/изменить пользователя")
-    public ResponseEntity<UserDto> save(@RequestBody UserDto newUser) {
+    public ResponseEntity<UserDto> save(@Valid @RequestBody UserDto newUser) {
         UserDto savedUser = userService.save(newUser);
         return ResponseEntity.status(HttpStatus.OK).body(savedUser);
     }

@@ -58,7 +58,7 @@ const Dataset = () => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'name', headerName: 'Name', width: 150 },
-        { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.user.username}`},
+        { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.user}`},
         { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.source.name}` },
         {
             field: 'actions',
