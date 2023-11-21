@@ -82,7 +82,7 @@ public class DatasetServiceIntegrationTest {
         assertNotNull(dsDto.getSourceDto());
         // User assert
         assertTrue(userLoaded);
-        assertNotNull(dsDto.getUserDto());
+        assertNotNull(dsDto.getUser());
     }
 
     // Проверка полной загрузки Dataset
@@ -124,7 +124,7 @@ public class DatasetServiceIntegrationTest {
         assertNotNull(dsDto.getSourceDto());
         // User assert
         assertTrue(userLoaded);
-        assertNotNull(dsDto.getUserDto());
+        assertNotNull(dsDto.getUser());
     }
 
     // Обновление колонок с только новым списком (актуально для новых датасетов)

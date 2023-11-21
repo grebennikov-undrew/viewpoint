@@ -1,5 +1,6 @@
 package com.grebennikovas.viewpoint.users;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class UserService {
      * @param newUser пользователь
      * @return сохраненный пользователь
      * */
-    public UserDto save(UserDto newUser) {
+    public UserDto save(@Valid UserDto newUser) {
         User user = userMapper.toUser(newUser);
         UserDto savedUserDto = userMapper.toDto(userRepository.save(user));
         return savedUserDto;

@@ -109,7 +109,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange, setTableData, s
                         disabled
                         fullWidth
                         defaultValue="You"
-                        value={datasetData.user && datasetData.user.username}
+                        value={datasetData.user}
                         variant='standard'
                     />
                 </Grid>
@@ -119,6 +119,7 @@ const GeneralTab = ({datasetData, onFieldChange, onSelectChange, setTableData, s
                         label="Updated"
                         disabled
                         fullWidth
+                        defaultValue="Now"
                         value={datasetData.updatedOn}
                         variant='standard'
                     />
