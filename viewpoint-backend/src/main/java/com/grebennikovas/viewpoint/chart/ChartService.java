@@ -12,7 +12,9 @@ import com.grebennikovas.viewpoint.datasets.results.Result;
 import com.grebennikovas.viewpoint.sources.Source;
 import com.grebennikovas.viewpoint.sources.SourceService;
 import com.grebennikovas.viewpoint.users.User;
+import com.grebennikovas.viewpoint.utils.CsvFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;

@@ -5,18 +5,27 @@ import com.grebennikovas.viewpoint.chart.dto.ChartRequestDto;
 import com.grebennikovas.viewpoint.chart.dto.ChartShortDto;
 import com.grebennikovas.viewpoint.dashboard.dto.DashboardResponseDto;
 import com.grebennikovas.viewpoint.security.ViewPointUserDetails;
+import com.grebennikovas.viewpoint.utils.CsvFormatter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chart")
@@ -60,6 +69,27 @@ public class ChartController {
     public ResponseEntity<ChartResponseDto> findById(@PathVariable Long id) throws SQLException {
         ChartResponseDto foundChart = chartService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(foundChart);
+    }
+
+    @GetMapping("/{id}/export")
+    @PreAuthorize("hasAuthority('READ CHART')")
+    @Operation(summary = "Выгрузка данных диаграммы в формате CSV")
+    public ResponseEntity<Resource> exportById(@PathVariable Long id) throws SQLException, IOException {
+        ChartResponseDto foundChart = chartService.findById(id);
+
+        List<String> columns = foundChart.getColumns();
+        Map<String, Map<String, Object>> data = foundChart.getData();
+        String fileName = URLEncoder.encode(foundChart.getName(), StandardCharsets.UTF_8) + ".csv";
+
+        byte[] csvData = CsvFormatter.export(columns, data);
+        ByteArrayResource result = new ByteArrayResource(csvData);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename" + fileName)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(csvData.length)
+                .body(result);
     }
 
     /**
