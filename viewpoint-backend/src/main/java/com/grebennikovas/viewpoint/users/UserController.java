@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -25,6 +26,7 @@ public class UserController {
      * @return список пользователей в формте коротких DTO
      * */
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('READ USER LIST')")
     @Operation(summary = "Все пользователи")
     public ResponseEntity<List<UserDto>> findAll() {
         List<UserDto> foundUsers = userService.findAll();
@@ -39,6 +41,7 @@ public class UserController {
      * @return сохраненный пользователь
      * */
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('EDIT USER')")
     @Operation(summary = "Сохранить/изменить пользователя")
     public ResponseEntity<UserDto> save(@Valid @RequestBody UserDto newUser) {
         UserDto savedUser = userService.save(newUser);
@@ -50,6 +53,7 @@ public class UserController {
      * @param id id пользователя
      * */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE USER')")
     @Operation(summary = "Удалить пользователя")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         userService.deleteById(id);

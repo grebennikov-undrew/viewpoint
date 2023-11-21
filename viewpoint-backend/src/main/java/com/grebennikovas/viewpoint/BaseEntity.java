@@ -13,7 +13,7 @@ import java.util.Date;
 public class BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", updatable = false)
     private Date createdOn;
 
     @Temporal(TemporalType.TIMESTAMP)

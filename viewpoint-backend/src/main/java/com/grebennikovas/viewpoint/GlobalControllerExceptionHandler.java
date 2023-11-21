@@ -24,7 +24,7 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleBodyValidationException(MethodArgumentNotValidException ex) {
         final String violations = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + " " + error.getDefaultMessage()).collect(Collectors.joining(","));
+                .map(error -> error.getField() + " " + error.getDefaultMessage()).collect(Collectors.joining("\n"));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + violations);
     }
 

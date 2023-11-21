@@ -1,13 +1,14 @@
 package com.grebennikovas.viewpoint.users;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.grebennikovas.viewpoint.security.rbac.Role;
+import com.grebennikovas.viewpoint.security.rbac.dto.RoleDto;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -33,8 +34,7 @@ public class UserDto {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String role;
+    private Set<RoleDto> roles;
 
     private Boolean isActive;
 

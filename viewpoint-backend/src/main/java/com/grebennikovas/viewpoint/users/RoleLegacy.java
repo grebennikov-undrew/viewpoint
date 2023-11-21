@@ -1,13 +1,13 @@
 package com.grebennikovas.viewpoint.users;
 
-public enum Role {
+public enum RoleLegacy {
     ADMIN ("admin"),
     ANALYST ("analyst"),
     PUBLIC ("public");
 
     private String role;
 
-    Role(String role) {
+    RoleLegacy(String role) {
         this.role = role;
     }
 

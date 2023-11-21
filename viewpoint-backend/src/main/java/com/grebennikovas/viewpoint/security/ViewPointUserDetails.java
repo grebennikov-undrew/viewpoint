@@ -1,12 +1,16 @@
 package com.grebennikovas.viewpoint.security;
 
+import com.grebennikovas.viewpoint.security.rbac.Privilege;
 import com.grebennikovas.viewpoint.users.User;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ViewPointUserDetails implements UserDetails {
     private User user;
@@ -21,8 +25,13 @@ public class ViewPointUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getStoredValue()));
+        Set<GrantedAuthority> privileges = user.getRoles().stream()
+                .flatMap(role -> role.getPrivileges().stream()
+                        .map(privilege -> new SimpleGrantedAuthority(privilege.getName())))
+                .collect(Collectors.toSet());
+        return privileges;
     }
+
 
     @Override
     public String getPassword() {
