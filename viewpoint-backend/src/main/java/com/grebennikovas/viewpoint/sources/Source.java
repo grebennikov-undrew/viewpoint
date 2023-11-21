@@ -25,7 +25,7 @@ public class Source {
 
     private String netloc;
 
-    private String port;
+    private Integer port;
 
     private String dbname;
 

@@ -43,7 +43,7 @@ function Dashboards() {
   };
 
   const handleEditClick = (e, id) => {
-    navigate(`/dashboard/${id}/edit`)
+    navigate(`/dashboard/${id}`)
   }
 
   const handleDeleteClick = (e,id) => {

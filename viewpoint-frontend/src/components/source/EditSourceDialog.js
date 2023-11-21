@@ -18,7 +18,7 @@ const dbTypes = [ "POSTGRESQL", "MYSQL" ]
 const EditSourceDialog = ({ source, open, onClose }) => {
     const [ editedSource, setEditedSource ] = useState({});
     const { showAlert } = useAlert();
-    const { id } = source;
+    const { id, type } = source;
 
     useEffect(() => {
         if (id) {
@@ -98,7 +98,7 @@ const EditSourceDialog = ({ source, open, onClose }) => {
                 <SelectValue 
                     id="Type"
                     options={dbTypes} 
-                    value={editedSource.type}
+                    value={type}
                     label="Type *"
                     onChange={(e) => handleFieldChange('type', e.target.value)}
                     variant='standard'
@@ -123,7 +123,7 @@ const EditSourceDialog = ({ source, open, onClose }) => {
             size='small'
             required={true}
             value={editedSource.port}
-            onChange={(e) => handleFieldChange('port', e.target.value)}
+            onChange={(e) => handleFieldChange('port', Number(e.target.value))}
             />
             <TextField
             label="Database"

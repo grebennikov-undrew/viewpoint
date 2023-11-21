@@ -52,7 +52,7 @@ const Chart = () => {
 
     const handleEditClick = (row) => {
         setSelectedRow(row);
-        navigate(`/dataset/${row.id}`)
+        navigate(`/chart/${row.id}`)
     };
 
     const columns = [
