@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class ChartController {
     ChartService chartService;
 
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('READ CHART LIST')")
     @Operation(summary = "Все диаграммы")
     public ResponseEntity<List<ChartShortDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(chartService.findAll());
@@ -39,6 +41,7 @@ public class ChartController {
      * @return сохраненная диаграмма с данными
      * */
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('EDIT CHART')")
     @Operation(summary = "Сохранить/изменить диаграмму")
     public ResponseEntity<ChartResponseDto> save(@RequestBody ChartRequestDto chartRequestDto,
                                   @AuthenticationPrincipal ViewPointUserDetails userDetails) throws SQLException {
@@ -52,6 +55,7 @@ public class ChartController {
      * @return диаграмма с данными
      * */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ CHART')")
     @Operation(summary = "Данные для построения сохранённой диаграммы")
     public ResponseEntity<ChartResponseDto> findById(@PathVariable Long id) throws SQLException {
         ChartResponseDto foundChart = chartService.findById(id);
@@ -64,6 +68,7 @@ public class ChartController {
      * @return сообщение об ошибке
      * */
     @Operation(summary = "Удалить диграмму")
+    @PreAuthorize("hasAuthority('DELETE CHART')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         chartService.deleteById(id);
@@ -76,6 +81,7 @@ public class ChartController {
      * @return диаграмма с данными
      * */
     @PostMapping("/data")
+    @PreAuthorize("hasAuthority('READ CHART')")
     @Operation(summary = "Данные для построения не сохранённой диаграммы")
     public ResponseEntity<ChartResponseDto> getDataRaw(@RequestBody ChartRequestDto chartRequestDto) throws SQLException {
         ChartResponseDto newChart = chartService.getData(chartRequestDto);

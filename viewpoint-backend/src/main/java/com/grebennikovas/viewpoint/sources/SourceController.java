@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class SourceController {
      * @return список источников в формте коротких DTO
      * */
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('READ SOURCE LIST')")
     @Operation(summary = "Все подключенные источники данных")
     public ResponseEntity<List<SourceDto>> findAll() {
         List<SourceDto> foundSources = sourceService.findAll();
@@ -40,6 +42,7 @@ public class SourceController {
      * @return информация о подключении
      * */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ SOURCE')")
     @Operation(summary = "Детализация источника данных")
     public ResponseEntity<SourceDto> findById(@PathVariable Long id) {
         SourceDto foundSource = sourceService.findById(id);
@@ -52,6 +55,7 @@ public class SourceController {
      * @return информация о сохраненном подключении
      * */
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('EDIT SOURCE')")
     @Operation(summary = "Проверить и сохранить новое подключение")
     public ResponseEntity<SourceDto> validateAndSave(@RequestBody SourceDto newSource) throws SQLException {
         SourceDto savedSource = sourceService.validateAndSave(newSource);
@@ -64,6 +68,7 @@ public class SourceController {
      * @param newSource настройки подключения для проверки
      * */
     @PostMapping("/validate")
+    @PreAuthorize("hasAuthority('EDIT SOURCE')")
     @Operation(summary = "Проверить подключение")
     public ResponseEntity<?> validate(@RequestBody SourceDto newSource) throws SQLException {
         sourceService.validate(newSource);
@@ -76,6 +81,7 @@ public class SourceController {
      * @return сообщение об ошибке
      * */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE SOURCE')")
     @Operation(summary = "Удалить подключение")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         sourceService.deleteById(id);

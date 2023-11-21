@@ -53,9 +53,9 @@ public class RolesDataLoader implements
         adminPrivileges.addAll(securityPrivileges);
 
         Set<Privilege> analystPrivileges = new HashSet<>();
-        adminPrivileges.addAll(dashboardPrivileges);
-        adminPrivileges.addAll(chartPrivileges);
-        adminPrivileges.addAll(datasetPrivileges);
+        analystPrivileges.addAll(dashboardPrivileges);
+        analystPrivileges.addAll(chartPrivileges);
+        analystPrivileges.addAll(datasetPrivileges);
         analystPrivileges.addAll(initPrivileges(List.of("READ SOURCE LIST", "READ USER LIST", "READ USER", "READ ROLE LIST", "READ ROLE")));
 
         createRoleIfNotFound("ADMIN", adminPrivileges);

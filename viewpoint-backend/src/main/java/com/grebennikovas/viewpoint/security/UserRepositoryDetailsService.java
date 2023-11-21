@@ -1,5 +1,6 @@
 package com.grebennikovas.viewpoint.security;
 
+import com.grebennikovas.viewpoint.security.rbac.Role;
 import com.grebennikovas.viewpoint.security.rbac.RoleRepository;
 import com.grebennikovas.viewpoint.users.User;
 import com.grebennikovas.viewpoint.users.UserRepository;

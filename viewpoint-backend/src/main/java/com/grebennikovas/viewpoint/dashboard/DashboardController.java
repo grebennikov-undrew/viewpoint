@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class DashboardController {
      * @return список дашбордов в формте коротких DTO
      * */
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('READ DASHBOARD LIST')")
     @Operation(summary = "Все дашборды")
     public ResponseEntity<List<DashboardShortDto>> findAll() {
         List<DashboardShortDto> all = dashboardService.findAll();
@@ -41,6 +43,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('EDIT DASHBOARD')")
     @Operation(summary = "Сохранить/изменить дашборд")
     public ResponseEntity<DashboardResponseDto> save(@RequestBody DashboardRequestDto dashboardRequestDto,
                                   @AuthenticationPrincipal ViewPointUserDetails userDetails) throws SQLException {
@@ -54,6 +57,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ DASHBOARD')")
     @Operation(summary = "Данные для построения дашборда", description = "Настройки дашборда, настройки диаграмм и данные для их наполнения")
     public ResponseEntity<DashboardResponseDto> findById(@PathVariable Long id) throws SQLException {
         DashboardResponseDto foundDashboard = dashboardService.findById(id);
@@ -68,6 +72,7 @@ public class DashboardController {
      * @return данные для построения дашборда
      * */
     @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ DASHBOARD')")
     @Operation(summary = "Данные для построения дашборда с фильтрами", description = "Настройки дашборда, настройки диаграмм и данные для их наполнения")
     public ResponseEntity<DashboardResponseDto> findByIdWithFilters(@PathVariable Long id, @RequestBody List<ColumnDto> columnFilters) throws SQLException {
         DashboardResponseDto foundDashboard = dashboardService.findById(id, columnFilters);
@@ -80,6 +85,7 @@ public class DashboardController {
      * @return сообщение об ошибке
      * */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE DASHBOARD')")
     @Operation(summary = "Удалить дашборд")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         dashboardService.deleteById(id);

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class DatasetController {
      * @return список датасетов в формте коротких DTO
      * */
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('READ DATASET LIST')")
     @Operation(summary = "Все датасеты")
     public ResponseEntity<List<DatasetDto>> findAll() {
         List<DatasetDto> datasets = datasetService.findAll();
@@ -41,6 +43,7 @@ public class DatasetController {
      * @return данные для датасета
      * */
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('EDIT DATASET')")
     @Operation(summary = "Сохранить/изменить датасет")
     public ResponseEntity<DatasetDto> save(@RequestBody DatasetDto newDataset,
                            @AuthenticationPrincipal ViewPointUserDetails userDetails) {
@@ -54,6 +57,7 @@ public class DatasetController {
      * @return сообщение об ошибке
      * */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE DATASET')")
     @Operation(summary = "Удалить датасет")
     public ResponseEntity<?> deleteById(@PathVariable Long id) throws SQLException {
         datasetService.deleteById(id);
@@ -66,6 +70,7 @@ public class DatasetController {
      * @return данные для датасета
      * */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ DATASET')")
     @Operation(summary = "Наполнение сохраненного датасета")
     public ResponseEntity<DatasetDto> getOne(@PathVariable Long id) {
         DatasetDto foundDataset = datasetService.findById(id);
@@ -78,6 +83,7 @@ public class DatasetController {
      * @return данные для датасета
      * */
     @PostMapping("/execute")
+    @PreAuthorize("hasAuthority('READ DATASET')")
     @Operation(summary = "Выполненить SQL запрос для датасета")
     public ResponseEntity<Result> execute(@RequestBody DatasetExecDto execInfo) throws SQLException {
         String sqlQuery = execInfo.getSqlQuery();
