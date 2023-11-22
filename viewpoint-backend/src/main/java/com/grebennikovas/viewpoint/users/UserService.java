@@ -3,6 +3,8 @@ package com.grebennikovas.viewpoint.users;
 import com.grebennikovas.viewpoint.users.dto.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    public PasswordEncoder passwordEncoder;
 
     /**
      * Получить список пользователей
@@ -38,6 +42,8 @@ public class UserService {
         if (newUser.getPassword().equals("")) {
             User foundUser = userRepository.findById(newUser.getId()).get();
             user.setPassword(foundUser.getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(newUser.getPassword())); // Если задан -> закодировать
         }
         return userMapper.toDto(userRepository.save(user));
     }

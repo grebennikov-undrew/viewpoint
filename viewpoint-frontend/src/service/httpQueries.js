@@ -14,8 +14,9 @@ export const deleteEntity = (address, id, showAlert) => {
     });
 }
 
-export const getData = (address, showAlert, setData, onDenied = () => {}) => {
-    httpRequest.get(`/${address}`)
+export const getData = (address, showAlert, setData, onSuccess = () => {}, onDenied = () => {}, download=false) => {
+    const responseType = download ? "blob" : "application/json"
+    httpRequest.get(`/${address}`, {...responseType})
     .then(response => {
         if (response.status === 400) {
             showAlert('Error: ' + response.data, "error");
@@ -26,6 +27,7 @@ export const getData = (address, showAlert, setData, onDenied = () => {}) => {
             return;
         }
         setData(response.data);
+        onSuccess();
         return;
     })
     .catch(error => {
