@@ -1,10 +1,8 @@
 package com.grebennikovas.viewpoint.security.rbac.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.grebennikovas.viewpoint.security.rbac.Privilege;
-import com.grebennikovas.viewpoint.users.User;
-import com.grebennikovas.viewpoint.users.UserDto;
-import jakarta.persistence.*;
+import com.grebennikovas.viewpoint.users.dto.UserDto;
+import com.grebennikovas.viewpoint.users.dto.UserShortDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +20,7 @@ public class RoleDto {
 
     private String name;
 
-    private List<UserDto> users;
+    private List<UserShortDto> users;
 
     private Set<PrivilegeDto> privileges;
 

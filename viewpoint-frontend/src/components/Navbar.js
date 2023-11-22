@@ -22,6 +22,7 @@ const pages = [
     {label: 'Charts', link: '/chart'},
     {label: 'Datasets', link: '/dataset'},
     {label: 'Sources', link: '/source'},
+    {label: 'Users', link: '/user'},
 ]
 // const pages = ['Dashboards', 'Charts', 'Datasets', 'Sources'];
 // const links = ['/dashboard', '/chart', '/dataset', '/source'];

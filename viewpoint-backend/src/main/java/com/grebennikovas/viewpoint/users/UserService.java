@@ -1,8 +1,8 @@
 package com.grebennikovas.viewpoint.users;
 
+import com.grebennikovas.viewpoint.users.dto.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +33,13 @@ public class UserService {
      * */
     public UserDto save(@Valid UserDto newUser) {
         User user = userMapper.toUser(newUser);
-        UserDto savedUserDto = userMapper.toDto(userRepository.save(user));
-        return savedUserDto;
+
+        // Если в dto не задан пароль -> не менять его
+        if (newUser.getPassword().equals("")) {
+            User foundUser = userRepository.findById(newUser.getId()).get();
+            user.setPassword(foundUser.getPassword());
+        }
+        return userMapper.toDto(userRepository.save(user));
     }
 
     /**
