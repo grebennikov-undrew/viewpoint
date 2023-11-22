@@ -2,11 +2,9 @@ package com.grebennikovas.viewpoint.users;
 
 import com.grebennikovas.viewpoint.security.rbac.Role;
 import com.grebennikovas.viewpoint.security.rbac.dto.RoleDto;
+import com.grebennikovas.viewpoint.users.dto.UserDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper
 public interface UserMapper {

@@ -16,6 +16,7 @@ import Chart from './routes/Charts';
 import EditChart from './components/chart/EditChart';
 import Dashboard from './components/dashboard/Dashboard';
 import Sources from './routes/Sources';
+import Users from './routes/Users';
 
 function App() {
     return (
@@ -35,6 +36,7 @@ function App() {
                     <Route path='/chart/:id' element={<EditChart/>}/>
                     <Route path='/chart/new' element={<EditChart/>}/>
                     <Route path='/source' element={<Sources/>}/>
+                    <Route path='/user' element={<Users/>}/>
                     <Route exact path='/login' element={<LoginForm/>}/>
                 </Routes>
             </Router>

@@ -34,7 +34,7 @@ public class PgConnection implements DbConnection {
     public String getUrl() {
         String driver = source.getType().getCredit();
         String netloc = source.getNetloc();
-        String port = source.getPort();
+        Integer port = source.getPort();
         String dbname = source.getDbname();
         String params = source.getParams();
         if (params.length() > 0) {

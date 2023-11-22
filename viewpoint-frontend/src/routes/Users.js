@@ -9,11 +9,12 @@ import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { useAlert } from '../components/AlertContext';
 import { getData } from '../service/httpQueries';
 import { RowActions } from '../components/basic/RowActions';
-import EditSourceDialog from '../components/source/EditSourceDialog';
+import EditUserDialog from '../components/user/EditUserDialog';
 import DeleteDialog from '../components/basic/DeleteDialog';
+import EditSourceDialog from '../components/source/EditSourceDialog';
 
 
-const Sources = () => {
+const Users = () => {
     const { showAlert } = useAlert();
     const [rows, setRows] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
@@ -22,13 +23,13 @@ const Sources = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            getData("source/", showAlert, setRows);
+            getData("user/", showAlert, setRows);
         }
         fetchData();
     }, [deleteConfirmationOpen, editDialogOpen]);
 
     const handleAddClick = () => {
-        setSelectedRow({id: null});
+        setSelectedRow({id: null, roles: []});
         setEditDialogOpen(true);
     };
 
@@ -51,11 +52,13 @@ const Sources = () => {
     };
 
 
-    const columns = [
+    const columns = rows ? [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'name', headerName: 'Name', width: 200 },
-        { field: 'type', headerName: 'Type', width: 130 },
-        { field: 'dbname', headerName: 'Database', width: 200 },
+        { field: 'username', headerName: 'Username', width: 150 },
+        { field: 'firstname', headerName: 'First name', width: 150 },
+        { field: 'lastname', headerName: 'Last name', width: 150 },
+        { field: 'email', headerName: 'Email', width: 300 },
+        { headerName: 'Roles', width: 200, valueGetter: (params) => params.row.roles ? `${params.row.roles.map(p => p.name).join(", ")}` : "" },
         {
         field: 'actions',
         headerName: 'Actions',
@@ -67,18 +70,17 @@ const Sources = () => {
             />
         ),
         },
-    ];
+    ] : [];
 
     return (
         <Container maxWidth="xl">
         <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
             <Typography variant="h2" >
-                Sources
+                Users
             </Typography>
-            {/* <Button variant="text">Add</Button> */}
             <IconButton
               size="large"
-              aria-label="Add source"
+              aria-label="Add user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               style={customButtonStyle}
@@ -88,18 +90,18 @@ const Sources = () => {
             </IconButton>
             </div>
             <div>
-            <div style={{ height: 300, width: '100%' }}>
+            <div style={{ height: "calc(100vh - 146px)", width: '100%' }}>
                 <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={5}
+                pageSize={15}
                 disableSelectionOnClick
                 />
             </div>
         
             {editDialogOpen &&
-            <EditSourceDialog
-                source={selectedRow}
+            <EditUserDialog
+                user={selectedRow}
                 open={editDialogOpen}
                 onClose={handleEditDialogClose}
             />}
@@ -107,7 +109,7 @@ const Sources = () => {
             {deleteConfirmationOpen && 
             <DeleteDialog
                 open={deleteConfirmationOpen}
-                deleteUri={"source"}
+                deleteUri={"user"}
                 id={selectedRow.id}
                 onClose={handleDeleteConfirmationClose}
             />
@@ -122,4 +124,4 @@ const customButtonStyle = {
     padding: '0 12px',
   };
 
-export default Sources;
+export default Users;
