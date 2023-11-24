@@ -9,6 +9,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import { ThemeProvider } from '@mui/material/styles';
 import customTheme from './CustomTheme';
+import { ViewPointTheme } from './theme/ViewPointTheme';
 import Dataset from './routes/Dataset';
 import EditDataset from './components/dataset/EditDataset';
 import LoginForm from './routes/LoginForm';
@@ -20,7 +21,7 @@ import Users from './routes/Users';
 
 function App() {
     return (
-        <ThemeProvider theme={customTheme}>
+        <ThemeProvider theme={ViewPointTheme}>
           <AlertProvider>
             <Router>
             <Navbar/>

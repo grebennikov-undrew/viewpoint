@@ -29,7 +29,8 @@ const pages = [
 const settings = ['Profile', 'Logout', 'Settings'];
 
 const customButtonStyle = {
-    padding: '6px 12px', // Задаем отступы
+    padding: '6px 16px',
+    fontSize: "13px",
 };
 
 function Navbar() {
@@ -66,36 +67,25 @@ function Navbar() {
     }
   }
 
+  const navBarStyle = {
+    
+  }
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            ViewPoint
-          </Typography> */}
+        <Toolbar disableGutters
+        variant='dense'
+        >
           <Typography
-            variant="h5"
+            variant="h3"
             noWrap
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
+              ml: 2,
               display: { xs: 'none', md: 'flex' },
-            //   flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -142,7 +132,7 @@ function Navbar() {
             </Menu>
           </Box>
           <Typography
-            variant="h5"
+            variant="h3"
             noWrap
             component="a"
             href="#app-bar-with-responsive-menu"
@@ -199,8 +189,13 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleClickUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem 
+                  key={setting} 
+                  onClick={handleClickUserMenu} 
+                >
+                  <Typography 
+                    textAlign="center"
+                  >{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -210,4 +205,7 @@ function Navbar() {
     </AppBar>
   );
 }
+
+
+
 export default Navbar;

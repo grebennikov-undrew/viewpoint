@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { DataGrid } from '@mui/x-data-grid';
+import { MainDataGrid } from '../components/basic/StyledComponents';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -55,12 +55,17 @@ const Chart = () => {
         navigate(`/chart/${row.id}`)
     };
 
+    const handleAddClick = (row) => {
+        setSelectedRow(row);
+        navigate(`/chart/new`)
+    };
+
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'name', headerName: 'Name', width: 150 },
+        { field: 'id', headerName: 'ID', width: 70,},
+        { field: 'name', headerName: 'Name', flex: 1},
         { field: 'type', headerName: 'Type', width: 100, valueGetter: (params) => `${params.row.chartType}`},
         { field: 'author', headerName: 'Author', width: 150, valueGetter: (params) => `${params.row.username}`},
-        { field: 'dataset', headerName: 'Dataset', width: 150, valueGetter: (params) => `${params.row.datasetName}`},
+        { field: 'dataset', headerName: 'Dataset', flex: 1, valueGetter: (params) => `${params.row.datasetName}`},
         { field: 'source', headerName: 'Source', width: 150, valueGetter: (params) => `${params.row.sourceName}` },
         {
             field: 'actions',
@@ -76,33 +81,15 @@ const Chart = () => {
     ];
 
     return (
-        <Container maxWidth="xl">
-            <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
-                <Typography variant="h2" >
-                    Charts
-                </Typography>
-                {/* <Button variant="text">Add</Button> */}
-                <IconButton
-                size="large"
-                aria-label="Add chart"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                style={customButtonStyle}
-                href='/chart/new'
-                >
-                <AddCircleIcon/>
-                </IconButton>
-            </div>
-            <DataGrid
+        <Container 
+            maxWidth="xl" 
+            sx={{height: "calc(100vh - 51px)"}}
+        >
+            <MainDataGrid
                 rows={data}
                 columns={columns}
-                initialState={{
-                pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                },
-                }}
-                pageSizeOptions={[10, 20, 50]}
-                disableColumnMenu={true}
+                title="charts"
+                onAddClick={handleAddClick}
             />
             {deleteConfirmationOpen && 
             <DeleteDialog

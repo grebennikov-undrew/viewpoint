@@ -19,7 +19,7 @@ const DashboardCard = (props) => {
           alt="green iguana"
         /> */}
         <CardContent onClick={(e) => handleOpenClick(e,id)}>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h3" component="div">
             {name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
