@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  viewpoint-db:
+    image: postgres:15
+    container_name: viewpoint_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    expose:
+      - "5433"
+    ports:
+      - "15432:5433"
+    volumes:
+      - ./docker/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    command: -p 5433
+      
+  viewpoint-backend:
+    image: grebennikovas/viewpoint-backend:0.0.1
+    build: ./viewpoint-backend
+    container_name: viewpoint_backend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - viewpoint-db
+    environment:
+      - SERVER_PORT= 8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://viewpoint-db:5433/viewpoint
+      
+  viewpoint-frontend:
+    image: grebennikovas/viewpoint-frontend:0.0.1
+    build: ./viewpoint-frontend
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - /app/node_modules
+      
+volumes:
+  db-data:

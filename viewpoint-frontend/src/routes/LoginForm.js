@@ -6,8 +6,6 @@ import { margin } from '@mui/system';
 
 import { useAlert } from '../components/AlertContext';
 
-const API_URL = 'http://localhost:8080'
-
 const LoginForm = () => {
   const { showAlert } = useAlert();
   const navigate = useNavigate();

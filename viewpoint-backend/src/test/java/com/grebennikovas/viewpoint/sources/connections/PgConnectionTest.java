@@ -17,7 +17,7 @@ class PgConnectionTest {
         String params = "";
         String username = "user";
         String password = "password";
-        String port = "5432";
+        int port = 5432;
         source.setDbname(dbname);
         source.setType(DatabaseType.POSTGRESQL);
         source.setNetloc(netloc);

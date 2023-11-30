@@ -45,7 +45,14 @@ public class DatasetServiceIntegrationTest {
     @Test
     public void testLazyEagerLoading() {
         User u = new User();
+        u.setUsername("test");
+        u.setEmail("test@test.com");
+        u.setPassword("123");
+        u.setActive(true);
+        u.setFirstname("test");
+        u.setLastname("test");
         u = userRepository.save(u);
+
         Source s = new Source();
         s = sourceRepository.save(s);
         // Создание датасета
@@ -90,7 +97,14 @@ public class DatasetServiceIntegrationTest {
     @Transactional
     public void testEagerLoading() {
         User u = new User();
+        u.setUsername("test2");
+        u.setEmail("test2@test.com");
+        u.setPassword("123");
+        u.setActive(true);
+        u.setFirstname("test");
+        u.setLastname("test");
         u = userRepository.save(u);
+
         Source s = new Source();
         s = sourceRepository.save(s);
         // Создание датасета

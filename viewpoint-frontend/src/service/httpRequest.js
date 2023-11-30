@@ -3,7 +3,7 @@ import axios from 'axios'
 // import { redirect, useNavigate } from "react-router-dom";
 // const history= useNavigate();
 
-const BASE_URL = 'http://localhost:8080/api'
+const BASE_URL = 'http://localhost:8081/api'
 
 const instance = axios.create({
     withCredentials: true,

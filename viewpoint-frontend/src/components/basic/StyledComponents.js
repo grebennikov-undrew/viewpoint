@@ -28,6 +28,7 @@ export const DataGrid = (props) => {
         }}
         getRowClassName={(params) => `super-app-theme--row`}
         rowSpacingType='margin'
+        disableRowSelectionOnClick={true}
         />)
 }
 
@@ -46,7 +47,7 @@ export const MainDataGrid = (props) => {
     );
 
     return (
-        <Container maxWidth="xl" sx={{height: "auto"}}>
+        <Container maxWidth="xl" >
                 <Stack
                     direction="row"
                     // justifyContent="left"

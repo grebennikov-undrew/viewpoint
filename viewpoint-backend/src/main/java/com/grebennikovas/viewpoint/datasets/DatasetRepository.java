@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface DatasetRepository extends JpaRepository<Dataset, Long> {
 
-    @EntityGraph(value = "Dataset.default")
     List<Dataset> findAll();
     Dataset save(Dataset person);
     @EntityGraph(value = "Dataset.default")

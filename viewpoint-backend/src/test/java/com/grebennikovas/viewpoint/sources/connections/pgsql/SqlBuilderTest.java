@@ -34,11 +34,11 @@ class SqlBuilderTest {
 
         // Assert
         String expectedQuery = """
-                SELECT col1 as "col1", col2 as "label"
+                SELECT "col1" as "col1", "col2" as "label"
                 FROM example_table
                 WHERE col1 > 10
-                GROUP BY col1
-                ORDER BY col1, col2 DESC
+                GROUP BY "col1"
+                ORDER BY "col1", "col2" DESC
                 LIMIT 5
                 """;
 

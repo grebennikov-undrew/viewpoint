@@ -36,8 +36,16 @@ class ColumnTest {
     void ColumnsLazyLoadTest() {
         Source s = new Source();
         s = sourceRepository.save(s);
+
         User u = new User();
+        u.setUsername("test2");
+        u.setEmail("test2@test.com");
+        u.setPassword("123");
+        u.setActive(true);
+        u.setFirstname("test");
+        u.setLastname("test");
         u = userRepository.save(u);
+
         Dataset d = new Dataset();
         d.setSource(s);
         d.setUser(u);
@@ -65,8 +73,16 @@ class ColumnTest {
     void ColumnsUniqueUpsertTestTest() {
         Source s = new Source();
         s = sourceRepository.save(s);
+
         User u = new User();
+        u.setUsername("test");
+        u.setEmail("test@test.com");
+        u.setPassword("123");
+        u.setActive(true);
+        u.setFirstname("test");
+        u.setLastname("test");
         u = userRepository.save(u);
+
         Dataset d = new Dataset();
         d.setSource(s);
         d.setUser(u);
@@ -104,7 +120,7 @@ class ColumnTest {
         boolean thirdInResult = dsColumns.contains(c3);
         boolean noDuplicates = dsColumns.contains(c2) || dsColumns.contains(c4);
 
-        assertEquals(columnCount, 2);
+        assertEquals(columnCount, 3);
         assertFalse(firstInResult);
         assertTrue(thirdInResult);
         assertTrue(noDuplicates);

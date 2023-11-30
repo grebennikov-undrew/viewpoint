@@ -5,7 +5,7 @@ INSERT INTO users (username, firstname, lastname, email, password, is_active) VA
 INSERT INTO users (username, firstname, lastname, email, password, is_active) VALUES ('danny', 'Daniel', 'Murillo', 'danny@example.com', '$2y$10$hLOSMYt.eZbKcahKGDJn9u0bpaqElt6NXKVqTaS8LW2H1lBZWWx1u', true);
 INSERT INTO users (username, firstname, lastname, email, password, is_active) VALUES ('johnny3tears', 'George', 'Ragan', 'johnny3tears@example.com', '$2y$10$mMA2/vpavfUlg8YD6PSkwuyORLWhbim4kzZiNBCO0VYEf5o1v0bvu', true);
 
-INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('default', 'POSTGRESQL', 'localhost', 5433, 'viewpoint', '', 'postgres', 'postgres');
+INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('default', 'POSTGRESQL', 'viewpoint-db', 5433, 'viewpoint', '', 'postgres', 'postgres');
 INSERT INTO sources (name, type, netloc, port, dbname, params, username, password) VALUES ('external', 'MYSQL', '1.1.1.1', 5432, 'public', '', 'admin', '12345');
 
 INSERT INTO datasets (name, sql_query, user_id, source_id) VALUES ('User list no param', 'SELECT * FROM users;', 4, 1);
@@ -19,8 +19,6 @@ INSERT INTO columns (dataset_id, name, type) VALUES (1, 'firstname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'lastname','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'username','String');
 INSERT INTO columns (dataset_id, name, type) VALUES (1, 'role','String');
-
-INSERT INTO parameters (dataset_id, name, type, sql_query) VALUES (2,'p_name','String','SELECT distinct firstname FROM users;');
 
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'id','Double');
 INSERT INTO columns (dataset_id, name, type) VALUES (2, 'created_on','Timestamp');

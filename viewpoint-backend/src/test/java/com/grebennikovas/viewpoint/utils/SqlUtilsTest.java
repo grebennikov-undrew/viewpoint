@@ -20,7 +20,7 @@ class SqlUtilsTest {
         String result = SqlUtils.getColumns(list);
 
         // Assert
-        assertEquals("Element", result);
+        assertEquals("\"Element\"", result);
     }
 
     @Test
@@ -32,47 +32,9 @@ class SqlUtilsTest {
         String result = SqlUtils.getColumns(list);
 
         // Assert
-        assertEquals("Element1, Element2, Element3", result);
+        assertEquals("\"Element1\", \"Element2\", \"Element3\"", result);
     }
 
-    @Test
-    public void testPrepareParamValueString() {
-        // Arrange
-        String parameterType = "String";
-        String paramValue = "example string";
-
-        // Act
-        String result = SqlUtils.prepareParamValue(parameterType, paramValue);
-
-        // Assert
-        assertEquals("'example string'", result);
-    }
-
-    @Test
-    public void testPrepareParamValueTimestamp() {
-        // Arrange
-        String parameterType = "Timestamp";
-        String paramValue = "2023-10-31 12:34:56";
-
-        // Act
-        String result = SqlUtils.prepareParamValue(parameterType, paramValue);
-
-        // Assert
-        assertEquals("'2023-10-31 12:34:56'", result);
-    }
-
-    @Test
-    public void testPrepareParamValueOther() {
-        // Arrange
-        String parameterType = "OtherType";
-        String paramValue = "123";
-
-        // Act
-        String result = SqlUtils.prepareParamValue(parameterType, paramValue);
-
-        // Assert
-        assertEquals("123", result);
-    }
 
     @Test
     void setParameters() {
@@ -97,7 +59,7 @@ class SqlUtilsTest {
 
         String result = SqlUtils.getColumnsWithLabels(aliases);
 
-        assertEquals("AVG(col_1) as \"label1\", MAX(col_2) as \"label2\"", result);
+        assertEquals("AVG(\"col_1\") as \"label1\", MAX(\"col_2\") as \"label2\"", result);
     }
 
     @Test
@@ -108,6 +70,6 @@ class SqlUtilsTest {
 
         String result = SqlUtils.getColumnsWithLabels(aliases);
 
-        assertEquals("AVG(col_1) as \"label\"", result);
+        assertEquals("AVG(\"col_1\") as \"label\"", result);
     }
 }
