@@ -37,6 +37,16 @@ services:
       - '3000:3000'
     volumes:
       - /app/node_modules
+
+  viewpoint-nginx:
+    image: nginx:1.17
+    ports:
+      - "80:80"
+    depends_on:
+      - viewpoint-frontend
+      - viewpoint-backend
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/nginx.conf:ro
       
 volumes:
   db-data:
