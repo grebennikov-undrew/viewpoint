@@ -8,11 +8,10 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import { httpRequest } from '../service/httpRequest';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -26,7 +25,6 @@ const pages = [
 ]
 // const pages = ['Dashboards', 'Charts', 'Datasets', 'Sources'];
 // const links = ['/dashboard', '/chart', '/dataset', '/source'];
-const settings = ['Profile', 'Logout', 'Settings'];
 
 const customButtonStyle = {
     padding: '6px 16px',
@@ -188,16 +186,14 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
                 <MenuItem 
-                  key={setting} 
+                  key="logout" 
                   onClick={handleClickUserMenu} 
                 >
                   <Typography 
                     textAlign="center"
-                  >{setting}</Typography>
+                  >Logout</Typography>
                 </MenuItem>
-              ))}
             </Menu>
           </Box>
         </Toolbar>
