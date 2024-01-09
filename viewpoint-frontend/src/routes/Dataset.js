@@ -1,27 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { DataGrid } from '@mui/x-data-grid';
+import { MainDataGrid } from '../components/basic/StyledComponents';
 import { Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { useAlert } from '../components/AlertContext';
 import { httpRequest } from '../service/httpRequest';
 import DeleteDialog from '../components/basic/DeleteDialog';
 import { RowActions } from '../components/basic/RowActions';
 
-const customButtonStyle = {
-    margin: 'auto 0', // Задаем отступы
-    padding: '0 12px',
-};
-
 const Dataset = () => {
     const { showAlert } = useAlert();
+    const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-    const [data, setData] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,6 +46,11 @@ const Dataset = () => {
         navigate(`/dataset/${row.id}`)
     };
 
+    const handleAddClick = (row) => {
+        setSelectedRow(row);
+        navigate(`/dataset/new`)
+    };
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'name', headerName: 'Name', width: 150 },
@@ -74,33 +70,16 @@ const Dataset = () => {
     ];
 
     return (
-        <Container maxWidth="xl">
-            <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
-                <Typography variant="h2" >
-                    Datasets
-                </Typography>
-                {/* <Button variant="text">Add</Button> */}
-                <IconButton
-                size="large"
-                aria-label="Add dataset"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                style={customButtonStyle}
-                href='/dataset/new'
-                >
-                <AddCircleIcon/>
-                </IconButton>
-            </div>
-            <DataGrid
+        <Container 
+            maxWidth="xl" 
+            sx={{height: "calc(100vh - 51px)"}}
+        >
+            <MainDataGrid
                 rows={data}
                 columns={columns}
-                initialState={{
-                pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                },
-                }}
-                pageSizeOptions={[10, 20, 50]}
-                disableColumnMenu={true}
+                title="datasets"
+                filterField="name"
+                onAddClick={handleAddClick}
             />
             {deleteConfirmationOpen && 
             <DeleteDialog

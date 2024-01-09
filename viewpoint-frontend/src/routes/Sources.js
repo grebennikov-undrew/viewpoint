@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { IconButton, Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import AddCircleIcon from '@mui/icons-material/AddCircle'
+import { MainDataGrid } from '../components/basic/StyledComponents';
+import { Container } from '@mui/material';
 
 import { useAlert } from '../components/AlertContext';
-import { getData } from '../service/httpQueries';
+import { httpRequest } from '../service/httpRequest';
+import DeleteDialog from '../components/basic/DeleteDialog';
 import { RowActions } from '../components/basic/RowActions';
 import EditSourceDialog from '../components/source/EditSourceDialog';
-import DeleteDialog from '../components/basic/DeleteDialog';
 
 
 const Sources = () => {
     const { showAlert } = useAlert();
-    const [rows, setRows] = useState([]);
+    const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            getData("source/", showAlert, setRows);
+            try {
+                const response = await httpRequest.get('/source/', {withCredentials: true});
+                if (response.status === 400) {
+                    showAlert('Error: ' + response.data, "error");
+                    return;
+                } 
+                setData(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
+    
         fetchData();
-    }, [deleteConfirmationOpen, editDialogOpen]);
+    }, []);
 
     const handleAddClick = () => {
         setSelectedRow({id: null});
@@ -70,56 +76,33 @@ const Sources = () => {
     ];
 
     return (
-        <Container maxWidth="xl">
-        <div style={{ display: 'flex', alignItems: 'center', paddingTop: '20px', paddingBottom: '5px' }}>
-            <Typography variant="h2" >
-                Sources
-            </Typography>
-            {/* <Button variant="text">Add</Button> */}
-            <IconButton
-              size="large"
-              aria-label="Add source"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              style={customButtonStyle}
-              onClick={handleAddClick}
-              >
-              <AddCircleIcon/>
-            </IconButton>
-            </div>
-            <div>
-            <div style={{ height: 300, width: '100%' }}>
-                <DataGrid
-                rows={rows}
+        <Container 
+            maxWidth="xl" 
+            sx={{height: "calc(100vh - 51px)"}}
+        >
+            <MainDataGrid
+                rows={data}
                 columns={columns}
-                pageSize={5}
-                disableSelectionOnClick
-                />
-            </div>
-        
+                title="sources"
+                filterField="name"
+                onAddClick={handleAddClick}
+            />
             {editDialogOpen &&
             <EditSourceDialog
                 source={selectedRow}
                 open={editDialogOpen}
                 onClose={handleEditDialogClose}
             />}
-
             {deleteConfirmationOpen && 
             <DeleteDialog
                 open={deleteConfirmationOpen}
-                deleteUri={"source"}
+                deleteUri={"user"}
                 id={selectedRow.id}
                 onClose={handleDeleteConfirmationClose}
             />
             }
-            </div>
         </Container>
     );
 };
-
-const customButtonStyle = {
-    margin: 'auto 0', // Задаем отступы
-    padding: '0 12px',
-  };
 
 export default Sources;

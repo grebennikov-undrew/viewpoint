@@ -12,11 +12,6 @@ import { httpRequest } from '../service/httpRequest';
 import DeleteDialog from '../components/basic/DeleteDialog';
 import { RowActions } from '../components/basic/RowActions';
 
-const customButtonStyle = {
-    margin: 'auto 0', // Задаем отступы
-    padding: '0 12px',
-};
-
 const Chart = () => {
     const { showAlert } = useAlert();
     const [data, setData] = useState([]);
