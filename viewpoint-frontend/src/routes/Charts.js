@@ -89,6 +89,7 @@ const Chart = () => {
                 rows={data}
                 columns={columns}
                 title="charts"
+                filterField="name"
                 onAddClick={handleAddClick}
             />
             {deleteConfirmationOpen && 

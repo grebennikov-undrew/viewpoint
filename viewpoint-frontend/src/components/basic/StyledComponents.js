@@ -33,7 +33,7 @@ export const DataGrid = (props) => {
 }
 
 export const MainDataGrid = (props) => {
-    const {title, rows, onAddClick} = props;
+    const {title, rows, filterField, onAddClick} = props;
     const [searchValue, setSearchValue] = useState('');
 
     const handleSearchChange = (event) => {
@@ -43,7 +43,7 @@ export const MainDataGrid = (props) => {
     const upTitle = title.charAt(0).toUpperCase() + title.slice(1);
 
     const filteredRows = rows && rows.filter(row =>
-        row["name"].toLowerCase().includes(searchValue.toLowerCase())
+        row[filterField].toLowerCase().includes(searchValue.toLowerCase())
     );
 
     return (
