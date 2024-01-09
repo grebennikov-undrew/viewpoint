@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { TextField, Button, Grid, Typography, Container } from '@mui/material';
-import AuthenticationService from "../service/AuthenticationService"
-import { margin } from '@mui/system';
+import { TextField, Button, Grid, Typography, Container, Dialog, DialogTitle, DialogContent } from '@mui/material';
 
 import { useAlert } from '../components/AlertContext';
+import { postData } from '../service/httpQueries';
+
 
 const LoginForm = () => {
   const { showAlert } = useAlert();
@@ -13,6 +13,15 @@ const LoginForm = () => {
     username: '',
     password: '',
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) navigate("/dashboard")
+  }, []);
+
+  const saveToken = (response) => {
+    localStorage.setItem('token', response.accessToken)
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,60 +34,61 @@ const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const fetchData = async () => {
-        try {
-            const response = await AuthenticationService.executeBasicAuthenticationService(formData.username, formData.password);
-            if (response.status === 200) navigate('/dataset')
-            else showAlert("Authorization failed", "error");
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+      postData("auth/jwt", formData, showAlert, saveToken)
     }
     fetchData();
   };
 
   return (
-    <Container maxWidth="sm">
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} style={{marginTop: 10}}>
-          <Grid item xs={12}>
-            <Typography variant="h2" align="center">
-              Sign in
-            </Typography>
+    <Dialog
+      fullWidth
+        onClose={() => {}}
+        open={true}
+        maxWidth="xs"
+        sx={{
+          backdropFilter: "blur(5px)",
+        }}
+    >
+      <DialogTitle variant="h3" align="center">Sign in</DialogTitle>
+      <DialogContent style={{ textAlign: "center" }}>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={6} style={{marginTop: 10}}>
+            <Grid item xs={12} >
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="password"
+                label="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} mt={4}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                type="submit"
+                size='large'
+              >
+                Sign in
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="password"
-              label="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
-              Sign in
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </Container>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

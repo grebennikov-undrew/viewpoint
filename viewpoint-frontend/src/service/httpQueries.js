@@ -6,6 +6,9 @@ export const deleteEntity = (address, id, showAlert) => {
         if (response.status === 400) {
             showAlert('Error: ' + response.data, "error");
             return;
+        } else if (response.status === 403) {
+            showAlert('Permission denied');
+            return;
         } 
         showAlert('Deleted successfully')
     })

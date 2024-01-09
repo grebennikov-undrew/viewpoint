@@ -57,7 +57,7 @@ function Navbar() {
     if (e.target.innerText === "Logout") {
         const fetchData = async () => {
             try {
-                const response = await httpRequest.post(`/auth/logout`)
+                localStorage.removeItem("token")
                 window.location.replace("/login")
             } catch (error) {
                 console.error('Error fetching data:', error);

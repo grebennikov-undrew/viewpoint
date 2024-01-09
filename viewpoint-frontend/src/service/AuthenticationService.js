@@ -5,12 +5,6 @@ export let globalToken;
 
 class AuthenticationService {
 
-    executeBasicAuthenticationService(username, password) {
-        return httpRequest.get(`/auth/basic_auth`,
-            { headers: { authorization: this.createBasicAuthToken(username, password) }})
-            // { headers: { authorization: this.createBasicAuthToken(username, password) }})
-    }
-
     executeJwtAuthenticationService(username, password) {
         console.log(username);
         return httpRequest.post(`/authenticate`, {
@@ -19,21 +13,16 @@ class AuthenticationService {
         })
     }
 
-    createBasicAuthToken(username, password) {
-        const token = window.btoa(username + ":" + password);
-        return 'Basic ' + token
-    }
-
     registerSuccessfulLogin(username, password) {
         //let basicAuthHeader = 'Basic ' +  window.btoa(username + ":" + password)
         //console.log('registerSuccessfulLogin')
-        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
-        this.setupAxiosInterceptors(this.createBasicAuthToken(username, password))
+        // sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
+        // this.setupAxiosInterceptors(this.createBasicAuthToken(username, password))
     }
 
     registerSuccessfulLoginForJwt(username, token) {
-        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
-        this.setupAxiosInterceptors(this.createJWTToken(token))
+        // sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
+        // this.setupAxiosInterceptors(this.createJWTToken(token))
     }
 
     createJWTToken(token) {

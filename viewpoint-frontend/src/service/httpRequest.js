@@ -6,19 +6,36 @@ import axios from 'axios'
 const BASE_URL = '/api'
 
 const instance = axios.create({
-    withCredentials: true,
     baseURL: BASE_URL,
     validateStatus: function (status) {
         return status < 600;
     },
 });
 
+instance.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers['Authorization'] = 'Bearer ' + token;
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
 instance.interceptors.response.use(response => {
-    if (response.status === 401) window.location.replace("/login");
+    const token = localStorage.getItem('token');
+    if (response.status === 401 || !token) {
+        localStorage.removeItem('token');
+        window.location.replace("/login");
+    }
 
     return response;
  }, error => {
-    if (error.response.status === 401) window.location.replace("/login");
+    const token = localStorage.getItem('token');
+    if (error.response.status === 401 || !token) {
+        localStorage.removeItem('token');
+        window.location.replace("/login");
+    }
  });
 
 export const httpRequest = instance;

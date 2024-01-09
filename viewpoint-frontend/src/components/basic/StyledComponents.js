@@ -42,7 +42,7 @@ export const MainDataGrid = (props) => {
 
     const upTitle = title.charAt(0).toUpperCase() + title.slice(1);
 
-    const filteredRows = rows.filter(row =>
+    const filteredRows = rows && rows.filter(row =>
         row["name"].toLowerCase().includes(searchValue.toLowerCase())
     );
 
