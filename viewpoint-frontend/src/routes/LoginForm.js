@@ -21,7 +21,10 @@ const LoginForm = () => {
 
   const saveToken = (response) => {
     const token = response.accessToken
-    if (token) localStorage.setItem('token', token)
+    if (token) {
+      localStorage.setItem('token', token)
+      navigate("/")
+    }
   }
 
   const handleInputChange = (e) => {
