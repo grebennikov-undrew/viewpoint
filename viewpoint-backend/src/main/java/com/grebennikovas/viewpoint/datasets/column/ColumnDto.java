@@ -7,6 +7,9 @@ import lombok.*;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Dto метаданных столбца
+ * */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,12 +17,16 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ColumnDto {
 
+    /** Id колонки */
     private Long datasetId;
 
+    /** Наименование колонки */
     private String name;
 
+    /** Тип данных колонки */
     private String type;
 
+    /** Значения фильтрации датасета по колонке */
     private List<Object> filterValues;
 
     // Сравнение только по name и type

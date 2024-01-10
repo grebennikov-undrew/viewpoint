@@ -24,7 +24,7 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(response => {
     const token = localStorage.getItem('token');
-    if (response.status === 401 || !token) {
+    if (response.status === 401) {
         localStorage.removeItem('token');
         window.location.replace("/login");
     }
@@ -32,7 +32,7 @@ instance.interceptors.response.use(response => {
     return response;
  }, error => {
     const token = localStorage.getItem('token');
-    if (error.response.status === 401 || !token) {
+    if (error.response.status === 401) {
         localStorage.removeItem('token');
         window.location.replace("/login");
     }

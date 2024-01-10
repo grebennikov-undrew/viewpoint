@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Dto получения токена
+ * */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AuthResponse {
 
     private String username;
+
     private String accessToken;
 
 }

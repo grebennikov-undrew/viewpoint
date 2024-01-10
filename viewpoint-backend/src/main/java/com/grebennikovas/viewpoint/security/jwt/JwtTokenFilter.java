@@ -32,17 +32,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException, RuntimeException {
 
-        if (!hasAuthorizationBearer(request)) {
+        String requestURI = request.getRequestURI();
+
+        // Пропустить только запросы авторизации
+        if (requestURI.startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = getAccessToken(request);
+        // Не пропускать запросы без токена
+        if (!hasAuthorizationBearer(request)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token not found");
+            return;
+        }
 
+        // Валидация токена
+        String token = getAccessToken(request);
         try {
-            if (!jwtUtil.validateAccessToken(token)) {
-                filterChain.doFilter(request, response);
-                return;
+            if (jwtUtil.validateAccessToken(token)) {
+                setAuthenticationContext(token, request);
             }
         } catch (JwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -52,7 +61,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throw new RuntimeException(e);
         }
 
-        setAuthenticationContext(token, request);
         filterChain.doFilter(request, response);
     }
 
