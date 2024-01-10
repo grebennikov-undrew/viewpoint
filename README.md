@@ -1,4 +1,7 @@
 # Viewpoint - BI System
+### Опубликованное демо - http://viewpoint.falsetrue.info/dashboard
+Для входа использовать analyst/analyst
+
 ## Описание
 Проект представляет собой Business Intelligence систему, предназначенную для визуализации данных из различных источников.
 
