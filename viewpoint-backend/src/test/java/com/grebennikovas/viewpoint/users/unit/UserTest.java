@@ -1,5 +1,6 @@
-package com.grebennikovas.viewpoint.users;
+package com.grebennikovas.viewpoint.users.unit;
 
+import com.grebennikovas.viewpoint.users.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
