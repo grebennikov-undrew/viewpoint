@@ -16,14 +16,14 @@ const LoginForm = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token) navigate("/")
+    if (token) navigate("/dashboard/1")
   }, []);
 
   const saveToken = (response) => {
     const token = response.accessToken
     if (token) {
       localStorage.setItem('token', token)
-      navigate("/")
+      navigate("/dashboard/1")
     }
   }
 

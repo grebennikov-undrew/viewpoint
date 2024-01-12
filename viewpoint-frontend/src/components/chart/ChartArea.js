@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { IconButton } from '@mui/material';
 import Menu from '@mui/material/Menu';
@@ -19,15 +20,24 @@ const ChartArea = (props) => {
     const { chartData } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
 
     const handleClick = (event) => {
-        getData(`chart/${chartData.id}/export`,showAlert)
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleExport = () => {
+        getData(`chart/${chartData.id}/export`,showAlert)
+        setAnchorEl(null);
+    };
+
+    const onEdit = () => {
+        navigate(`/chart/${chartData.id}`)
+    }
 
     return(
         chartData && chartData.data && 
@@ -42,8 +52,10 @@ const ChartArea = (props) => {
             <div style={{display: "flex", alignItems: "center"}}>
                 <Typography 
                     variant="h4" 
-                    pl={2} pb={0} 
+                    pl={4} pb={0} 
                     fontWeight={600} 
+                    onClick={onEdit}
+                    style={{cursor: "pointer"}}
                     // style={{display: "inline"}}
                 >
                     {chartData.name}
@@ -69,7 +81,8 @@ const ChartArea = (props) => {
                         'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={handleClose}>Export to CSV</MenuItem>
+                        <MenuItem onClick={onEdit}>Edit</MenuItem>
+                        <MenuItem onClick={handleExport}>Export to CSV</MenuItem>
                     </Menu>
             </div>
                 <Box height= {"100%"}>

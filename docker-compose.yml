@@ -5,17 +5,17 @@ services:
     image: postgres:15
     container_name: viewpoint_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     expose:
-      - "5433"
+      - "${POSTGRES_PORT}"
     ports:
-      - "15432:5433"
+      - "15432:${POSTGRES_PORT}"
     volumes:
-      - ./docker/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - ./docker/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
-    command: -p 5433
+    command: -p ${POSTGRES_PORT}
       
   viewpoint-backend:
     image: grebennikovas/viewpoint-backend:0.0.1
@@ -27,7 +27,7 @@ services:
       - viewpoint-db
     environment:
       - SERVER_PORT= 8081
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://viewpoint-db:5433/viewpoint
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://viewpoint-db:${POSTGRES_PORT}/viewpoint
       
   viewpoint-frontend:
     image: grebennikovas/viewpoint-frontend:0.0.1
@@ -47,6 +47,21 @@ services:
       - viewpoint-backend
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/nginx.conf:ro
+  
+  load-samples:
+    image: postgres:15
+    depends_on:
+      - viewpoint-db
+      - viewpoint-backend
+    volumes:
+      - ./docker/db/load_samples.sh:/docker-entrypoint-initdb.d/load_samples.sh
+      - ./docker/db/sample_data.tar:/docker-entrypoint-initdb.d/sample_data.tar
+    environment:
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOAD_SAMPLES: ${LOAD_SAMPLES}
+    command: ["/bin/bash", "-c", "/docker-entrypoint-initdb.d/load_samples.sh"]
       
 volumes:
   db-data:
