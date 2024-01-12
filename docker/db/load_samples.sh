@@ -4,6 +4,8 @@ echo LOAD SAMLPES FLAG: $LOAD_SAMPLES
 
 if [ "$LOAD_SAMPLES" = "true" ]; then
 
+    sleep 20 # TODO заменить на healthcheck базы данных
+
     export PGPASSWORD="$POSTGRES_PASSWORD"
     echo ==== START LOAD SAMLPES ====
 
@@ -13,20 +15,5 @@ if [ "$LOAD_SAMPLES" = "true" ]; then
 
     # Загрузка метаданных BI
     echo ==== END LOAD SAMLPES ====
-
-    # Активация tcp/ip доступа для БД с примерами
-    
-    # POSTGRES_CONF="/var/lib/postgresql/data/postgresql.conf"
-    # PG_HBA_CONF="/var/lib/postgresql/data/pg_hba.conf"
-
-    # ALLOWED_IP="0.0.0.0"
-
-    # # Открываем доступ к TCP/IP-соединениям в postgresql.conf
-    # sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/" "$POSTGRES_CONF"
-    # # Разрешаем соединения из ALLOWED_IP в pg_hba.conf
-    # echo "host    all             all             $ALLOWED_IP/32      md5" >> "$PG_HBA_CONF"
-
-    # # Перезапускаем PostgreSQL
-    # systemctl restart postgresql
 
 fi
