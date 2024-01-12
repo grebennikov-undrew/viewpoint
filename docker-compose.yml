@@ -52,7 +52,6 @@ services:
     image: postgres:15
     depends_on:
       - viewpoint-db
-      - viewpoint-backend
     volumes:
       - ./docker/db/load_samples.sh:/docker-entrypoint-initdb.d/load_samples.sh
       - ./docker/db/sample_data.tar:/docker-entrypoint-initdb.d/sample_data.tar
